@@ -12,7 +12,7 @@ class Transforming extends Generic {
     Observable.from(list)
       .map(n => text.concat(String.valueOf(n)))
       .map(s => s.toUpperCase())
-      .foreach(s => println(s))
+      .subscribe(s => println(s))
   }
 
 
@@ -24,7 +24,7 @@ class Transforming extends Generic {
       .flatMap(n => Observable.just(n)
         .map(n => text.concat(String.valueOf(n))))
       .map(s => s.toUpperCase())
-      .foreach(s => println(s))
+      .subscribe(s => println(s))
   }
 
 
