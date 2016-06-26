@@ -3,10 +3,10 @@ import rx.lang.scala.Observable
 /**
   * Created by pabloperezgarcia on 26/6/16.
   */
-class Transforming {
+class Transforming extends Generic{
 
   def map(): Unit = {
-    println("\n*****Map******")
+    addHeader("Map observable")
     val text = "number mutate to String:"
     val list = List(1, 2, 3, 4, 5)
     Observable.from(list)
@@ -17,7 +17,7 @@ class Transforming {
 
 
   def flatMap(): Unit = {
-    println("\n*****Flat Map******")
+    addHeader("Flat Map")
     val text = "number mutated in flatMap::"
     val list = List(1, 2, 3, 4, 5)
     Observable.from(list)

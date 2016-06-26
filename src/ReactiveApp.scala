@@ -15,6 +15,7 @@ object ReactiveApp {
 
     val creating = new Creating();
     creating.interval();
+    creating.deferObservable();
 //    println("*****Subscribe******\n")
 //    subscribe();
 //    println("*****Filter******\n")
