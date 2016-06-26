@@ -1,6 +1,6 @@
 import java.util.concurrent.TimeUnit
 
-import scala.concurrent.duration.{Duration, FiniteDuration}
+import _root_.scala.concurrent.duration.{Duration, FiniteDuration}
 
 /**
   * Created by pabloperezgarcia on 26/6/16.
