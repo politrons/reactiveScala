@@ -18,16 +18,16 @@ To reference to the real documentation go here https://github.com/ReactiveX/RxJa
 All the most common features of Observable
 
 
-* **[Creating] (src/Creating.scala)**
+* **[Creating] (src/main/scala/Creating.scala)**
 
     ![My image](src/main/resources/img/rsz_1createc.png)
 
     
-* **[ObservableDefer] (src/Creating.scala)**
+* **[ObservableDefer] (src/main/scala/Creating.scala)**
 
     ![My image](src/main/resources/img/rsz_1filter.png)
 
 
-* **[Transforming] (src/Transforming.scala)**
+* **[Transforming] (src/main/scala/Transforming.scala)**
 
     ![My image](src/main/resources/img/rsz_flatmap.png)
