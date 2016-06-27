@@ -28,4 +28,15 @@ class Transforming extends Generic {
   }
 
 
+  def merge(): Unit = {
+    addHeader("Flat Map")
+    val text = "number mutated in flatMap::"
+    val list = List(1, 2, 3, 4, 5)
+    Observable.from(list)
+      .flatMap(n => Observable.just(n)
+        .merge())
+      .map(s => s.toUpperCase())
+      .subscribe(s => println(s))
+  }
+
 }
