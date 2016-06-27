@@ -12,6 +12,7 @@ This project it´s just a way to learn a little bit more the API and Scala langu
 
 To reference to the real documentation go here https://github.com/ReactiveX/RxJava/wiki
 
+RxJava examples [here](https://github.com/politrons/reactive)
 
 ### Observables
 
