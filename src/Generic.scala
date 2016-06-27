@@ -7,13 +7,14 @@ import _root_.scala.concurrent.duration.{Duration, FiniteDuration}
   */
 class Generic {
 
-  def addHeader(header: String): Unit = {
+  protected def addHeader(header: String): Unit = {
     println("\n***********************************")
-    println("\n*********" + header + "************")
-    println("\n***********************************")
+    println("\n" + header)
+    println("\n")
+
   }
 
-  def createDuration(time: Long): FiniteDuration = {
+  protected def createDuration(time: Long): FiniteDuration = {
     Duration.create(time, TimeUnit.MILLISECONDS)
   }
 

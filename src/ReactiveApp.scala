@@ -9,16 +9,18 @@ object ReactiveApp {
 
   def main(args: Array[String]) {
 
-    val transforming = new Transforming();
-    transforming.map();
-    transforming.flatMap();
+    val transforming = new Transforming()
+    transforming.map()
+    transforming.flatMap()
+    transforming.merge()
+    transforming.zip()
 
-    val creating = new Creating();
-    creating.interval();
-    creating.deferObservable();
+    val creating = new Creating()
+    creating.interval()
+    creating.deferObservable()
 
-    val filtering = new Filtering();
-    filtering.filter();
+    val filtering = new Filtering()
+    filtering.filter()
 
 
   }

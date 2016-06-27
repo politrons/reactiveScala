@@ -16,15 +16,15 @@ class Filtering extends Generic {
       .subscribe(println(_))
   }
 
-  def isBiggerThan(number:Integer): (Int) => Boolean = {
+  private def isBiggerThan(number:Integer): (Int) => Boolean = {
     n => n > number
   }
 
-  def transformToString: (Int) => String = {
+  private def transformToString: (Int) => String = {
     n => String.valueOf(n)
   }
 
-  def isString: (String) => Boolean = {
+  private def isString: (String) => Boolean = {
     s => s.isInstanceOf[String]
   }
 }
