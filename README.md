@@ -28,6 +28,6 @@ All the most common features of Observable
     ![My image](src/main/resources/img/rsz_1filter.png)
 
 
-* **[Transforming] (src/main/Transforming.scala)**
+* **[Transforming] (src/Transforming.scala)**
 
     ![My image](src/main/resources/img/rsz_flatmap.png)
