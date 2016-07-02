@@ -10,32 +10,33 @@ import rx.observers.TestSubscriber
 /**
   * Creating are the operator that create the observables from scratch with 0-N item to be emitted.
   */
-class Creating extends Generic{
+class Creating extends Generic {
 
   /**
     * empty operator create an observable with Nothing class
     */
-  @Test def empty():Unit={
+  @Test def empty(): Unit = {
     addHeader("empty observable")
-    Observable.empty.subscribe(n=>println(n))
+    Observable.empty
+      .subscribe(n => println(n))
   }
 
   /**
     * Just create an observable with just 1 item to emit
     */
-  @Test def just():Unit={
+  @Test def just(): Unit = {
     addHeader("Just observable")
     Observable.just("Hello scala world")
-      .subscribe(n=>println(n))
+      .subscribe(n => println(n))
   }
 
   /**
     * From create an observable with N items to emit
     */
-  @Test def from():Unit={
+  @Test def from(): Unit = {
     addHeader("From observable")
-    Observable.from(List(1,2,3,4,5))
-      .subscribe(n=>println(n))
+    Observable.from(List(1, 2, 3, 4, 5))
+      .subscribe(n => println(n))
   }
 
   /**

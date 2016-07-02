@@ -45,12 +45,29 @@ class Combining extends Generic {
       .subscribe(s => println(s))
   }
 
-//  def concat(): Unit = {
-//    addHeader("Observable concat")
-//    Observable.just("hello").concatMap(Observable.just(""))
-//      .subscribe(n => println(n))
-//
-//  }
+  /**
+    * This operator concat all Observables items emitted in the pipeline
+    */
+  @Test def concat(): Unit = {
+    addHeader("Observable concat")
+    Observable.from(List("hello", " scala", " world"))
+      .map(n => Observable.just(n))
+      .concat
+      .subscribe(n => println(n))
+  }
+
+  /**
+    * concatMap can be used instead of flatMap just to return a new observable where internally you can, or not concat the items
+    * This operator is pretty shit and does not has to much value to be honest
+    */
+  @Test def concatMap(): Unit = {
+    addHeader("Observable concatMap")
+    Observable.just("hello")
+      .concatMap(s => Observable.just(s.concat(" scala")))
+      .concatMap(s => Observable.just(s.concat(" world")))
+      .subscribe(n => println(n))
+  }
+
 
 
 }

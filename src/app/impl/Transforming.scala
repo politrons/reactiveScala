@@ -78,7 +78,6 @@ class Transforming extends Generic {
     Observable.just(1)
       .compose(transformerToString)
       .subscribe(n => println(n))
-
   }
 
   def transformerToString: (Observable[Int]) => Observable[String] = {

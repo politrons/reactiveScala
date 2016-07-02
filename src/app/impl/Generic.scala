@@ -10,9 +10,8 @@ import _root_.scala.concurrent.duration.{Duration, FiniteDuration}
 class Generic {
 
   protected def addHeader(header: String): Unit = {
-    println("\n***********************************")
     println("\n" + header)
-    println("\n")
+    println("\n***********************************")
 
   }
 
