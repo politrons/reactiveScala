@@ -18,17 +18,20 @@ RxJava examples [here](https://github.com/politrons/reactive)
 
 All the most common features of Observable
 
+* **[Combining] (src/app/impl/Combining.scala)**
 
-* **[Creating] (src/Creating.scala)**
+    ![My image](src/main/resources/img/rsz_1zipo.png)
+
+* **[Creating] (src/app/impl/Creating.scala)**
 
     ![My image](src/main/resources/img/rsz_1createc.png)
 
     
-* **[Filtering] (src/Filtering.scala)**
+* **[Filtering] (src/app/impl/Filtering.scala)**
 
     ![My image](src/main/resources/img/rsz_1filter.png)
 
 
-* **[Transforming] (src/Transforming.scala)**
+* **[Transforming] (src/app/impl/Transforming.scala)**
 
     ![My image](src/main/resources/img/rsz_flatmap.png)

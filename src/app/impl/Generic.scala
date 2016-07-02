@@ -1,3 +1,5 @@
+package app.impl
+
 import java.util.concurrent.TimeUnit
 
 import _root_.scala.concurrent.duration.{Duration, FiniteDuration}
