@@ -57,7 +57,7 @@ class Creating extends Generic{
     * Defer it will wait to create the observable with the value when we subscribe our observer.
     * Basically create this Observable that wrap the observable that we want to create only when we subscribe to the observable.
     */
-  @Test def deferObservable(): Unit = {
+  @Test def defer(): Unit = {
     addHeader("Defer Observable")
     var text = "Foo"
     val deferObservable = Observable.defer(Observable.just(text))

@@ -53,8 +53,37 @@ class Transforming extends Generic {
       .orElse("hello scala world")
       .map(n => n.toUpperCase())
       .subscribe(n => println(n))
+
   }
 
+  /**
+    * Buffer operator create a ArrayBuffer which append all items emitted in the pipeline
+    * Once that we have the arrayBuffer we can use the operators to remove some items inside it
+    */
+  @Test def buffer(): Unit = {
+    addHeader("buffer operator")
+    Observable.from(getList)
+      .toBuffer
+      .doOnNext(a => println(a.-(1)))
+      .doOnNext(a => println(a.-(2)))
+      .doOnNext(a => println(a.-(3)))
+      .doOnNext(a => println(a.-(4)))
+      .subscribe(n => println(n))
+  }
+
+  /**
+    * Compose operator emit the observable to the Transformer function and return a new Observable.
+    */
+  @Test def compose(): Unit = {
+    Observable.just(1)
+      .compose(transformerToString)
+      .subscribe(n => println(n))
+
+  }
+
+  def transformerToString: (Observable[Int]) => Observable[String] = {
+    o => Observable.just("Hello Scala world")
+  }
 
   def getList: List[Int] = {
     List(1, 2, 3, 4, 5)
