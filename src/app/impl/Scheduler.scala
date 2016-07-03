@@ -16,8 +16,8 @@ import scala.concurrent.ExecutionContext;
   */
 class Scheduler extends Generic {
 
-  val e = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
-  val scheduler = ExecutionContextScheduler(e)
+  val executor = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
+  val scheduler = ExecutionContextScheduler(executor)
 
   /**
     * subscribeOn specify in which thread the pipeline will executed once the observer subscribe it
@@ -46,10 +46,10 @@ class Scheduler extends Generic {
     */
   @Test def observerOn(): Unit = {
 
-    val e = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
-    val e1 = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
-    val scheduler = ExecutionContextScheduler(e)
-    val scheduler1 = ExecutionContextScheduler(e1)
+    val executor = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
+    val executor1 = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
+    val scheduler = ExecutionContextScheduler(executor)
+    val scheduler1 = ExecutionContextScheduler(executor1)
 
     addHeader("observerOn observable")
     Observable.just("hello async scala world")
