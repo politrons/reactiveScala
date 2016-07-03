@@ -36,8 +36,11 @@ All the most common features of Observable
 
     ![My image](src/main/resources/img/rsz_flatmap.png)
 
-## Scala
+![My image](src/main/resources/img/rz_scala.gif)
+
 
 Some examples about how to use collections and other operators
+
+* **[Collections] (src/app/impl/Collections.scala)**
 
 * **[Utils] (src/app/impl/Utils.scala)**
