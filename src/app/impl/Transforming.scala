@@ -80,6 +80,7 @@ class Transforming extends Generic {
       .subscribe(n => println(n))
   }
 
+
   def transformerToString: (Observable[Int]) => Observable[String] = {
     o => Observable.just("Hello Scala world")
   }

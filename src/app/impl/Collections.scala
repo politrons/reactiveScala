@@ -38,6 +38,21 @@ class Collections extends Generic with NumberInterface {
     println(revertedMap)
   }
 
+
+  /**
+    * We a map with int/list pair and we revert as key for every item in the collection,
+    * and we set the value as the current key
+    */
+  @Test def revertMapList(): Unit = {
+    val map = HashMap[Int, List[Int]](1 -> List(3, 4), 4 -> List(5, 6))
+    val revertedMap = map.toStream
+      .flatMap(map => map._2.toStream
+        .map(entry => Map[Int, Int](entry -> map._1))
+        .scan(HashMap())((map1, map2) => map1 ++ map2))
+      .scan(HashMap())((m, m1) => m ++ m1).last
+    println(revertedMap)
+  }
+
   /**
     * Iterate over a collection emit the items in string and return a new collection
     */
