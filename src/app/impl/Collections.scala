@@ -28,7 +28,7 @@ class Collections extends Generic with NumberInterface {
   }
 
   /**
-    * How to create and iterate a Map collection
+    * How to revert a map from key/value to value/key using scan
     */
   @Test def revertMap(): Unit = {
     val map = HashMap[Int, Int](1 -> 2, 3 -> 4, 5 -> 6)
@@ -54,7 +54,7 @@ class Collections extends Generic with NumberInterface {
   }
 
   /**
-    * Iterate over a collection emit the items in string and return a new collection
+    * Iterate over a collection emit the items create a new string items and return a new collection
     */
   @Test def intToStringList(): Unit = {
     val list = List(1, 2, 3).toStream
@@ -64,7 +64,8 @@ class Collections extends Generic with NumberInterface {
   }
 
   /**
-    * Iterate over a collection emit the items and return a new collection
+    * Iterate over a collection, emit the items, create a new one through the previous values,
+    * and return a new collection with this new values
     */
   @Test def intToNewIntList(): Unit = {
     val list = List(1, 2, 3).toStream
@@ -74,7 +75,7 @@ class Collections extends Generic with NumberInterface {
   }
 
   /**
-    * How to create and iterate a Map collection
+    * How to create merge to list
     */
   @Test def appendList(): Unit = {
     val list = List(1, 2, 3)
