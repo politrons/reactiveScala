@@ -27,15 +27,16 @@ class Collections extends Generic with NumberInterface {
     println(sumMap)
   }
 
-//    /**
-//      * How to create and iterate a Map collection
-//      */
-//    @Test def revertMap(): Unit = {
-//      val map = HashMap[String, Int]("1" -> 1, "2" -> 2, "3" -> 3)
-//      Observer.from(List(map.toStream))
-//        .map(entry => Map[Int, String](entry._2 -> entry._1))
-//        .reduce((m,m1)=>)
-//    }
+  /**
+    * How to create and iterate a Map collection
+    */
+  @Test def revertMap(): Unit = {
+    val map = HashMap[Int, Int](1 -> 2, 3 -> 4, 5 -> 6)
+    val revertedMap = map.toStream
+      .map(entry => Map[Int, Int](entry._2 -> entry._1))
+      .scan(HashMap())((map1, map2) => map1 ++ map2).last
+    println(revertedMap)
+  }
 
   /**
     * Iterate over a collection emit the items in string and return a new collection
@@ -70,6 +71,8 @@ class Collections extends Generic with NumberInterface {
 
   /**
     * Scan operator allow us in an iterator get the previous emitted item and the new one and do an operation.
+    * We need to provide an initial value for the scan, and as second argument a bi function where we priovide
+    * the previous item emitted and the new one
     */
   @Test def scanIntegers(): Unit = {
     print(List(1, 2, 3).scan(0)(sumIntegerFunction)
