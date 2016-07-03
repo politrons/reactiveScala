@@ -1,7 +1,12 @@
 package app.impl
 
+import java.util.concurrent.Executors
+
 import org.junit.Test
 import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.ExecutionContextScheduler
+
+import scala.concurrent.ExecutionContext
 
 
 /**
@@ -74,12 +79,32 @@ class Transforming extends Generic {
   /**
     * Compose operator emit the observable to the Transformer function and return a new Observable.
     */
-  @Test def compose(): Unit = {
+  @Test def composeToString(): Unit = {
+    addHeader("compose operator")
     Observable.just(1)
       .compose(transformerToString)
       .subscribe(n => println(n))
   }
 
+  /**
+    * Compose operator emit the observable to the Transformer function and return a new Observable
+    * that will run in another thread.
+    */
+  @Test def composeToAsync(): Unit = {
+    addHeader("compose async operator")
+    val executor = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
+    val scheduler = ExecutionContextScheduler(executor)
+    println("Thread before pipeline:"+Thread.currentThread().getName)
+    Observable.just(1)
+      .compose(transformerToAsync(scheduler))
+        .doOnNext(i=> println("Thread inside pipeline:"+Thread.currentThread().getName))
+      .subscribe(n => println(n))
+  }
+
+
+  def transformerToAsync(scheduler: ExecutionContextScheduler): (Observable[Int]) => Observable[Observable[Int]] = {
+    i => Observable.just(i).observeOn(scheduler)
+  }
 
   def transformerToString: (Observable[Int]) => Observable[String] = {
     o => Observable.just("Hello Scala world")
