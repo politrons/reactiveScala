@@ -101,6 +101,19 @@ class Transforming extends Generic {
       .subscribe(n => println(n))
   }
 
+  /**
+    * Using the scan operator we can interact with the items emitted in the pipeline.
+    * We have to pass to the operator the default first value, and then as second argument we pass
+    * the previous item emitted, and the new one.
+    */
+  @Test def scanInRevertMap():Unit = {
+    val map = Map[String, Int]("1"->1, "1"-> 2, "3"-> 1)
+    Observable.from(map.toIterable)
+      .map(entry =>  Map[Int, String](entry._2 -> entry._1))
+      .scan(Map[Int, String]())((m, m1) => m ++ m1)
+      .last
+      .subscribe(m => println(m))
+  }
 
   def transformerToAsync(scheduler: ExecutionContextScheduler): (Observable[Int]) => Observable[Observable[Int]] = {
     i => Observable.just(i).observeOn(scheduler)

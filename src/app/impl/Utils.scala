@@ -14,17 +14,20 @@ class Utils extends Generic with NumberInterface {
   @Test def arithmetic(): Unit = {
     val product = List(1, 2, 3, 4, 5).toStream
       .map(n => n * 1)
-      .filter(n => n >= 1).product
+      .filter(n => n >= 1)
+      .product
     println(product)
 
     val sum = List(1, 2, 3, 4, 5).toStream
       .map(n => n * 1)
-      .filter(n => n >= 1).sum
+      .filter(n => n >= 1)
+      .sum
     println(sum)
 
     val sub = List(1, 2, 3, 4, 5).toStream
       .map(n => n * 1)
-      .filter(n => n >= 1).reduce((a, b) => a - b)
+      .filter(n => n >= 1)
+      .reduce((a, b) => a - b)
     println(sub)
 
   }
