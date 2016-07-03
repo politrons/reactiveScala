@@ -21,4 +21,24 @@ class Algorithmic extends Generic[String, Long] {
       .toList
     println(numbers)
   }
+
+  @Test def getNumberOfScapes(): Unit = {
+    val text = "  ab1 cx2d 3b "
+    val spaces = text.toCharArray.toStream
+      .filter(c => c.isSpaceChar)
+      .toList
+      .size
+    println(spaces)
+  }
+
+  @Test def getNumberOfWords(): Unit = {
+    val text = "  ab1 cx2d 3b "
+    val words = text.split(" ").toStream
+      .filter(s => !s.isEmpty)
+      .toList
+      .size
+    println(words)
+  }
+
+
 }
