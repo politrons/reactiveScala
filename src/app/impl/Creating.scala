@@ -10,7 +10,7 @@ import rx.observers.TestSubscriber
 /**
   * Creating are the operator that create the observables from scratch with 0-N item to be emitted.
   */
-class Creating extends Generic[String] {
+class Creating extends Generic[String, Long] {
 
   /**
     * empty operator create an observable with Nothing class
@@ -35,7 +35,7 @@ class Creating extends Generic[String] {
     */
   @Test def from(): Unit = {
     addHeader("From observable")
-    Observable.from(List(1, 2, 3, 4, 5))
+    Observable.from(List[Int](1, 2, 3, 4, 5))
       .subscribe(n => println(n))
   }
 
