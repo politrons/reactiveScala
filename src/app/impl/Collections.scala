@@ -7,6 +7,7 @@ import scala.collection.immutable.HashMap
 
 
 /**
+  * Some examples about how to use collections in scala
   */
 class Collections extends Generic with NumberInterface {
 
@@ -109,6 +110,20 @@ class Collections extends Generic with NumberInterface {
       .map(n => List(n * 100))
       .scan(List())(mergeList).last
     println(newList)
+  }
+
+  /**
+    * This exmaple compare two lists and return a new list with the only the values that exist in both collections
+    */
+  @Test def listEqualThanList(): Unit = {
+    val listA = List(1, 3, 5)
+    val listEqualThanA = List(1, 4, 6, 5, 3).toStream
+      .map(n => listA.toStream
+        .filter(n1 => n1 == n)
+        .toList)
+      .scan(List())((l, l1) => l ++ l1)
+      .last
+    println(listEqualThanA)
   }
 
   def mergeList(prevResult: List[Int], currentItem: List[Int]): List[Int] = {

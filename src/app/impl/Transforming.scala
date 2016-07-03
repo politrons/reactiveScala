@@ -94,10 +94,10 @@ class Transforming extends Generic {
     addHeader("compose async operator")
     val executor = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
     val scheduler = ExecutionContextScheduler(executor)
-    println("Thread before pipeline:"+Thread.currentThread().getName)
+    println("Thread before pipeline:" + Thread.currentThread().getName)
     Observable.just(1)
       .compose(transformerToAsync(scheduler))
-        .doOnNext(i=> println("Thread inside pipeline:"+Thread.currentThread().getName))
+      .doOnNext(i => println("Thread inside pipeline:" + Thread.currentThread().getName))
       .subscribe(n => println(n))
   }
 
@@ -106,13 +106,27 @@ class Transforming extends Generic {
     * We have to pass to the operator the default first value, and then as second argument we pass
     * the previous item emitted, and the new one.
     */
-  @Test def scanInRevertMap():Unit = {
-    val map = Map[String, Int]("1"->1, "1"-> 2, "3"-> 1)
+  @Test def scanInRevertMap(): Unit = {
+    val map = Map[String, Int]("1" -> 1, "1" -> 2, "3" -> 1)
     Observable.from(map.toIterable)
-      .map(entry =>  Map[Int, String](entry._2 -> entry._1))
+      .map(entry => Map[Int, String](entry._2 -> entry._1))
       .scan(Map[Int, String]())((m, m1) => m ++ m1)
       .last
       .subscribe(m => println(m))
+  }
+
+  /**
+    * This example compare two lists and return a new list with only the values that exist in both collections
+    */
+  @Test def listEqualThanList(): Unit = {
+    val listA = List(1, 3, 5)
+    Observable.from(List(1, 4, 6, 5, 3))
+      .flatMap(n => Observable.from(listA)
+        .filter(n1 => n1 == n)
+        .toList)
+      .scan(List[Int]())((l, l1) => l ++ l1)
+      .last
+      .subscribe(list => println(list))
   }
 
   def transformerToAsync(scheduler: ExecutionContextScheduler): (Observable[Int]) => Observable[Observable[Int]] = {
