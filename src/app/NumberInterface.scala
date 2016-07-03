@@ -6,4 +6,6 @@ package app
 trait NumberInterface {
 
   def isHigherThan1(obj: Int): Boolean
+
+  def defaultImpl(): String = "This is a default implementation"
 }

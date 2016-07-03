@@ -15,6 +15,7 @@ class Collections extends Generic with NumberInterface {
     * How to create and iterate a Map collection
     */
   @Test def iterateMap(): Unit = {
+    println(defaultImpl)
     val map = HashMap[String, Int]("1" -> 1, "2" -> 2, "3" -> 3)
 
     val sumMap = map.toStream
