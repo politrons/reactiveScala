@@ -35,6 +35,11 @@ All the most common features of Observable
 * **[Transforming] (src/app/impl/Transforming.scala)**
 
     ![My image](src/main/resources/img/rsz_flatmap.png)
+    
+* **Scheduler (src/app/impl/Scheduler.scala)**
+
+    ![My image](src/main/resources/img/rsz_2subscribeonc.png)
+        
 
 ![My image](src/main/resources/img/rsz_scala.gif)
 

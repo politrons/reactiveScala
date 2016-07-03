@@ -18,7 +18,7 @@ class Combining extends Generic {
       .merge(Observable.just(" scala"))
       .merge(Observable.just(" world!"))
       .reduce((s, s1) => s.concat(s1))
-      .map(s => s.toUpperCase).subscribe(s => println(s));
+      .map(s => s.toUpperCase).subscribe(s => println(s))
   }
 
   /**

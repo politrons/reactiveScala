@@ -31,7 +31,7 @@ class Creating extends Generic {
   }
 
   /**
-    * From create an observable with N items to emit
+    * From create an observable with a collection of N items to emit
     */
   @Test def from(): Unit = {
     addHeader("From observable")
@@ -57,6 +57,10 @@ class Creating extends Generic {
     * Sometimes that´s not the desirable, since maybe we dont want to  create the observable at that point, only when an observer subscribe to it.
     * Defer it will wait to create the observable with the value when we subscribe our observer.
     * Basically create this Observable that wrap the observable that we want to create only when we subscribe to the observable.
+    * Shall print
+    *
+    * Hello scala world
+    *
     */
   @Test def defer(): Unit = {
     addHeader("Defer Observable")
