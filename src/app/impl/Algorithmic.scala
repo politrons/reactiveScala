@@ -6,7 +6,7 @@ import org.junit.Test
 class Algorithmic extends Generic[String, Long] {
 
 
-  @Test def duplicate(): Unit = {
+  @Test def duplicateNumbers(): Unit = {
     val numbers = Array[Int](1, 2, 5, 4, 3, 4)
     val highestNumber = numbers.length - 1
     val total = numbers.toStream.sum

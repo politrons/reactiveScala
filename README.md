@@ -48,4 +48,6 @@ Some examples about how to use collections and other operators
 
 * **[Collections] (src/app/impl/Collections.scala)**
 
+* **[Algorithmic] (src/app/impl/Algorithmic.scala)**
+
 * **[Utils] (src/app/impl/Utils.scala)**
