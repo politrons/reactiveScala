@@ -6,7 +6,7 @@ import rx.lang.scala.Observable
 /**
   * Combining operators are used in order to combine items emitted by the pipeline.
   */
-class Combining extends Generic {
+class Combining extends Generic[String] {
 
 
   /**

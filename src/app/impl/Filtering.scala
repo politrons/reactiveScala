@@ -5,7 +5,7 @@ import rx.lang.scala.Observable
 
 
 
-class Filtering extends Generic {
+class Filtering extends Generic[String] {
 
   /**
     * Filter operator just apply a Predicate function to determine when allow the item to go through the pipeline

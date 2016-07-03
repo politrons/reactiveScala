@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext
   * Remember that everything that happen inside a pipeline is immutable, so every time that you "modify" an item
   * inside a function of Map or flatMap, actually you´re creating an emitting a new item.
   */
-class Transforming extends Generic {
+class Transforming extends Generic[String] {
 
   /**
     * Map operator allow us to evolve the pipeline passing new items through the pipeline.

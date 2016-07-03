@@ -7,9 +7,9 @@ import _root_.scala.concurrent.duration.{Duration, FiniteDuration}
 /**
   * Created by pabloperezgarcia on 26/6/16.
   */
-class Generic {
+class Generic[T] {
 
-  protected def addHeader(header: String): Unit = {
+  protected def addHeader(header: T): Unit = {
     println("\n" + header)
     println("\n***********************************")
 

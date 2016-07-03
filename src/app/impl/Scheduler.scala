@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext;
   * We can specify if we want that the whole pipeline will be executed in a specific thread subscribeOn
   * Or if we want to just execute some steps in a specific thread observerOn
   */
-class Scheduler extends Generic {
+class Scheduler extends Generic[String] {
 
   val executor = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor)
   val scheduler = ExecutionContextScheduler(executor)

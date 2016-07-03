@@ -10,7 +10,7 @@ import rx.observers.TestSubscriber
 /**
   * Creating are the operator that create the observables from scratch with 0-N item to be emitted.
   */
-class Creating extends Generic {
+class Creating extends Generic[String] {
 
   /**
     * empty operator create an observable with Nothing class
