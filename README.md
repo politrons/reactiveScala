@@ -14,8 +14,8 @@ To reference to the real documentation go here https://github.com/ReactiveX/RxJa
 
 RxJava examples [here](https://github.com/politrons/reactive)
 
-### Observables
-
+ ![My image](src/main/resources/img/rsz_reactive-extensions.png)
+ 
 All the most common features of Observable
 
 * **[Combining] (src/app/impl/Combining.scala)**
