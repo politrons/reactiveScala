@@ -36,7 +36,7 @@ All the most common features of Observable
 
     ![My image](src/main/resources/img/rsz_flatmap.png)
 
-![My image](src/main/resources/img/rz_scala.gif)
+![My image](src/main/resources/img/rsz_scala.gif)
 
 
 Some examples about how to use collections and other operators
