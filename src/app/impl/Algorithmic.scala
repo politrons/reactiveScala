@@ -63,6 +63,10 @@ class Algorithmic extends Generic[String, Long] {
     println(list)
   }
 
+  def distinctList(prevResult: List[Char], currentItem: List[Char]): List[Char] = {
+    (prevResult ++ currentItem).distinct
+  }
+
   /**
     * Sort algotihm to sort secuence of numbers increased.
     */
@@ -78,9 +82,5 @@ class Algorithmic extends Generic[String, Long] {
     println(numbers.toList)
   }
 
-
-  def distinctList(prevResult: List[Char], currentItem: List[Char]): List[Char] = {
-    (prevResult ++ currentItem).distinct
-  }
 
 }

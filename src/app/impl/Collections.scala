@@ -126,6 +126,14 @@ class Collections extends Generic with NumberInterface {
     println(listEqualThanA)
   }
 
+  @Test def sumValuesAsKey(): Unit = {
+    val map = Map[String, List[Int]]("1" -> List(1, 3, 4, 5), "2" -> List(3, 5, 7, 8), "4" -> List(1, 2, 4, 5))
+    val revertedMap = map.toStream
+      .map(entry => Map[Int, String](entry._2.sum -> entry._1))
+      .scan(HashMap())((m, m1) => m ++ m1).last
+    println(revertedMap)
+  }
+
   def mergeList(prevResult: List[Int], currentItem: List[Int]): List[Int] = {
     prevResult ++ currentItem
   }
