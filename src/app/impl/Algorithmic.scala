@@ -40,8 +40,20 @@ class Algorithmic extends Generic[String, Long] {
     println(words)
   }
 
+  @Test def distinct(): Unit = {
+    val text = "ab1bcxc2da3b"
+    val list = text.toCharArray.toStream
+      .map(c => List[Char](c))
+      .scan(List[Char]())(distinctList).last
+    println(list)
+  }
+
+  def distinctList(prevResult: List[Char], currentItem: List[Char]): List[Char] = {
+    (prevResult ++ currentItem).distinct
+  }
+
   @Test def bubbleSort(): Unit = {
-    val numbers = Array[Int](3,2,1,4,5)
+    val numbers = Array[Int](3, 2, 1, 4, 5)
     for (i <- 0 until numbers.length - 1; j <- 0 until numbers.length - 1 - i) {
       if (numbers(j) > numbers(j + 1)) {
         val swap = numbers(j)
