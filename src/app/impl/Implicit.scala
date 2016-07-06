@@ -23,28 +23,40 @@ class Implicit {
     x * y
   }
 
+  /**
+    * An implicit class is an instance class that Scala compiler automatically initialize and attach to the object type,
+    * as part of the API of the class.
+    *
+    * In our example those are the behaviors of implicit
+    *
+    * increment become part of String API
+    * exponential become part of Int API
+    * multiply become part of Int API
+    * decrement become part of Int API
+    *
+    * As is logical only 1 implicit class/type bound per class is allowed
+    *
+    * Shall print
+    * IBM
+    * 4
+    * 3
+    * 1
+    * 6
+    */
   @Test def implicitClass(): Unit = {
     println("HAL".increment)
-    println(2.exponencial)
+    println(2.exponential)
     println(2.increment(1))
     println(2.decrement(1))
     println(2.multiply(3))
   }
 
-  /**
-    * An implicit class is an instance class that Scala compiler automatically initialize and attach to the object type,
-    * as part of the API of the class.
-    * In our example increment become part of String API
-    * As is logical only 1 implicit class/type bound per class is allowed
-    *
-    * @param s
-    */
   implicit class StringImprovements(s: String) {
     def increment = s.map(c => (c + 1).toChar)
   }
 
   implicit class IntegerImprovements(i: Int) {
-    def exponencial = i * i
+    def exponential = i * i
 
     def increment(n: Int) = i + n
 
