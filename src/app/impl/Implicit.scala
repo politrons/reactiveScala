@@ -2,6 +2,7 @@ package app.impl
 
 import org.junit.Test
 
+import implicitUtils._
 
 class Implicit {
 
@@ -24,6 +25,8 @@ class Implicit {
   }
 
   /**
+    * Import class implicitUtils
+    *
     * An implicit class is an instance class that Scala compiler automatically initialize and attach to the object type,
     * as part of the API of the class.
     *
@@ -51,19 +54,5 @@ class Implicit {
     println(2.multiply(3))
   }
 
-  implicit class StringImprovements(s: String) {
-    def increment = s.map(c => (c + 1).toChar)
-  }
-
-  implicit class IntegerImprovements(i: Int) {
-    def exponential = i * i
-
-    def increment(n: Int) = i + n
-
-    def decrement(n: Int) = i - n
-
-    def multiply(n: Int) = i * n
-
-  }
 
 }
