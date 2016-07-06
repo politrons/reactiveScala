@@ -3,7 +3,7 @@ package app.impl
 import org.junit.Test
 
 
-class Implicit extends Generic[String, Long] {
+class Implicit {
 
 
   /**
@@ -18,10 +18,10 @@ class Implicit extends Generic[String, Long] {
 
   implicit val multiplier = 2
 
-  def multiply(implicit x: Int, y: Int) = {
+
+  implicit def multiply(implicit x: Int, y: Int) = {
     x * y
   }
-
 
 
 
