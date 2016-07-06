@@ -134,6 +134,17 @@ class Collections extends Generic with NumberInterface {
     println(revertedMap)
   }
 
+  @Test def createListThroughArray(): Unit = {
+    val list = Array[Int](1, 2, 3, 4, 5).toList
+    println(list)
+  }
+
+  @Test def createMapThroughMap(): Unit = {
+    val map = Map[Int, Int](1 -> 2, 2 -> 3, 3 -> 4)
+    val map1 = Map[Int, Int]() ++ map
+    println(map1)
+  }
+
   def mergeList(prevResult: List[Int], currentItem: List[Int]): List[Int] = {
     prevResult ++ currentItem
   }

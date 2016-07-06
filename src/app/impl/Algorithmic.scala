@@ -7,7 +7,7 @@ class Algorithmic extends Generic[String, Long] {
 
 
   /**
-    * Algorith to find all duplicate numbers
+    * Algorithm to find all duplicate numbers
     */
   @Test def duplicateNumbers(): Unit = {
     val numbers = Array[Int](1, 2, 5, 4, 3, 4)
@@ -81,6 +81,5 @@ class Algorithmic extends Generic[String, Long] {
     }
     println(numbers.toList)
   }
-
 
 }
