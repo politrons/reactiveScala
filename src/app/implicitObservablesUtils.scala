@@ -19,6 +19,10 @@ package object implicitObservablesUtils {
 
     def customUpperCase: Observable[String] = o.map(x => x.toUpperCase)
 
+    def mergeStrings(a: Observable[String], b: Observable[String]): Observable[String] = {
+      o.merge(a).merge(b)
+    }
+
   }
 
   implicit class MapUtils(o: Observable[Any]) {
@@ -32,7 +36,6 @@ package object implicitObservablesUtils {
     def changeTo(a: Any): Observable[Any] = {
       o.map(x => a)
     }
-
 
   }
 

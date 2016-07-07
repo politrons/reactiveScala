@@ -24,5 +24,11 @@ class ImplicitObservables {
       .subscribe(s => println(s))
   }
 
+  @Test def mergeStringOperator() {
+    Observable.just("hello").mergeStrings(Observable.just(" scala"),Observable.just(" world"))
+      .reduce((s, s1) => s.concat(s1))
+      .subscribe(s => println(s))
+  }
+
 
 }
