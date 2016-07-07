@@ -13,9 +13,14 @@ class ImplicitObservables {
 
   }
 
-  @Test def implicitObservableClass(): Unit = {
+  @Test def implicitObservableClass(){
     val map = Map[Int, List[Int]](1 -> List[Int](1, 2), 2 -> List[Int](3, 4))
-    Observable.empty.revertListValueAsKey(map).last
+    Observable.empty.revertTotalValueAsKey(map).last
+      .subscribe(s => println(s))
+  }
+
+  @Test def changeToOperator() {
+    Observable.just(1).changeTo("Hello scala!")
       .subscribe(s => println(s))
   }
 

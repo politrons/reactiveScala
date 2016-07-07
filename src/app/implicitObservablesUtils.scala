@@ -21,17 +21,19 @@ package object implicitObservablesUtils {
 
   }
 
-  implicit class MapUtils(o: Observable[Map[Any, Any]]) {
+  implicit class MapUtils(o: Observable[Any]) {
 
-    def revertListValueAsKey(m: Map[Int, List[Int]]): Observable[Map[Int, Int]] = {
+    def revertTotalValueAsKey(m: Map[Int, List[Int]]): Observable[Map[Int, Int]] = {
       Observable.from(m)
-        .map(entry => Map[Int, Int](sumListValues(entry) -> entry._1))
+        .map(entry => Map[Int, Int](entry._2.sum -> entry._1))
         .scan(Map[Int, Int]())((m, m1) => m ++ m1)
     }
 
+    def changeTo(a: Any): Observable[Any] = {
+      o.map(x => a)
+    }
+
+
   }
 
-  def sumListValues(entry: (Int, List[Int])): Int = {
-    entry._2.sum
-  }
 }
