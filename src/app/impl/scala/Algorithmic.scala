@@ -1,5 +1,6 @@
-package app.impl
+package app.impl.scala
 
+import app.impl.Generic
 import org.junit.Test
 
 

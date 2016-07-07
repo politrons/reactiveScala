@@ -1,5 +1,6 @@
-package app.impl
+package app.impl.rx
 
+import app.impl.Generic
 import org.junit.Test
 import rx.lang.scala.Observable
 

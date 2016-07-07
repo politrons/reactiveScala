@@ -1,7 +1,8 @@
-package app.impl
+package app.impl.rx
 
 import java.util.concurrent.TimeUnit
 
+import app.impl.Generic
 import org.junit.Test
 import rx.Subscription
 import rx.lang.scala.Observable

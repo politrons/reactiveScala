@@ -18,16 +18,16 @@ RxJava examples [here](https://github.com/politrons/reactive)
  
 All the most common features of Observable
 
-* **[Combining] (src/app/impl/Combining.scala)**
+* **[Combining] (src/app/impl/rx/Combining.scala)**
 
     ![My image](src/main/resources/img/rsz_1zipo.png)
 
-* **[Creating] (src/app/impl/Creating.scala)**
+* **[Creating] (src/app/impl/rx/Creating.scala)**
 
     ![My image](src/main/resources/img/rsz_1createc.png)
 
     
-* **[Filtering] (src/app/impl/Filtering.scala)**
+* **[Filtering] (src/app/impl/rx/Filtering.scala)**
 
     ![My image](src/main/resources/img/rsz_1filter.png)
 
@@ -36,21 +36,23 @@ All the most common features of Observable
 
     ![My image](src/main/resources/img/rsz_flatmap.png)
     
-* **[Scheduler] (src/app/impl/Scheduler.scala)**
+* **[Scheduler] (src/app/impl/rx/Scheduler.scala)**
 
     ![My image](src/main/resources/img/rsz_2subscribeonc.png)
     
-* **[Implicit] (src/app/impl/ImplicitObservables.scala)**
+* **[Implicit] (src/app/impl/rx/ImplicitObservables.scala)**
         
     ![My image](src/main/resources/img/rsz_1buffer.png)
 
+![My image](src/main/resources/img/rsz_scala.gif)
 
-Some examples about how to use collections and other operators
 
-* **[Collections] (src/app/impl/Collections.scala)**
+* **[Collections] (src/app/impl/scala/Collections.scala)**
 
-* **[Algorithmic] (src/app/impl/Algorithmic.scala)**
+* **[Algorithmic] (src/app/impl/scala/Algorithmic.scala)**
 
-* **[Implicit] (src/app/impl/Implicit.scala)**
+* **[Implicit] (src/app/impl/scala/Implicit.scala)**
 
-* **[Utils] (src/app/impl/Utils.scala)**
+* **[Interpolation] (src/app/impl/scala/Interpolation.scala)**
+
+* **[Utils] (src/app/impl/scala/Utils.scala)**

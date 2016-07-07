@@ -1,4 +1,4 @@
-package app.impl
+package app.impl.rx
 
 import implicitObservablesUtils._
 import org.junit.Test

@@ -1,8 +1,7 @@
-package app.impl
-
-import org.junit.Test
+package app.impl.scala
 
 import implicitUtils._
+import org.junit.Test
 
 class Implicit {
 

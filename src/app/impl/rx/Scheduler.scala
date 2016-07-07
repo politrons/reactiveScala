@@ -1,8 +1,8 @@
-package app.impl
-
+package app.impl.rx
 
 import java.util.concurrent.Executors
 
+import app.impl.Generic
 import org.junit.Test
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.ExecutionContextScheduler
