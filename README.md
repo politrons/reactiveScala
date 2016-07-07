@@ -39,9 +39,10 @@ All the most common features of Observable
 * **[Scheduler] (src/app/impl/Scheduler.scala)**
 
     ![My image](src/main/resources/img/rsz_2subscribeonc.png)
+    
+* **[Implicit] (src/app/impl/ImplicitObservables.scala)**
         
-
-![My image](src/main/resources/img/rsz_scala.gif)
+    ![My image](src/main/resources/img/rsz_1buffer.png)
 
 
 Some examples about how to use collections and other operators
