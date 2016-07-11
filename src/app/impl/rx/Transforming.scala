@@ -141,4 +141,5 @@ class Transforming extends Generic[String, Long] {
   def getList: List[Int] = {
     List(1, 2, 3, 4, 5)
   }
+
 }

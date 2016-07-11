@@ -10,10 +10,9 @@ class ImplicitObservables {
     Observable.just("Hello observable implicits")
       .customUpperCase
       .subscribe(s => println(s))
-
   }
 
-  @Test def implicitObservableClass(){
+  @Test def implicitObservableClass() {
     val map = Map[Int, List[Int]](1 -> List[Int](1, 2), 2 -> List[Int](3, 4))
     Observable.empty.revertTotalValueAsKey(map).last
       .subscribe(s => println(s))
@@ -25,7 +24,7 @@ class ImplicitObservables {
   }
 
   @Test def mergeStringOperator() {
-    Observable.just("hello").mergeStrings(Observable.just(" scala"),Observable.just(" world"))
+    Observable.just("hello").mergeStrings(Observable.just(" scala"), Observable.just(" world"))
       .reduce((s, s1) => s.concat(s1))
       .subscribe(s => println(s))
   }

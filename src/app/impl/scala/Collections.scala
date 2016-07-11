@@ -146,6 +146,11 @@ class Collections extends Generic with NumberInterface {
     println(map1)
   }
 
+  @Test def concateniations(): Unit = {
+    val list = List(1, 2, 3)
+    print(list ::: List(4, 5, 6))
+  }
+
   def mergeList(prevResult: List[Int], currentItem: List[Int]): List[Int] = {
     prevResult ++ currentItem
   }
