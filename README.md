@@ -53,6 +53,10 @@ All the most common features of Observable
 
 * **[Implicit] (src/app/impl/scala/Implicit.scala)**
 
+* **[MatchesPattern] (src/app/impl/scala/MatchesPattern.scala)**
+
 * **[Interpolation] (src/app/impl/scala/Interpolation.scala)**
+
+* **[Functions] (src/app/impl/scala/Functions.scala)**
 
 * **[Utils] (src/app/impl/scala/Utils.scala)**
