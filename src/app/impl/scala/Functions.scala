@@ -40,13 +40,13 @@ class Functions {
     v => println(v + " is higher")
   }
 
-  def passFunction(f: (Int, Int, Int) => String): String = {
-    f.apply(1, 2, 3)
-  }
-
-  @Test def functionOverFunction: Unit = {
+  @Test def functionOverFunction(): Unit = {
     val sum = passFunction(multiSum)
     println(sum);
+  }
+
+  def passFunction(f: (Int, Int, Int) => String): String = {
+    f.apply(1, 2, 3)
   }
 
 }
