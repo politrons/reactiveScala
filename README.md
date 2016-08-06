@@ -59,4 +59,8 @@ All the most common features of Observable
 
 * **[Functions] (src/app/impl/scala/Functions.scala)**
 
+* **[Factory] (src/app/impl/scala/Factory.scala)**
+
+* **[CompoundTypes] (src/app/impl/scala/CompoundTypes.scala)**
+
 * **[Utils] (src/app/impl/scala/Utils.scala)**
