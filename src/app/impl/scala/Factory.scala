@@ -13,15 +13,17 @@ class Factory {
   @Test def createHelloClass() {
     Hello.create().print()
   }
-}
 
-object Hello {
-  def create(): Hello = {
-    new Hello("Paul")
+  object Hello {
+    def create(): Hello = {
+      new Hello("Paul")
+    }
+  }
+
+  class Hello(name: String) {
+    def print() = println("Hello " + name)
   }
 }
 
-class Hello(name: String) {
-  def print() = println("Hello " + name)
-}
+
 

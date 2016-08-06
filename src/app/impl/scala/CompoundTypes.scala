@@ -32,23 +32,25 @@ class CompoundTypes extends Generic {
     obj.reset
     cloned
   }
-}
 
-class MyCloneableClass(arg: String) extends Cloneable with Resetable {
-  def printArg() = println(arg)
+  class MyCloneableClass(arg: String) extends Cloneable with Resetable {
+    def printArg() = println(arg)
 
-  override def reset: Unit = {
-    println("class reset")
+    override def reset: Unit = {
+      println("class reset")
+    }
   }
-}
 
-trait Cloneable extends java.lang.Cloneable {
-  override def clone(): Cloneable = {
-    super.clone().asInstanceOf[Cloneable]
+  trait Cloneable extends java.lang.Cloneable {
+    override def clone(): Cloneable = {
+      super.clone().asInstanceOf[Cloneable]
+    }
   }
+
+  trait Resetable {
+    def reset: Unit
+  }
+
 }
 
-trait Resetable {
-  def reset: Unit
-}
 

@@ -63,4 +63,6 @@ All the most common features of Observable
 
 * **[CompoundTypes] (src/app/impl/scala/CompoundTypes.scala)**
 
+* **[SelfReference] (src/app/impl/scala/SelfReference.scala)**
+
 * **[Utils] (src/app/impl/scala/Utils.scala)**
