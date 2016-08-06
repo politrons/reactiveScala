@@ -83,4 +83,5 @@ class Algorithmic extends Generic[String, Long] {
     println(numbers.toList)
   }
 
+
 }

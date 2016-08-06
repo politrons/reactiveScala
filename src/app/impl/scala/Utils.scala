@@ -89,6 +89,26 @@ class Utils extends Generic {
   }
 
 
+  /**
+    * Using multi method param list you can pospone the execution of a method and instead create a function,
+    * this function it can be used to fill up the rest of arguments that needs, moment where it will be executed.
+    */
+  @Test def multiMethodParams(): Unit = {
+    def addFunction = add(2) _
+    println(addFunction(3))
+
+    def stringFunction = multiString("hello")("scala") _
+    println(stringFunction)
+    def string2 = stringFunction("world")
+    println(string2)
+  }
+
+  def add(x: Int)(y: Int) = x + y
+
+  def multiString(x: String)(y: String)(z: String) = x.concat("_") + y.concat("_") + z
+
+
+
 }
 
 

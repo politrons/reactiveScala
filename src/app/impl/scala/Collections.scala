@@ -83,8 +83,18 @@ class Collections extends Generic with NumberInterface {
   @Test def appendList(): Unit = {
     val list = List(1, 2, 3)
     val list2 = List(4, 5, 6)
-    val totalList = mergeList(list, list2)
+    val totalList = list ++ list2
     print(totalList)
+  }
+
+  /**
+    * Add a value on list
+    */
+  @Test def addValue(): Unit = {
+    val list = List(1, 2, 3)
+    var list1 = list.::(4)
+    list1 = 5 +: list1
+    print(list1)
   }
 
 
@@ -149,6 +159,34 @@ class Collections extends Generic with NumberInterface {
   @Test def concateniations(): Unit = {
     val list = List(1, 2, 3)
     print(list ::: List(4, 5, 6))
+  }
+
+  @Test def tranversable(): Unit = {
+    println(List(1, 2, 3, 4, 5)
+      .takeWhile(n => n < 3))
+
+    println(List(1, 2, 3, 4, 5)
+      .map(n => n * 100)
+      .filter(n => n < 400))
+
+    println(List(1, 2, 3, 4, 5)
+      .map(n => n * 100)
+      .filterNot(n => n < 400)
+      .last)
+
+    //Forall
+    println(List(1, 2, 3, 4, 5)
+      .map(n => n * 100)
+      .forall(n => n < 400))
+
+    println(List(1, 2, 3, 4, 5)
+      .map(n => n * 100)
+      .forall(n => n > 1))
+
+    //Find
+    println(List(1, 2, 3, 4, 5)
+      .find(n => n == 3))
+
   }
 
   def mergeList(prevResult: List[Int], currentItem: List[Int]): List[Int] = {

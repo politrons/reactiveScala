@@ -17,6 +17,15 @@ import scala.concurrent.ExecutionContext
   */
 class Transforming extends Generic[String, Long] {
 
+
+  @Test def operators(): Unit = {
+    Observable.from(Observable.getClass.getMethods)
+      .filter(m => Observable.getClass.isAssignableFrom(m.getReturnType))
+      .map(m => m.getName)
+      .distinct
+      .foreach(m => println(m))
+  }
+
   /**
     * Map operator allow us to evolve the pipeline passing new items through the pipeline.
     * In order to do that use a Function which receive an item and return another item.
