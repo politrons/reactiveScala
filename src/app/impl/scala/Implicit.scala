@@ -1,6 +1,5 @@
 package app.impl.scala
 
-import implicitUtils._
 import org.junit.Test
 
 class Implicit {
@@ -53,5 +52,20 @@ class Implicit {
     println(2.multiply(3))
   }
 
+
+  implicit class StringImprovements(s: String) {
+    def increment = s.map(c => (c + 1).toChar)
+  }
+
+  implicit class IntegerImprovements(i: Int) {
+    def exponential = i * i
+
+    def increment(n: Int) = i + n
+
+    def decrement(n: Int) = i - n
+
+    def multiply(n: Int) = i * n
+
+  }
 
 }
