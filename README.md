@@ -65,4 +65,8 @@ All the most common features of Observable
 
 * **[SelfReference] (src/app/impl/scala/SelfReference.scala)**
 
+* **[Generics] (src/app/impl/scala/Generics.scala)**
+
+* **[CovariantSubType] (src/app/impl/scala/CovariantSubType.scala)**
+
 * **[Utils] (src/app/impl/scala/Utils.scala)**

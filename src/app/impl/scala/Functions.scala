@@ -3,7 +3,33 @@ package app.impl.scala
 import org.junit.Test
 import rx.lang.scala.Observable
 
+/**
+  * On Scala we define Functions defining the entry and output type
+  *
+  * Types:
+  *
+  *    Function:  Any=>Any
+  *    Predicate: Any=>Boolean
+  *    Consumer:  Any=>Unit
+  */
 class Functions {
+
+  @Test def passFunctionAsArgument(): Unit = {
+    println(s"Casting number to String ${printString(toStringFunction, 100)}")
+  }
+
+  /**
+    * Here we pass as first argument of the method a function, normally you specify a function setting entry value
+    * and return if it has any.
+    * @param function
+    * @param value
+    * @return
+    */
+  def printString(function: Int => String, value: Int) = function.apply(value)
+
+
+  def toStringFunction(v: Int) = String.valueOf(v)
+
 
   @Test def functionsZip(): Unit = {
     Observable.zip(Observable.just(1), Observable.just(2), Observable.just(3))
