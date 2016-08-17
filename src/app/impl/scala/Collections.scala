@@ -199,6 +199,29 @@ class Collections extends Generic with NumberInterface {
   }
 
 
+  /**
+    * Format style for foreach loop + plus use of interpolation
+    */
+  @Test def foreach(): Unit = {
+    List(1, 2, 3, 4, 5) foreach { element =>
+      println(element)
+    }
+
+    Map(1 -> "one", 2 -> "two", 3 -> "three") foreach { entry =>
+      println(s"key:${entry._1} --> val:${entry._2}")
+    }
+  }
+
+  @Test def foreach2(): Unit = {
+    val x = 0
+    val list = List(1,2,3,4,5)
+    (x to list.size-1) foreach (e => {
+      println(list.apply(e))
+    })
+  }
+
+
+
 }
 
 

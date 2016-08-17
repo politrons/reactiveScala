@@ -69,4 +69,6 @@ All the most common features of Observable
 
 * **[CovariantSubType] (src/app/impl/scala/CovariantSubType.scala)**
 
+* **[Extractor] (src/app/impl/scala/Extractor.scala)**
+
 * **[Utils] (src/app/impl/scala/Utils.scala)**
