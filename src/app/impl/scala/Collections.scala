@@ -30,8 +30,6 @@ class Collections extends Generic with NumberInterface {
     })
   }
 
-  import collectionImplicits.listUtils
-
   /**
     * Drop function will drop from the collection the number of items we specify,
     * and it will return a new collection
@@ -45,12 +43,9 @@ class Collections extends Generic with NumberInterface {
     })
   }
 
-  object collectionImplicits {
-    implicit class listUtils[V](list: List[V]) {
-      def get[T](value: T): V = list.filter(v => v.equals(value)).head
-    }
+  implicit class listUtils[V](list: List[V]) {
+    def get[T](value: T): V = list.filter(v => v.equals(value)).head
   }
-
 
 
   /**
