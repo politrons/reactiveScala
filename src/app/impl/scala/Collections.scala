@@ -14,6 +14,46 @@ class Collections extends Generic with NumberInterface {
 
 
   /**
+    * Slice function will get the collection and it will return a new collection
+    * With the elements specify in te from to
+    * shall print
+    *
+    * 6
+    * 7
+    * 8
+    * 9
+    */
+  @Test def slice(): Unit = {
+    val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    list.slice(4, 8) foreach (e => {
+      println(list(e))
+    })
+  }
+
+  import collectionImplicits.listUtils
+
+  /**
+    * Drop function will drop from the collection the number of items we specify,
+    * and it will return a new collection
+    *
+    */
+  @Test def drop(): Unit = {
+    val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    val newList = list.drop(5)
+    newList foreach (e => {
+      println(newList.get[Int](e))
+    })
+  }
+
+  object collectionImplicits {
+    implicit class listUtils[V](list: List[V]) {
+      def get[T](value: T): V = list.filter(v => v.equals(value)).head
+    }
+  }
+
+
+
+  /**
     * How to create and iterate a Map collection
     */
   @Test def iterateMap(): Unit = {
@@ -214,14 +254,11 @@ class Collections extends Generic with NumberInterface {
 
   @Test def foreach2(): Unit = {
     val x = 0
-    val list = List(1,2,3,4,5)
-    (x to list.size-1) foreach (e => {
+    val list = List(1, 2, 3, 4, 5)
+    (x to list.size - 1) foreach (e => {
       println(list.apply(e))
     })
   }
-
-
-
 }
 
 

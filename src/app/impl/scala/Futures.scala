@@ -17,6 +17,7 @@ class Futures {
     future.onComplete(x=> println(s"List emitted:${x.get}"))
     println(s"Main thread:${Thread.currentThread().getName}")
   }
+
   val future: Future[List[Int]] = Future {
     println(s"Future thread:${Thread.currentThread().getName}")
     List[Int](1,2,3)
