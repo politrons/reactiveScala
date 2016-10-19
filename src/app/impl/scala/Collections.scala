@@ -47,6 +47,27 @@ class Collections extends Generic with NumberInterface {
     def get[T](value: T): V = list.filter(v => v.equals(value)).head
   }
 
+  /**
+    * To replace an element in a collection we can just map to pass a function where we specify
+    * from which value to which we want to replace
+    */
+  @Test def replace(): Unit = {
+    val a1 = new A(1)
+    val a2 = new A(2)
+    val a3 = new A(3)
+    val a4 = new A(4)
+
+    val a20 = new A(20)
+    val a40 = new A(40)
+
+    var list = List(a1, a2, a3, a4)
+    list = list.map { case a2 => a20}
+    list.toStream
+      .foreach(a => println(a.a))
+  }
+
+  class A(val a: Int) {}
+
 
   /**
     * How to create and iterate a Map collection
