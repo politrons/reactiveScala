@@ -33,13 +33,13 @@ class Functions {
 
   @Test def functionsZip(): Unit = {
     Observable.zip(Observable.just(1), Observable.just(2), Observable.just(3))
-      .map(s => multiSum.apply(s._1, s._2, s._3))
+      .map(values => multiSum.apply(values._1, values._2, values._3))
       .subscribe(v => println(v))
   }
 
   @Test def functionsMultiZip(): Unit = {
     Observable.zip(Observable.just(10), Observable.just(2), Observable.just("VAL:"))
-      .map(s => multiValFun.apply(s._1, s._2, s._3))
+      .map(values => multiValFun.apply(values._1, values._2, values._3))
       .subscribe(v => println(v))
   }
 

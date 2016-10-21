@@ -61,9 +61,8 @@ class Collections extends Generic with NumberInterface {
     val a40 = new A(40)
 
     var list = List(a1, a2, a3, a4)
-    list = list.map { case a2 => a20}
-    list.toStream
-      .foreach(a => println(a.a))
+    list = list.map { case a2 => a20 }
+    list.foreach(a => println(a.a))
   }
 
   class A(val a: Int) {}
@@ -74,11 +73,11 @@ class Collections extends Generic with NumberInterface {
     */
   @Test def iterateMap(): Unit = {
     println(defaultImpl())
-    val map = HashMap[String, Int]("1" -> 1, "2" -> 2, "3" -> 3)
+    val numberMap = HashMap[String, Int]("1" -> 1, "2" -> 2, "3" -> 3)
 
-    val sumMap = map.toStream
+    val sumMap = numberMap
       .map(entry => {
-        println(map.get(entry._1).get)
+        println(numberMap.get(entry._1).get)
         entry._2
       })
       .filter(n => isHigherThan1(n))
@@ -90,8 +89,8 @@ class Collections extends Generic with NumberInterface {
     * How to revert a map from key/value to value/key using scan
     */
   @Test def revertMap(): Unit = {
-    val map = HashMap[Int, Int](1 -> 2, 3 -> 4, 5 -> 6)
-    val revertedMap = map.toStream
+    val numberMap = HashMap[Int, Int](1 -> 2, 3 -> 4, 5 -> 6)
+    val revertedMap = numberMap
       .map(entry => Map[Int, Int](entry._2 -> entry._1))
       .scan(HashMap())((map1, map2) => map1 ++ map2).last
     println(revertedMap)
@@ -103,9 +102,9 @@ class Collections extends Generic with NumberInterface {
     * and we set the value as the current key
     */
   @Test def revertMapList(): Unit = {
-    val map = HashMap[Int, List[Int]](1 -> List(3, 4), 4 -> List(5, 6))
-    val revertedMap = map.toStream
-      .flatMap(map => map._2.toStream
+    val listMap = HashMap[Int, List[Int]](1 -> List(3, 4), 4 -> List(5, 6))
+    val revertedMap = listMap
+      .flatMap(map => map._2
         .map(entry => Map[Int, Int](entry -> map._1))
         .scan(HashMap())((map1, map2) => map1 ++ map2))
       .scan(HashMap())((m, m1) => m ++ m1).last
@@ -127,9 +126,8 @@ class Collections extends Generic with NumberInterface {
     * and return a new collection with this new values
     */
   @Test def intToNewIntList(): Unit = {
-    val list = List(1, 2, 3).toStream
+    val list = List(1, 2, 3)
       .flatMap(entry => List(entry * 100))
-      .toList
     print(list)
   }
 
@@ -184,18 +182,17 @@ class Collections extends Generic with NumberInterface {
     */
   @Test def listEqualThanList(): Unit = {
     val listA = List(1, 3, 5)
-    val listEqualThanA = List(1, 4, 6, 5, 3).toStream
-      .map(n => listA.toStream
-        .filter(n1 => n1 == n)
-        .toList)
+    val listEqualThanA = List(1, 4, 6, 5, 3)
+      .map(n => listA
+        .filter(n1 => n1 == n))
       .scan(List())((l, l1) => l ++ l1)
       .last
     println(listEqualThanA)
   }
 
   @Test def sumValuesAsKey(): Unit = {
-    val map = Map[String, List[Int]]("1" -> List(1, 3, 4, 5), "2" -> List(3, 5, 7, 8), "3" -> List(1, 2, 4, 5))
-    val revertedMap = map.toStream
+    val mapList = Map[String, List[Int]]("1" -> List(1, 3, 4, 5), "2" -> List(3, 5, 7, 8), "3" -> List(1, 2, 4, 5))
+    val revertedMap = mapList
       .map(entry => Map[Int, String](entry._2.sum -> entry._1))
       .scan(HashMap())((m, m1) => m ++ m1).last
     println(revertedMap)
