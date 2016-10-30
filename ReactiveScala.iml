@@ -13,5 +13,6 @@
     <orderEntry type="library" exported="" name="junit:junit:4.8.2" level="project" />
     <orderEntry type="library" exported="" name="junit:junit:4.12" level="project" />
     <orderEntry type="library" exported="" name="io.reactivex:rxscala_2.11:0.26.1" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.module:jackson-module-scala_2.10:2.8.3" level="project" />
   </component>
 </module>

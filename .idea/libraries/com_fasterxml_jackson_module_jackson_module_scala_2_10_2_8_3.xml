@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="com.fasterxml.jackson.module:jackson-module-scala_2.10:2.8.3" type="repository">
+    <properties maven-id="com.fasterxml.jackson.module:jackson-module-scala_2.10:2.8.3" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jackson-module-scala_2.10-2.8.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/scala-library-2.10.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/scala-reflect-2.10.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.8.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-annotations-2.8.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-databind-2.8.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-module-paranamer-2.8.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/paranamer-2.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
