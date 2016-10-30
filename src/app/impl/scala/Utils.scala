@@ -9,6 +9,20 @@ import org.junit.Test
 class Utils extends Generic {
 
   /**
+    * Scala provide the possibility to return mmultiplevalues types per method.
+    */
+  @Test def multipleReturnTypes(): Unit = {
+    val (a: String, b: Int, c: Double) = returnMultipleVars()
+    println(a)
+    println(b)
+    println(c)
+  }
+
+  def returnMultipleVars(): (String, Int, Double) = {
+    ("1", 2, 3.00)
+  }
+
+  /**
     * Arithmetic operators item by item emitted.
     */
   @Test def arithmetic(): Unit = {
@@ -85,8 +99,6 @@ class Utils extends Generic {
   def add(x: Int)(y: Int) = x + y
 
   def multiString(x: String)(y: String)(z: String) = x.concat("_") + y.concat("_") + z
-
-
 
 }
 

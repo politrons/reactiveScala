@@ -30,6 +30,10 @@ object Polimorpishm {
 
   case class Zoo(animals: Iterable[Animal])
 
+  /**
+    * Shall Prints: Zoo(List(Dog(Spike,mutt,red), Cat(Fluffy,spider ring)))
+    * @param args
+    */
   def main(args: Array[String]): Unit = {
     val objectMapper = new ObjectMapper with ScalaObjectMapper
     objectMapper.registerModule(DefaultScalaModule)
@@ -41,7 +45,6 @@ object Polimorpishm {
     val zoo = objectMapper.readValue[Zoo](zooStr)
 
     println(zoo)
-    // Prints: Zoo(List(Dog(Spike,mutt,red), Cat(Fluffy,spider ring)))
   }
 
 
