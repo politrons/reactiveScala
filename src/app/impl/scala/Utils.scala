@@ -72,16 +72,6 @@ class Utils extends Generic {
     }
   }
 
-  @Test def partialFunction(): Unit = {
-    val pf: PartialFunction[Int /*Entry type*/ , String /*Output type*/ ] = {
-      case b if b > 100 => "higher"
-    }
-    val orElseFunction: (Int => String) = pf orElse { case _ => "lower" }
-    println(orElseFunction(101))
-    println(orElseFunction(99))
-  }
-
-
   /**
     * Using multi method param list you can pospone the execution of a method and instead create a function,
     * this function it can be used to fill up the rest of arguments that needs, moment where it will be executed.

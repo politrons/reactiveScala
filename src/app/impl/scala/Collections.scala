@@ -265,13 +265,14 @@ class Collections extends Generic with NumberInterface {
     }
   }
 
-  @Test def foreach2(): Unit = {
+  @Test def range(): Unit = {
     val x = 0
     val list = List(1, 2, 3, 4, 5)
     (x to list.size - 1) foreach (e => {
       println(list.apply(e))
     })
   }
+
 }
 
 

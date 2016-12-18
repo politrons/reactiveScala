@@ -19,7 +19,6 @@ class CovariantSubType {
 
   class startUp extends SmallCompany
 
-
   class Investor(company: Company[BigCompany])
 
   @Test def testCovariant(): Unit = {
