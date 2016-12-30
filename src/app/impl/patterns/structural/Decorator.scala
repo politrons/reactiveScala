@@ -1,7 +1,7 @@
 package app.impl.patterns.structural
 
 /**
-  *Decorator pattern give us the flexibility to have a class that accept a Type class which will use
+  * Decorator pattern give us the flexibility to have a class that accept a Type class which will use
   * to run the implementation once this decorator class is consumed.
   * Giving us the chance to have different behaviours depending the class that it´s decorating
   */
@@ -38,17 +38,17 @@ object Decorator extends App{
   }
 
   println("========Calc in millis================")
-
-  def decorator = new CalcDecorator(new CalcInMillis)
-  println(decorator.sum(1,2))
-  println(decorator.div(10,2))
-  println(decorator.multiply(5,2))
-
+  printActions(new CalcInMillis)
   println("=========Normal calc===============")
+  printActions(new NormalCalc)
 
-   def newDecorator = new CalcDecorator(new NormalCalc)
-  println(newDecorator.sum(1,2))
-  println(newDecorator.div(10,2))
-  println(newDecorator.multiply(5,2))
+
+  private def printActions(calc:Calc) = {
+    def decorator = new CalcDecorator(calc)
+    println(decorator.sum(1, 2))
+    println(decorator.div(10, 2))
+    println(decorator.multiply(5, 2))
+  }
+
 
 }
