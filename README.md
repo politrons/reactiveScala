@@ -72,3 +72,11 @@ All the most common features of Observable
 * **[Extractor] (src/app/impl/scala/Extractor.scala)**
 
 * **[Utils] (src/app/impl/scala/Utils.scala)**
+
+
+Design patterns ![My image](src/main/resources/img/design.png)
+
+
+* **[Creational] (src/app/impl/patterns/creational)**
+
+* **[Structural] (src/app/impl/patterns/structural)**
