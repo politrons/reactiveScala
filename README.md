@@ -74,8 +74,8 @@ All the most common features of Observable
 * **[Utils] (src/app/impl/scala/Utils.scala)**
 
 
-## Design patterns ![My image](src/main/resources/img/design.png)
-
+![My image](src/main/resources/img/design.png)
+# Design patterns
 
 * **[Creational] (src/app/impl/patterns/creational)**
 
