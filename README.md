@@ -80,3 +80,5 @@ All the most common features of Observable
 * **[Creational] (src/app/impl/patterns/creational)**
 
 * **[Structural] (src/app/impl/patterns/structural)**
+
+* **[Behavioral] (src/app/impl/patterns/behavioral)**
