@@ -2,7 +2,7 @@ package app.impl.patterns.behavioral
 
 /**
   * Strategy pattern it´s similar to decorator patter with the different that the Strategy class
-  * it´s not like an extension of the component class, it´s more like a trigger of the class that wrap
+  * it´s not an extension of the wrapper class but a isolate behave.
   *
   * Here Strategy it´s not an instance but a function that receive two values and return 1
   * So the strategy class basically trigger the function
