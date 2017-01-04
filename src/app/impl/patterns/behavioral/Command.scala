@@ -4,7 +4,7 @@ package app.impl.patterns.behavioral
   * In command patter we pass a Command which can be just a "parameter of type" which in
   * Scala it´s used by arg: => Type specifying that you´e expecting that param type.
   */
-object CommandPattern extends App {
+object Command extends App {
 
   //======== First pattern ========\\
   object Invoker {
