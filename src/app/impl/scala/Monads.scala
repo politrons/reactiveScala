@@ -5,7 +5,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-object FutureMonad extends App {
+object Monads extends App {
 
   val f1 = Future {
     Thread.sleep(1000)
@@ -21,5 +21,17 @@ object FutureMonad extends App {
   } yield v1 + v2
 
   println(Await.result(f3, 3.second))
+
+  val first = List(1, 2)
+  val next = List(8, 9)
+
+  val multiply = first flatMap {
+    f => next map {
+      n => f * n
+    }
+  }
+
+  println(multiply)
+
 
 }
