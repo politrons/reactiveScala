@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 
 
 /**
-  * Thanks to type or case operator we can create inmutable classes to represent type values in our classes
+  * Thanks to type or case operator we can create immutable classes to represent type values in our classes
   * which in general always is much better use than the primitive types that language provide.
   * Increase readability and make our code thread safe
   */
