@@ -3,6 +3,7 @@ package app.impl.scala
 
 class Monad {
 
+  //Sealed specify that this trait can only be extended in this file
   sealed trait Maybe[+A] {
     // >>=
     def flatMap[B](f: A => Maybe[B]): Maybe[B]
