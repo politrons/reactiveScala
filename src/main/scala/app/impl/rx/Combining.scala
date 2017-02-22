@@ -9,7 +9,6 @@ import rx.lang.scala.Observable
   */
 class Combining extends Generic[String, Long] {
 
-
   /**
     * Merge operator get two observables and combine together, returning both items emitted together
     */
@@ -32,7 +31,7 @@ class Combining extends Generic[String, Long] {
       .zip(Observable.just(" scala"))
       .zip(Observable.just(" world!"))
       .map(s => s._1._1.concat(s._1._2).concat(s._2).toUpperCase)
-      .subscribe(s => println(s));
+      .subscribe(s => println(s))
   }
 
   /**
@@ -40,7 +39,6 @@ class Combining extends Generic[String, Long] {
     * you can always implement your own function.
     */
   @Test def zipWith3(): Unit = {
-    addHeader("Observable zip with 3")
     Observable.zip(Observable.just("hello"), Observable.just(" scala"), Observable.just(" world"))
       .map(sentences => sentences._1.toUpperCase.concat(sentences._2.toUpperCase.concat(sentences._3.toUpperCase)))
       .subscribe(s => println(s))
@@ -68,7 +66,6 @@ class Combining extends Generic[String, Long] {
       .concatMap(s => Observable.just(s.concat(" world")))
       .subscribe(n => println(n))
   }
-
 
 
 }

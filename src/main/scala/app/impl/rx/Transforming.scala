@@ -92,7 +92,7 @@ class Transforming extends Generic[String, Long] {
   @Test def composeToString(): Unit = {
     addHeader("compose operator")
     Observable.just(1)
-      .compose(transformerToString)
+//      .compose(transformerToString)
       .subscribe(n => println(n))
   }
 
@@ -106,7 +106,7 @@ class Transforming extends Generic[String, Long] {
     val scheduler = ExecutionContextScheduler(executor)
     println("Thread before pipeline:" + Thread.currentThread().getName)
     Observable.just(1)
-      .compose(transformerToAsync(scheduler))
+//      .compose(transformerToAsync(scheduler))
       .doOnNext(i => println("Thread inside pipeline:" + Thread.currentThread().getName))
       .subscribe(n => println(n))
   }

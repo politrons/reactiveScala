@@ -68,7 +68,7 @@ class Functions {
 
   @Test def functionOverFunction(): Unit = {
     val sum = passFunction(multiSum)
-    println(sum);
+    println(sum)
   }
 
   def passFunction(f: (Int, Int, Int) => String): String = {

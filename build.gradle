@@ -1,0 +1,26 @@
+apply plugin: 'scala'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://repo.akka.io/snapshots/"
+    }
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.8'
+    compile group: 'io.reactivex', name: 'rxscala_2.11', version: '0.26.5'
+//    compile group: 'io.vertx', name: 'lang-scala', version: '0.3.0'
+    compile group: 'io.vertx', name: 'vertx-core', version: '3.3.3'
+//    compile group: 'io.vertx', name: 'vertx-platform', version: '2.1.6'
+    compile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-scala_2.11', version: '2.8.6'
+
+}
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.useAnt = false
+}
+
+
+

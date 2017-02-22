@@ -61,7 +61,7 @@ class Collections extends Generic with NumberInterface {
     val a40 = new A(40)
 
     var list = List(a1, a2, a3, a4)
-    list = list.map { case a2 => a20 }
+    list = list.map(a2 => a20)
     list.foreach(a => println(a.a))
   }
 
@@ -77,7 +77,7 @@ class Collections extends Generic with NumberInterface {
 
     val sumMap = numberMap
       .map(entry => {
-        println(numberMap.get(entry._1).get)
+        println(numberMap(entry._1))
         entry._2
       })
       .filter(n => isHigherThan1(n))
@@ -268,7 +268,7 @@ class Collections extends Generic with NumberInterface {
   @Test def range(): Unit = {
     val x = 0
     val list = List(1, 2, 3, 4, 5)
-    (x to list.size - 1) foreach (e => {
+    x until list.size foreach (e => {
       println(list.apply(e))
     })
   }

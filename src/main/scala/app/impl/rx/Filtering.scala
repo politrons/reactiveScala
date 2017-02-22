@@ -4,7 +4,7 @@ import app.impl.Generic
 import org.junit.Test
 import rx.lang.scala.Observable
 
-
+import scala.concurrent.duration._
 
 class Filtering extends Generic[String, Long] {
 
@@ -56,7 +56,23 @@ class Filtering extends Generic[String, Long] {
       .take(2)
       .takeWhile(n => n > 3)
       .subscribe(n => println(n))
+  }
 
+  var retry = false
+
+  @Test def timeoutRetry(): Unit = {
+    Observable.just("Timeout-Retry")
+      .doOnNext(i => {
+        println(s"item emitted:$i")
+        if (!retry) {
+          Thread.sleep(1000)
+          retry = true
+        }
+      })
+      .retry
+      .timeout(500 milliseconds)
+      .onErrorResumeNext(e => Observable.empty)
+      .subscribe()
   }
 
   private def isBiggerThan(number: Integer): (Int) => Boolean = {
