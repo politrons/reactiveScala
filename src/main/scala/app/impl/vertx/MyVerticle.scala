@@ -5,7 +5,7 @@ import io.vertx.core.http.HttpServerRequest
 /**
   * Created by pabloperezgarcia on 22/02/2017.
   */
-class MyTestVerticle extends AbstractVerticle {
+class MyVerticle extends AbstractVerticle {
 
   override def start(startFuture: Future[Void]): Unit = {
     val handle = new Handler[HttpServerRequest] {
@@ -17,9 +17,17 @@ class MyTestVerticle extends AbstractVerticle {
     this.getVertx.createHttpServer()
       .requestHandler(handle)
       .listen(8888)
+    startFuture.complete()
   }
 }
 
 object run extends App {
-  Vertx.vertx.deployVerticle(classOf[MyTestVerticle].getName)
+  val initHandler = new Handler[AsyncResult[String]]() {
+    override def handle(event: AsyncResult[String]): Unit = {
+      if (event.succeeded()) {
+        println("server initialized")
+      }
+    }
+  }
+  Vertx.vertx.deployVerticle(classOf[MyVerticle].getName, initHandler)
 }
