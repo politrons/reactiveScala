@@ -18,67 +18,67 @@ RxJava examples [here](https://github.com/politrons/reactive)
  
 All the most common features of Observable
 
-* **[Combining] (src/app/impl/rx/Combining.scala)**
+* **[Combining] (src/main/scala/app/impl/rx/Combining.scala)**
 
     ![My image](src/main/resources/img/rsz_1zipo.png)
 
-* **[Creating] (src/app/impl/rx/Creating.scala)**
+* **[Creating] (src/main/scala/app/impl/rx/Creating.scala)**
 
     ![My image](src/main/resources/img/rsz_1createc.png)
 
     
-* **[Filtering] (src/app/impl/rx/Filtering.scala)**
+* **[Filtering] (src/main/scala/app/impl/rx/Filtering.scala)**
 
     ![My image](src/main/resources/img/rsz_1filter.png)
 
 
-* **[Transforming] (src/app/impl/Transforming.scala)**
+* **[Transforming] (src/main/scala/app/impl/Transforming.scala)**
 
     ![My image](src/main/resources/img/rsz_flatmap.png)
     
-* **[Scheduler] (src/app/impl/rx/Scheduler.scala)**
+* **[Scheduler] (src/main/scala/app/impl/rx/Scheduler.scala)**
 
     ![My image](src/main/resources/img/rsz_2subscribeonc.png)
     
-* **[Implicit] (src/app/impl/rx/ImplicitObservables.scala)**
+* **[Implicit] (src/main/scala/app/impl/rx/ImplicitObservables.scala)**
         
     ![My image](src/main/resources/img/rsz_1buffer.png)
 
 ![My image](src/main/resources/img/rsz_scala.gif)
 
 
-* **[Collections] (src/app/impl/scala/Collections.scala)**
+* **[Collections] (src/main/scala/app/impl/scala/Collections.scala)**
 
-* **[Algorithmic] (src/app/impl/scala/Algorithmic.scala)**
+* **[Algorithmic] (src/main/scala/app/impl/scala/Algorithmic.scala)**
 
-* **[Implicit] (src/app/impl/scala/Implicit.scala)**
+* **[Implicit] (src/main/scala/app/impl/scala/Implicit.scala)**
 
-* **[MatchesPattern] (src/app/impl/scala/MatchesPattern.scala)**
+* **[MatchesPattern] (src/main/scala/app/impl/scala/MatchesPattern.scala)**
 
-* **[Interpolation] (src/app/impl/scala/Interpolation.scala)**
+* **[Interpolation] (src/main/scala/app/impl/scala/Interpolation.scala)**
 
-* **[Functions] (src/app/impl/scala/Functions.scala)**
+* **[Functions] (src/main/scala/app/impl/scala/Functions.scala)**
 
-* **[Factory] (src/app/impl/scala/Factory.scala)**
+* **[Factory] (src/main/scala/app/impl/scala/Factory.scala)**
 
-* **[CompoundTypes] (src/app/impl/scala/CompoundTypes.scala)**
+* **[CompoundTypes] (src/main/scala/app/impl/scala/CompoundTypes.scala)**
 
-* **[SelfReference] (src/app/impl/scala/SelfReference.scala)**
+* **[SelfReference] (src/main/scala/app/impl/scala/SelfReference.scala)**
 
-* **[Generics] (src/app/impl/scala/Generics.scala)**
+* **[Generics] (src/main/scala/app/impl/scala/Generics.scala)**
 
-* **[CovariantSubType] (src/app/impl/scala/CovariantSubType.scala)**
+* **[CovariantSubType] (src/main/scala/app/impl/scala/CovariantSubType.scala)**
 
-* **[Extractor] (src/app/impl/scala/Extractor.scala)**
+* **[Extractor] (src/main/scala/app/impl/scala/Extractor.scala)**
 
-* **[Utils] (src/app/impl/scala/Utils.scala)**
+* **[Utils] (src/main/scala/app/impl/scala/Utils.scala)**
 
 
 ![My image](src/main/resources/img/design.png)
 # Design patterns
 
-* **[Creational] (src/app/impl/patterns/creational)**
+* **[Creational] (src/main/scala/app/impl/patterns/creational)**
 
-* **[Structural] (src/app/impl/patterns/structural)**
+* **[Structural] (src/main/scala/app/impl/patterns/structural)**
 
-* **[Behavioral] (src/app/impl/patterns/behavioral)**
+* **[Behavioral] (src/main/scala/app/impl/patterns/behavioral)**
