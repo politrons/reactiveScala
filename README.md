@@ -82,3 +82,10 @@ All the most common features of Observable
 * **[Structural] (src/main/scala/app/impl/patterns/structural)**
 
 * **[Behavioral] (src/main/scala/app/impl/patterns/behavioral)**
+
+# ScalaZ
+
+* **[Free monads] (src/main/scala/app/impl/scalaz/FreeMonad.scala)**
+* **[Features] (src/main/scala/app/impl/scalaz/Features.scala)**
+* **[Tagging] (src/main/scala/app/impl/scalaz/Tagging.scala)**
+

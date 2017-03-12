@@ -9,7 +9,7 @@ import scalaz.{Free, ~>}
   *
   *
   */
-object ScalaFreeMonad extends App {
+object FreeMonad extends App {
 
   /**
     * With type we define a new class type instead have to create an object

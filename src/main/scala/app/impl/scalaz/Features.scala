@@ -40,21 +40,17 @@ class Features {
 
   @Test
   def typeClass(): Unit = {
-
     trait Ord[T] {
       def compare(a: T, b: T): Boolean
     }
-
     implicit object intOrd extends Ord[Int] {
       def compare(a: Int, b: Int): Boolean = a <= b
     }
-
     def areEquals[T](v1: T, v2: T)(implicit ord: Ord[T]): Boolean = {
       ord.compare(v1, v2)
     }
 
     println(areEquals[Int](2, 2))
-
   }
 
   /**
@@ -68,8 +64,24 @@ class Features {
     def addHundred[F[_]](toAdd: F[Int])(implicit mapper: Functor[F]): F[Int] = {
       mapper.map(toAdd)(value => value + 100)
     }
+
     println(addHundred(10.some).get)
 
+  }
+
+  @Test
+  def monoid(): Unit = {
+    //Concat
+    val letters = "A" |+| "B"
+    println(letters)
+    //Sun
+    val numbers = 1 |+| 2 |+| 3
+    println(numbers)
+    //Merge maps
+    val m1 = Map(1 -> List("A", "B", "C"), 2 -> List("AA", "BB"))
+    val m2 = Map(1 -> List("Z"), 2 -> List("CC"), 3 -> List("YYY"))
+    val mergedMap = m1 |+| m2
+    println(mergedMap)
   }
 
 }
