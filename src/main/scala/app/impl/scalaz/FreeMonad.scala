@@ -65,10 +65,8 @@ object FreeMonad extends App {
 
   def error(msg: String): LogF[Unit] = liftF[Log, Unit](Error(msg))
 
-  val flatMapThat = listStocks()
-    .map(symbols => {
-      buy("done", 100)
-    })
+  val freeMonad = listStocks()
+    .flatMap(symbols => buy("done", 100))
     .flatMap(r => sell("GOOG", 100))
 
 
@@ -101,7 +99,7 @@ object FreeMonad extends App {
     * Also, since we define a generic type for the return, this one it could be anything.
     *
     **/
-  flatMapThat.foldMap(orderInterpreter)
+  freeMonad.foldMap(orderInterpreter)
 
 
 }
