@@ -83,7 +83,7 @@ All the most common features of Observable
 
 * **[Behavioral] (src/main/scala/app/impl/patterns/behavioral)**
 
-![My image](src/main/resources/img/lambda.png)
+![My image](src/main/resources/img/lambda.ico)
 # ScalaZ
 
 * **[Free monads] (src/main/scala/app/impl/scalaz/FreeMonad.scala)**
