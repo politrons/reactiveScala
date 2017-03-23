@@ -66,8 +66,16 @@ object FreeMonad extends App {
   def error(msg: String): LogF[Unit] = liftF[Log, Unit](Error(msg))
 
   val freeMonad = listStocks()
-    .flatMap(symbols => buy("done", 100))
-    .flatMap(r => sell("GOOG", 100))
+    .flatMap(symbols => {
+      val value = symbols
+        .filter(symbol => symbol.eq("FB"))
+        .head
+      buy(value, 100)
+    })
+    .flatMap(r => {
+      r
+      sell("GOOG", 100)
+    })
 
 
   /**
