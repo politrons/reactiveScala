@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.thrift:libthrift:0.10.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.thrift/libthrift/0.10.0/3201c5a6d85d3f030bae5a520abaaf81ef7df037/libthrift-0.10.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.thrift/libthrift/0.10.0/e52aec15d774e90d2c9588571634c054e352b26b/libthrift-0.10.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

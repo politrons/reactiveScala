@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.twitter:finagle-http_2.11:6.43.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twitter/finagle-http_2.11/6.43.0/caed88a801bea9668860be3b9dfa134d3cb8efc/finagle-http_2.11-6.43.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twitter/finagle-http_2.11/6.43.0/c8c552343899150da720a027b9707b25ab7c6c0a/finagle-http_2.11-6.43.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

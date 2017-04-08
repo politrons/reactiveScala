@@ -73,7 +73,6 @@ object FreeMonad extends App {
       buy(value, 100)
     })
     .flatMap(r => {
-      r
       sell("GOOG", 100)
     })
 

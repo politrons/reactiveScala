@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.twitter:util-tunable_2.11:6.42.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twitter/util-tunable_2.11/6.42.0/ed81fe68882ab7c0423b7e6488665edde7a11f0/util-tunable_2.11-6.42.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.twitter/util-tunable_2.11/6.42.0/b90d4c32d43bb8a7b305259a63b45c3e1d3ead67/util-tunable_2.11-6.42.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
