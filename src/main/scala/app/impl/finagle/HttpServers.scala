@@ -1,34 +1,20 @@
 package app.impl.finagle
 
+import app.impl.finagle.FinagleService.{responseType, service, sleepTime}
+import com.twitter.conversions.time._
 import com.twitter.finagle._
 import com.twitter.finagle.http.service.HttpResponseClassifier
-import com.twitter.util.{Await, Future}
-import com.twitter.conversions.time._
+import com.twitter.util.Await
 
 /**
   * Created by pabloperezgarcia on 08/04/2017.
   *
-  * Finagle provide multiple features on server side that could be handy
+  * Finagle provide multiple operators features on server side that could be handy
+  * Such features as retry policy, error handler, max concurrent connections, timeout and so on.
   */
 object HttpServers extends App {
 
-  private var sleepTime = 0
   private val port = "8888"
-  private var responseType = "ok"
-
-  val service = new Service[http.Request, http.Response] {
-    def apply(req: http.Request): Future[http.Response] = {
-      Thread.sleep(sleepTime)
-      responseType match {
-        case "ok" => Future.value(http.Response(req.version, http.Status.Ok))
-        case "error_retry" =>
-          responseType = "ok"
-          Future.exception(Failure.rejected("busy"))
-        case "error_non_retry" => Future.exception(Failure("Don't try again",
-          Failure.Rejected | Failure.NonRetryable))
-      }
-    }
-  }
   Await.ready(mainServer().serve(s"localhost:$port", service))
 
   /**
