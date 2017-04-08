@@ -5,6 +5,8 @@ import com.twitter.util.Future
 
 /**
   * Created by pabloperezgarcia on 08/04/2017.
+  * The Service class will receive and response a Future[Response] with types that you specify
+  * Service[Req,Rep]
   */
 object FinagleService {
 
