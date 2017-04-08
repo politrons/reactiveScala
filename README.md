@@ -96,3 +96,5 @@ All the most common features of Observable
 * **[Http Client](src/main/scala/app/impl/finagle/HttpClient.scala)**
 * **[Http Server](src/main/scala/app/impl/finagle/HttpServers.scala)**
 * **[Service](src/main/scala/app/impl/finagle/FinagleService.scala)**
+* **[Filter](src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
+

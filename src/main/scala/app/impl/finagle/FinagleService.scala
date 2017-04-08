@@ -25,5 +25,5 @@ object FinagleService {
           Failure.Rejected | Failure.NonRetryable))
       }
     }
-
   }
+}

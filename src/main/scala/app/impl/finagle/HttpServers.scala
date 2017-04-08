@@ -1,6 +1,6 @@
 package app.impl.finagle
 
-import app.impl.finagle.FinagleService.{responseType, service, sleepTime}
+import app.impl.finagle.FinagleService.{responseType, sleepTime}
 import com.twitter.conversions.time._
 import com.twitter.finagle._
 import com.twitter.finagle.http.service.HttpResponseClassifier
@@ -14,13 +14,15 @@ import com.twitter.util.Await
   */
 object HttpServers extends App {
 
+  var service = FinagleService.service
+
   private val port = "8888"
-  Await.ready(mainServer().serve(s"localhost:$port", service))
+  Await.ready(serviceWithTimeoutFilter().serve(s"localhost:$port", service))
 
   /**
     * This is a regular finagle server
     */
-  def mainServer(): Http.Server  = {
+  def mainServer(): Http.Server = {
     Http.server
       .withResponseClassifier(HttpResponseClassifier.ServerErrorsAsFailures)
   }
@@ -62,6 +64,7 @@ object HttpServers extends App {
   /**
     * You can also provide the max TTL of your connection, and how much time the connection
     * can be idle without any traffic.
+    *
     * @return
     */
   def errorMaxLifeTime(): Http.Server = {
@@ -69,6 +72,14 @@ object HttpServers extends App {
     responseType = "error_retry"
     Http.server
       .withSession.maxLifeTime(5.seconds)
-      .withSession.maxIdleTime(5.seconds)  }
+      .withSession.maxIdleTime(5.seconds)
+  }
+
+  def serviceWithTimeoutFilter(): Http.Server = {
+    sleepTime = 10000
+    val timeoutFilter = new TimeoutFilter[http.Request, http.Response](5.seconds)
+    service = timeoutFilter.andThen(service)
+    Http.server
+  }
 
 }
