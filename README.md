@@ -90,3 +90,9 @@ All the most common features of Observable
 * **[Features](src/main/scala/app/impl/scalaz/Features.scala)**
 * **[Tagging](src/main/scala/app/impl/scalaz/Tagging.scala)**
 
+![My image](src/main/resources/img/finagle.png)
+# Finagle
+
+* **[Http Client](src/main/scala/app/impl/finagle/HttpClient.scala)**
+* **[Http Server](src/main/scala/app/impl/finagle/HttpServers.scala)**
+
