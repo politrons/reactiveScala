@@ -71,6 +71,8 @@ All the most common features of Observable
 
 * **[Extractor](src/main/scala/app/impl/scala/Extractor.scala)**
 
+* **[Try](src/main/scala/app/impl/scala/Try.scala)**
+
 * **[Utils](src/main/scala/app/impl/scala/Utils.scala)**
 
 

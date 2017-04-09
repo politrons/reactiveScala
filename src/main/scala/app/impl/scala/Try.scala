@@ -13,7 +13,7 @@ class Try {
 
 
   @Test def trySuccess(): Unit = {
-    val list = List("1", "2", "3", "4",  "5")
+    val list = List("1", "2", "3", "4", "5")
 
     val result = for {
       number <- Try(list.map(number => Integer.parseInt(number)))
@@ -23,7 +23,7 @@ class Try {
   }
 
   @Test def tryFailure(): Unit = {
-    val list = List("1", "2", "3", "4","ups",  "5")
+    val list = List("1", "2", "3", "4", "ups", "5")
 
     val result = for {
       number <- Try(list.map(number => Integer.parseInt(number)))
@@ -31,4 +31,25 @@ class Try {
 
     println(result)
   }
+
+  @Test def tryCustomThrowable(): Unit = {
+    val list = List("1", "2", "3", "4", "200", "5")
+
+    val result = for {
+      number <- Try(list.map(number => extractNumber(number)))
+    } yield number
+    println(result)
+  }
+
+  private def extractNumber(sNumber: String):Int=  {
+    val number = Integer.parseInt(sNumber)
+    if (number > 100) {
+      throw BigNumberException(s"Error with big number $number")
+    }
+    number
+  }
+
+  case class BigNumberException(message: String) extends Exception(message)
+
+
 }
