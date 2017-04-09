@@ -53,7 +53,7 @@ All the most common features of Observable
 
 * **[Implicit](src/main/scala/app/impl/scala/Implicit.scala)**
 
-* **[MatchesPattern](src/main/scala/app/impl/scala/MatchesPattern.scala)**
+* **[Matches Pattern](src/main/scala/app/impl/scala/MatchesPattern.scala)**
 
 * **[Interpolation](src/main/scala/app/impl/scala/Interpolation.scala)**
 
@@ -61,13 +61,15 @@ All the most common features of Observable
 
 * **[Factory](src/main/scala/app/impl/scala/Factory.scala)**
 
-* **[CompoundTypes](src/main/scala/app/impl/scala/CompoundTypes.scala)**
+* **[Compound Types](src/main/scala/app/impl/scala/CompoundTypes.scala)**
 
-* **[SelfReference](src/main/scala/app/impl/scala/SelfReference.scala)**
+* **[Self Reference](src/main/scala/app/impl/scala/SelfReference.scala)**
 
 * **[Generics](src/main/scala/app/impl/scala/Generics.scala)**
 
-* **[CovariantSubType](src/main/scala/app/impl/scala/CovariantSubType.scala)**
+* **[Covariant SubType](src/main/scala/app/impl/scala/CovariantSubType.scala)**
+
+* **[Partial function](src/main/scala/app/impl/scala/PartialFunctions.scala)**
 
 * **[Extractor](src/main/scala/app/impl/scala/Extractor.scala)**
 

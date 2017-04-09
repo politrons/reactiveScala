@@ -34,7 +34,6 @@ class Try {
 
   @Test def tryCustomThrowable(): Unit = {
     val list = List("1", "2", "3", "4", "200", "5")
-
     val result = for {
       number <- Try(list.map(number => extractNumber(number)))
     } yield number
