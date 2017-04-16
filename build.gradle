@@ -17,6 +17,7 @@ dependencies {
     compile group: 'com.twitter', name: 'finagle-core_2.11', version: '6.43.0'
     compile group: 'com.twitter', name: 'finagle-http_2.11', version: '6.43.0'
     compile group: 'org.apache.thrift', name: 'libthrift', version: '0.10.0'
+    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
 }
 
 tasks.withType(ScalaCompile) {

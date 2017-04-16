@@ -1,5 +1,6 @@
 package app.impl.scala
 
+import org.apache.commons.lang.StringUtils
 import org.junit.Test
 
 import scala.util.Try
@@ -23,17 +24,29 @@ class PartialFunctions {
     def isDefinedAt(d: Int) = d != 0
   }
 
-
   @Test def upperCase(): Unit = {
-    assert(Try(upperCaseIfString("hello scala world")).isSuccess)
-    assert(Try(upperCaseIfString(0)).isFailure)
+    println(upperCaseIfString.isDefinedAt("hello scala world"))
+    val triedUpperCase = Try(upperCaseIfString("hello scala world"))
+    assert(triedUpperCase.isSuccess)
+    println(triedUpperCase.get)
+    val orElseFunction: (String => String) = upperCaseIfString orElse makeNumberString
+    assert(Try(orElseFunction("0")).isSuccess)
+    println(Try(orElseFunction("0")).get)
   }
 
-  val upperCaseIfString = new PartialFunction[Any, String] {
-    def apply(str: Any) = str.asInstanceOf[String].toUpperCase()
-    def isDefinedAt(str: Any) = str.isInstanceOf[String]
+  val upperCaseIfString: PartialFunction[String, String] = {
+    case input if !StringUtils.isNumeric(input) => input.asInstanceOf[String].toUpperCase()
   }
 
+  val makeNumberString = new PartialFunction[Any, String] {
+    def apply(any: Any) = {
+      any.asInstanceOf[String]
+    }
+
+    def isDefinedAt(any: Any) = {
+      any.asInstanceOf[String] forall Character.isDigit
+    }
+  }
 
   /**
     * Also with partial function you can use pattern matching to execute one function or another
