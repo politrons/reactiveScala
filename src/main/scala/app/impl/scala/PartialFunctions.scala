@@ -29,7 +29,7 @@ class PartialFunctions {
     val triedUpperCase = Try(upperCaseIfString("hello scala world"))
     assert(triedUpperCase.isSuccess)
     println(triedUpperCase.get)
-    val orElseFunction: (String => String) = upperCaseIfString orElse makeNumberString
+    val orElseFunction: (String => String) = upperCaseIfString orElse makeNumberAlphanumeric
     assert(Try(orElseFunction("0")).isSuccess)
     println(Try(orElseFunction("0")).get)
   }
@@ -38,14 +38,11 @@ class PartialFunctions {
     case input if !StringUtils.isNumeric(input) => input.asInstanceOf[String].toUpperCase()
   }
 
-  val makeNumberString = new PartialFunction[Any, String] {
-    def apply(any: Any) = {
-      any.asInstanceOf[String]
-    }
-
-    def isDefinedAt(any: Any) = {
-      any.asInstanceOf[String] forall Character.isDigit
-    }
+  val makeNumberAlphanumeric: PartialFunction[String, String] = {
+    case input if input == "0" => "zero"
+    case input if input == "1" => "one"
+    case input if input == "2" => "two"
+    case input if input == "3" => "three"
   }
 
   /**
