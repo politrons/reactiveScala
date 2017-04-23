@@ -18,6 +18,8 @@ dependencies {
     compile group: 'com.twitter', name: 'finagle-http_2.11', version: '6.43.0'
     compile group: 'org.apache.thrift', name: 'libthrift', version: '0.10.0'
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    compile group: 'com.github.scala-academy', name: 'castalia_2.11', version: '0.0.1'
+
 }
 
 tasks.withType(ScalaCompile) {
