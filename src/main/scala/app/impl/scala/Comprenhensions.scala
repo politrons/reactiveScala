@@ -21,9 +21,26 @@ class Comprenhensions {
 
   /**
     * Every item emitted in the for is added into a List using yield
+    *
     * @param from
     * @param to
     * @return
     */
   def toList(from: Int, to: Int): List[Int] = for (i <- List.range(from, to)) yield i
+
+
+  @Test
+  def filters = {
+    val pNames = for (
+      name <- getNames
+      if name.contains("P")
+    ) yield name
+
+    println(pNames)
+  }
+
+  private def getNames = {
+    List("Pablo", "Luis", "Javier", "Paul", "Esther")
+  }
+
 }
