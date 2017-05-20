@@ -17,8 +17,8 @@ object FreeMonad extends App {
     */
   type Id[+X] = X
   type Symbol = String
-  type Response = String
-
+  type Response = Any
+  type Pair = (String, Int)
 
   sealed trait Orders[A]
 
@@ -27,13 +27,6 @@ object FreeMonad extends App {
   case class Sell(stock: Symbol, amount: Int) extends Orders[Response]
 
   case class ListStocks() extends Orders[List[Symbol]]
-
-  sealed trait Log[A]
-
-  case class Info(msg: String) extends Log[Unit]
-
-  case class Error(msg: String) extends Log[Unit]
-
 
   /**
     * A Free monad it´s kind like an Observable,
@@ -56,24 +49,23 @@ object FreeMonad extends App {
     liftF[Orders, List[Symbol]](ListStocks())
   }
 
-  /**
-    * As part of our DSL we might want to log the pipeline during the execution
-    */
-  type LogF[A] = Free[Log, A]
-
-  def info(msg: String): LogF[Unit] = liftF[Log, Unit](Info(msg))
-
-  def error(msg: String): LogF[Unit] = liftF[Log, Unit](Error(msg))
-
   val freeMonad = listStocks()
     .flatMap(symbols => {
-      val value = symbols
-        .filter(symbol => symbol.eq("FB"))
-        .head
-      buy(value, 100)
+      var value = ""
+      var amount = 100
+      try {
+        value = symbols
+          .filter(symbol => symbol.eq("FB"))
+          .head
+      } catch {
+        case e: Exception =>
+          value = s"ERROR $e"
+          amount = 0
+      }
+      buy(value, amount)
     })
-    .flatMap(r => {
-      sell("GOOG", 100)
+    .flatMap(pair => {
+      sell(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100)
     })
 
 
@@ -84,17 +76,51 @@ object FreeMonad extends App {
     *
     * @return
     */
-  def orderInterpreter: Orders ~> Id = new (Orders ~> Id) {
+  def orderInterpreter1: Orders ~> Id = new (Orders ~> Id) {
     def apply[A](order: Orders[A]): Id[A] = order match {
       case ListStocks() =>
         println(s"Getting list of stocks: FB, TWTR")
         List("FB", "TWTR")
       case Buy(stock, amount) =>
         println(s"Buying $amount of $stock")
-        "ok"
+        new Pair(stock, amount)
       case Sell(stock, amount) =>
         println(s"Selling $amount of $stock")
-        "ok"
+        "done interpreter 1"
+    }
+  }
+
+  /**
+    * Thanks to the free monads defined, now using another interpreter we can create a corner case
+    * to see how our monad behave for instances against a NullPointerException
+    *
+    * @return
+    */
+  def orderInterpreter2: Orders ~> Id = new (Orders ~> Id) {
+    def apply[A](order: Orders[A]): Id[A] = order match {
+      case ListStocks() =>
+        println(s"Getting list of stocks: FB, TWTR")
+        null
+      case Buy(stock, amount) =>
+        println(s"Buying $amount of $stock")
+        new Pair(stock, amount)
+      case Sell(stock, amount) =>
+        println(s"Selling $amount of $stock")
+        "done interpreter 2"
+    }
+  }
+
+  def orderInterpreter3: Orders ~> Id = new (Orders ~> Id) {
+    def apply[A](order: Orders[A]): Id[A] = order match {
+      case ListStocks() =>
+        println(s"Getting list of stocks: FB, TWTR")
+        List("TWTR")
+      case Buy(stock, amount) =>
+        println(s"Buying $amount of $stock")
+        new Pair(stock, amount)
+      case Sell(stock, amount) =>
+        println(s"Selling $amount of $stock")
+        "done interpreter 3"
     }
   }
 
@@ -106,7 +132,11 @@ object FreeMonad extends App {
     * Also, since we define a generic type for the return, this one it could be anything.
     *
     **/
-  freeMonad.foldMap(orderInterpreter)
+  freeMonad.foldMap(orderInterpreter1)
+  println("###############################")
+  freeMonad.foldMap(orderInterpreter2)
+  println("###############################")
+  freeMonad.foldMap(orderInterpreter3)
 
 
 }

@@ -7,6 +7,12 @@ repositories {
     }
 }
 
+jar {
+    from ('./src/main/scala') {
+        include 'META-INF/services/com.twitter.finagle.Resolver'
+    }
+}
+
 dependencies {
     compile 'org.scala-lang:scala-library:2.11.8'
     compile group: 'io.reactivex', name: 'rxscala_2.11', version: '0.26.5'
@@ -18,7 +24,12 @@ dependencies {
     compile group: 'com.twitter', name: 'finagle-http_2.11', version: '6.43.0'
     compile group: 'org.apache.thrift', name: 'libthrift', version: '0.10.0'
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-    compile group: 'com.github.scala-academy', name: 'castalia_2.11', version: '0.0.1'
+//    compile group: 'com.github.scala-academy', name: 'castalia_2.11', version: '0.0.1'
+    compile group: 'org.clapper', name: 'grizzled-slf4j_2.11', version: '1.3.0'
+//    compile group: 'net.sourceforge', name: 'jdistlib', version: '0.4.1'
+    compile group: 'org.scalatest', name: 'scalatest_2.11', version: '3.0.1'
+
+
 }
 
 tasks.withType(ScalaCompile) {
