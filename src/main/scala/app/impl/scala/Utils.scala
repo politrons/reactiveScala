@@ -94,17 +94,6 @@ class Utils extends Generic {
 
   def multiString(x: String)(y: String)(z: String) = x.concat("_") + y.concat("_") + z
 
-  @Test
-  def replaceString() = {
-    val keyValue = Map("SERVICE" -> "test", "VERSION" -> "works")
-    var sentence = "/this/is/a/SERVICE/and/VERSION"
-    keyValue.foldLeft(sentence) {
-      case (acc, (key, value)) =>
-        sentence = acc.replaceAll(key, value)
-        sentence
-    }
-    println(sentence)
-  }
 
 }
 
