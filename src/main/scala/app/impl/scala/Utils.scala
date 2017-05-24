@@ -78,17 +78,33 @@ class Utils extends Generic {
     */
   @Test def multiMethodParams(): Unit = {
     def addFunction = add(2) _
+
     println(addFunction(3))
 
     def stringFunction = multiString("hello")("scala") _
+
     println(stringFunction)
+
     def string2 = stringFunction("world")
+
     println(string2)
   }
 
   def add(x: Int)(y: Int) = x + y
 
   def multiString(x: String)(y: String)(z: String) = x.concat("_") + y.concat("_") + z
+
+  @Test
+  def replaceString() = {
+    val keyValue = Map("SERVICE" -> "test", "VERSION" -> "works")
+    var sentence = "/this/is/a/SERVICE/and/VERSION"
+    keyValue.foldLeft(sentence) {
+      case (acc, (key, value)) =>
+        sentence = acc.replaceAll(key, value)
+        sentence
+    }
+    println(sentence)
+  }
 
 }
 
