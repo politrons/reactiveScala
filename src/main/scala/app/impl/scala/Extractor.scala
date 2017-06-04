@@ -16,7 +16,7 @@ class Extractor {
     */
   @Test
   def userFound(): Unit = {
-    val user: User = new PremiumUser("Paul",35)
+    val user: User = new PremiumUser("Paul", 35)
     val result = user match {
       case FreeUser(freeUser) => "FreeUser:" + freeUser.name + " age:" + freeUser.age
       case PremiumUser(name, age) => "Premium user:" + name + " age:" + age
@@ -24,7 +24,7 @@ class Extractor {
     }
     println(result)
 
-    val user1: User = new FreeUser("Paul1",35)
+    val user1: User = new FreeUser("Paul1", 35)
     val result1 = user1 match {
       case FreeUser(freeUser) => "FreeUser:" + freeUser.name + " age:" + freeUser.age
       case PremiumUser(name, age) => "Premium user:" + name + " age:" + age
@@ -50,12 +50,13 @@ class Extractor {
 
   trait User {
     def name: String
+
     def age: Int
   }
 
-  class FreeUser(val name: String, val age:Int) extends User
+  class FreeUser(val name: String, val age: Int) extends User
 
-  class PremiumUser(val name: String, val age:Int) extends User
+  class PremiumUser(val name: String, val age: Int) extends User
 
   object FreeUser {
     def unapply(user: FreeUser): Option[User] = Some(user)

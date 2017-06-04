@@ -42,7 +42,7 @@ class Algorithmic extends Generic[String, Long] {
   }
 
   /**
-    * Algoerithm to find the number of words in String
+    * Algorithm to find the number of words in String
     */
   @Test def findNumberOfWords(): Unit = {
     val text = "  ab1 cx2d 3b "

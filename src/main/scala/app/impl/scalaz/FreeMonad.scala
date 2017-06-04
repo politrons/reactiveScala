@@ -20,53 +20,59 @@ object FreeMonad extends App {
   type Response = Any
   type Pair = (String, Int)
 
+  /**
+    * The next classes are our ADT algebraic data types
+    */
+
   sealed trait Orders[A]
+
+  case class ListStocks() extends Orders[List[Symbol]]
 
   case class Buy(stock: Symbol, amount: Int) extends Orders[Response]
 
   case class Sell(stock: Symbol, amount: Int) extends Orders[Response]
 
-  case class ListStocks() extends Orders[List[Symbol]]
-
   /**
     * A Free monad it´s kind like an Observable,
     * where we specify the Entry type Orders, and output type A
     */
-  type OrdersF[A] = Free[Orders, A]
+  type OrdersFree[A] = Free[Orders, A]
+
+  def listStocks(): OrdersFree[List[Symbol]] = {
+    liftF[Orders, List[Symbol]](ListStocks())
+  }
 
   /**
     * With liftF we specify to introduce a function into the Free Monad
     */
-  def buy(stock: Symbol, amount: Int): OrdersF[Response] = {
+  def buyStock(stock: Symbol, amount: Int): OrdersFree[Response] = {
     liftF[Orders, Response](Buy(stock, amount))
   }
 
-  def sell(stock: Symbol, amount: Int): OrdersF[Response] = {
+  def sellStock(stock: Symbol, amount: Int): OrdersFree[Response] = {
     liftF[Orders, Response](Sell(stock, amount))
   }
 
-  def listStocks(): OrdersF[List[Symbol]] = {
-    liftF[Orders, List[Symbol]](ListStocks())
-  }
 
-  val freeMonad = listStocks()
-    .flatMap(symbols => {
-      var value = ""
-      var amount = 100
-      try {
-        value = symbols
-          .filter(symbol => symbol.eq("FB"))
-          .head
-      } catch {
-        case e: Exception =>
-          value = s"ERROR $e"
-          amount = 0
-      }
-      buy(value, amount)
-    })
-    .flatMap(pair => {
-      sell(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100)
-    })
+  val freeMonad =
+    listStocks()
+      .flatMap(symbols => {
+        var value = ""
+        var amount = 100
+        try {
+          value = symbols
+            .filter(symbol => symbol.eq("FB"))
+            .head
+        } catch {
+          case e: Exception =>
+            value = s"ERROR $e"
+            amount = 0
+        }
+        buyStock(value, amount)
+      })
+      .flatMap(pair => {
+        sellStock(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100)
+      })
 
 
   /**

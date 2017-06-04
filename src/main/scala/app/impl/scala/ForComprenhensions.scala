@@ -5,7 +5,7 @@ import org.junit.Test
 /**
   * Created by pabloperezgarcia on 17/8/16.
   */
-class Comprenhensions {
+class ForComprenhensions {
 
 
   @Test def comprenhension(): Unit = {

@@ -19,8 +19,8 @@ class Comparator {
     */
   @Test def sortObjects(): Unit = {
     val men:List[Man] = List(new Man("pablo", 35), new Man("Nene", 35), new Man("Didu", 38), new Man("Bulum", 37))
-    println(men.sortBy(_.name))
-    println(men.sortBy(_.age))
+    println(men.sortBy(_.name).head.name)
+    println(men.sortBy(_.age).head.age)
   }
 
 

@@ -2,25 +2,45 @@ package app.impl.scala
 
 import org.junit.Test
 
+
 class Implicit {
 
 
   /**
     * Implicit parameter tell is used in case that there´s no parameters passed to the function,
     * the compiler will take the one implicit val defined.
-    * if you define more than one implicit val the code wont compile.
+    * if you define more than one implicit val/def with the same type the code it wont compile.
     */
   @Test def implicitParameter(): Unit = {
     println(multiply)
     println(multiply(3, 3))
   }
 
-  implicit val multiplier = 2
+  implicit val multiplier: Int = 2
 
 
   implicit def multiply(implicit x: Int, y: Int) = {
     x * y
   }
+
+
+  /**
+    * As requirement for implicit class we need to initialize the class with def/val both use same name space
+    * And the once that you mark in some method that a class type it´s implicit, the compile will automatically
+    * search for a initialized implicit class of that type
+    */
+  implicit def initImplicitClass = HundredClass(100)
+
+  case class HundredClass(magicNumber: Int)
+
+  @Test def implicitClassTet(): Unit = {
+    println(numberPer100(2))
+  }
+
+  def numberPer100(number: Int)(implicit implicitClass: HundredClass): Int = {
+    number * implicitClass.magicNumber
+  }
+
 
   /**
     * Import class implicitUtils
@@ -50,14 +70,34 @@ class Implicit {
     println(2.increment(1))
     println(2.decrement(1))
     println(2.multiply(3))
+    println("TEST".equals("-Works"))
+  }
+
+  @Test def replaceAllTest(): Unit = {
+    val test = "{services}/service/{versions}/version"
+    val replace = test.replaceAllLiterally("{services}", "works")
+    println(replace)
   }
 
 
-  implicit class StringImprovements(s: String) {
+  implicit class StringImprovements(val s: String) {
+
+    //    override def concat(newValue: String): String = newValue.concat("-CustomConcat-").concat(s)
+
     def increment = s.map(c => (c + 1).toChar)
+
+    // Use `equals`, not `==`
+    override def equals(that: Any) = that match {
+      case t: String => t.s.equalsIgnoreCase(this.s)
+      case _ => false
+    }
+
+    override def toString() = s
+
   }
 
   implicit class IntegerImprovements(i: Int) {
+
     def exponential = i * i
 
     def increment(n: Int) = i + n
@@ -67,5 +107,6 @@ class Implicit {
     def multiply(n: Int) = i * n
 
   }
+
 
 }
