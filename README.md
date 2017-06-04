@@ -55,6 +55,10 @@ All the most common features of Observable
 
 * **[Matches Pattern](src/main/scala/app/impl/scala/MatchesPattern.scala)**
 
+* **[For Comprenhensions](src/main/scala/app/impl/scala/ForComprenhensions.scala)**
+
+* **[Type Classes](src/main/scala/app/impl/scala/TypeClasses.scala)**
+
 * **[Interpolation](src/main/scala/app/impl/scala/Interpolation.scala)**
 
 * **[Functions](src/main/scala/app/impl/scala/Functions.scala)**
