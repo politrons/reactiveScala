@@ -13,7 +13,7 @@ import com.twitter.util.{Await, Future}
   */
 object HttpClient extends App {
 
-  val client: Service[Request, Response] = Http.newService("localhost:8888")
+  val client: Service[Request, Response] = Http.newService("localhost:1982")
   val request = http.Request(http.Method.Get, "/")
   val response = makeRequest
   defineOnFailure
@@ -26,14 +26,14 @@ object HttpClient extends App {
 
   private def defineOnFailure = {
     response.onFailure { t =>
-      println(s"Error:${t.getMessage}")
+      print(s"Error:${t.getMessage}")
       makeRequest
     }
   }
 
   private def defineOnSuccess = {
     response.onSuccess { rep =>
-      println("Response: " + rep)
+      print("Response: " + rep)
     }
   }
 

@@ -16,8 +16,9 @@ object HttpServers extends App {
 
   var service = FinagleService.service
 
-  private val port = "8888"
-  Await.ready(serviceWithTimeoutFilter().serve(s"localhost:$port", service))
+  private val port = "1982"
+  Await.ready(mainServer().serve(s"localhost:$port", service))
+  println("Service up")
 
   /**
     * This is a regular finagle server
