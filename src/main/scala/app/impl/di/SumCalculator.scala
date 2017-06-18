@@ -3,13 +3,13 @@ package app.impl.di
 /**
   * Created by pabloperezgarcia on 16/06/2017.
   */
-trait Calculator {
+trait SumCalculator {
 
   def sum(a: Int, b: Int): Int
 
 }
 
-class ServiceCalculator extends Calculator {
+class SumCalculatorImpl extends SumCalculator {
 
   override def sum(a: Int, b: Int): Int = a + b
 

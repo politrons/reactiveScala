@@ -7,12 +7,15 @@ import org.junit.Test
   */
 class Main() {
 
-  implicit val serviceCalculator: Calculator = new ServiceCalculator
+  implicit val sumCalculator = new SumCalculatorImpl
 
-//  new Conf().init()
 
-  @Test def sumTest(): Unit = {
-    new Dependency()
+  @Test def firstSum(): Unit = {
+    println(new Dependency().calcSum(10,20))
+  }
+
+  @Test def secondSum(): Unit = {
+    println(new Dependency().calcDiv(50, 10))
   }
 
 }

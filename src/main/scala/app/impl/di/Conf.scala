@@ -7,7 +7,7 @@ class Conf {
 
   def init(): Unit = {
 
-    implicit val serviceCalculator: Calculator = new ServiceCalculator
+    implicit val serviceCalculator: SumCalculator = new SumCalculatorImpl
 
   }
 

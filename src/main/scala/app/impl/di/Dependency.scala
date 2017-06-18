@@ -2,12 +2,16 @@ package app.impl.di
 /**
   * Created by pabloperezgarcia on 16/06/2017.
   */
-class Dependency()(implicit serviceCalculator: Calculator) {
+class Dependency()(implicit calculator: SumCalculator) {
 
-  println(calcSum(10, 20))
+  implicit val divCalculator = new DivCalculatorImpl
+
+  def calcDiv(a: Int, b: Int) ={
+    new SecondDependency().calcDiv(a,b)
+  }
 
   def calcSum(a: Int, b: Int): Int = {
-    serviceCalculator.sum(a, b)
+    calculator.sum(a, b)
   }
 
 }
