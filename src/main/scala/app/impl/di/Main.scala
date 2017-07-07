@@ -9,9 +9,11 @@ class Main() {
 
   implicit val sumCalculator = new SumCalculatorImpl
 
+  implicit val divCalculator = new DivCalculatorImpl
+
 
   @Test def firstSum(): Unit = {
-    println(new Dependency().calcSum(10,20))
+    println(new Dependency().calcSum(10, 20))
   }
 
   @Test def secondSum(): Unit = {

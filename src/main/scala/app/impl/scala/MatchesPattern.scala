@@ -32,9 +32,9 @@ class MatchesPattern {
   }
 
   @Test def matchesOnMap(): Unit = {
-    Map(1->1, 2->"2", 3->3).foreach{ entry =>
+    Map(1 -> 1, 2 -> "2", 3 -> 3).foreach { entry =>
       entry._1 match {
-        case 1 => println(s"Map value:${entry._2.asInstanceOf[Integer]*100}")
+        case 1 => println(s"Map value:${entry._2.asInstanceOf[Integer] * 100}")
         case 2 => println(s"Map value:${entry._2.asInstanceOf[String].toUpperCase()}")
         case 3 => println(s"Map value:${entry._2.asInstanceOf[Integer] * 100}")
         case _ => println("???")
@@ -51,6 +51,28 @@ class MatchesPattern {
       "TEST".toLowerCase
     }
     case _ => "many"
+  }
+
+  val PARAMS="'(.*)'='(.*)'"
+  val PAYLOAD_VALUE_REGEX = s"^Payload $PARAMS".r
+
+  @Test
+  def regex(): Unit = {
+    val list = List("Not a match", "Payload 'name'='value'", "OXFORD")
+
+    list.foreach {
+      case PAYLOAD_VALUE_REGEX(c, c1) => {
+        println(c)
+        println(c1)
+        test("fit")
+      }
+      case s if s.matches("""OXF.*""") => println("XXX")
+      case _ => println("NO MATCHING")
+    }
+  }
+
+  def test(implicit sentence: String): Unit = {
+    println(sentence)
   }
 
 }
