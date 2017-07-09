@@ -110,8 +110,8 @@ All the most common features of Observable
 
 # Macros
 
-* [DSL validator](src/main/scala/app/impl/macros/DSLValidator.scala)
-* [Runner](src/main/scala/app/impl/macros/Main.scala)
+* [DSL validator](macros/src/main/scala/app/impl/macros/DSLValidator.scala)
+* [Runner](macros/src/main/scala/app/impl/macros/Main.scala)
 
 # Shapeless
 
