@@ -17,10 +17,9 @@ class Main {
 
   @Test
   def TestDSL(): Unit = {
-
-    DSLValidator.Given("Make a request to F2E")
+    DSLValidator.Given("Make a request to server")
     DSLValidator.When("Payload code=works")
-
+    println("Works!")
 
   }
 
