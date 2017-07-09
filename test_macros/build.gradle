@@ -1,21 +1,10 @@
+version 'unspecified'
+
 apply plugin: 'scala'
 
 repositories {
     mavenCentral()
-    maven {
-        url "http://repo.akka.io/snapshots/"
-    }
 }
-
-jar {
-    from('./src/main/scala') {
-        include 'META-INF/services/com.twitter.finagle.Resolver'
-    }
-}
-
-//include ':macros', ':module'
-//include 'macros'
-
 
 dependencies {
     compile 'org.scala-lang:scala-library:2.11.8'
@@ -34,15 +23,7 @@ dependencies {
     compile group: 'org.scalatest', name: 'scalatest_2.11', version: '3.0.1'
     compile 'com.chuusai:shapeless_2.11:2.3.2'
 
-//    compile project(':macros')
-
-
+    compile project(':macros')
 
 }
-
-tasks.withType(ScalaCompile) {
-    scalaCompileOptions.useAnt = false
-}
-
-
 

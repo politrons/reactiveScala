@@ -74,6 +74,17 @@ object FreeMonad extends App {
         sellStock(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100)
       })
 
+//  (for {
+//    stocks <- listStocks()
+//    response <- buyStock(stocks.head, 1)
+//    _ <- sellStock(null, 1)
+//  } yield ()).run
+//
+//  implicit class customFree(free:Free[FreeMonad.Orders,Unit]){
+//
+//    def run() = free.foldMap(orderInterpreter1)
+//
+//  }
 
   /**
     * This function return a function which receive an Order type of A and return that type
