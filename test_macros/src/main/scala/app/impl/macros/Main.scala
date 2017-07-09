@@ -1,5 +1,6 @@
 package app.impl.macros
 
+import app.impl.macros.DSLValidator.{->}
 import org.junit.Test
 
 
@@ -10,17 +11,17 @@ class Main {
 
   @Test
   def helloWorld(): Unit = {
-
     Macros.hello("world!")
-
   }
 
   @Test
   def TestDSL(): Unit = {
-    DSLValidator.Given("Make a request to server")
-    DSLValidator.When("Payload code=works")
-    println("Works!")
+    Macros hello "world"
+    Macros Given ->("Make a request to server")
+    println("End")
+
 
   }
+
 
 }

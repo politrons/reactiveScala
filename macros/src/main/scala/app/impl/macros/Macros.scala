@@ -1,7 +1,7 @@
 package app.impl.macros
 
-import scala.reflect.macros.blackbox
 import scala.language.experimental.macros
+import scala.reflect.macros.blackbox
 
 /**
   * Created by pabloperezgarcia on 09/07/2017.
@@ -9,11 +9,19 @@ import scala.language.experimental.macros
 
 object Macros {
 
-  def hello(message:String): Unit = macro helloImpl
+  def Given(message: String) = {
+    println(message)
+  }
+
+  def When(message: String) = {
+    println("When")
+  }
+
+  def hello(message: String): Unit = macro helloImpl
 
   def helloImpl(c: blackbox.Context)(message: c.Expr[String]): c.Expr[Unit] = {
     import c.universe._
-//    println(showRaw(q"""println("hello " + ${message.tree} + "!")"""))
+    //    println(showRaw(q"""println("hello " + ${message.tree} + "!")"""))
     c.Expr(q"""println("hello " + ${message.tree} + "!")""")
   }
 }

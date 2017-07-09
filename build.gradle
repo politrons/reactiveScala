@@ -34,7 +34,7 @@ dependencies {
     compile group: 'org.scalatest', name: 'scalatest_2.11', version: '3.0.1'
     compile 'com.chuusai:shapeless_2.11:2.3.2'
 
-//    compile project(':macros')
+    compile project(':test_macros')
 
 
 

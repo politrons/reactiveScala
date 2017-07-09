@@ -29,13 +29,7 @@ object DSLValidator {
 
   import scala.language.experimental.macros
 
-  def Given(message: String): Any = macro checkActionImpl
-
-  def When(message: String): Any = macro checkActionImpl
-
-  def Then(message: String): Any = macro checkActionImpl
-
-  def And(message: String): Any = macro checkActionImpl
+  def ->(message: String): String = macro checkActionImpl
 
   def checkActionImpl(c: blackbox.Context)(message: c.Tree): c.Tree = {
     import c.universe._
