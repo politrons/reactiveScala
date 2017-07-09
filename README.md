@@ -108,3 +108,14 @@ All the most common features of Observable
 * **[Service](src/main/scala/app/impl/finagle/FinagleService.scala)**
 * **[Filter](src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
 
+# Macros
+
+* **[DSL validator](src/main/scala/app/impl/macros/DSLValidator.scala)
+* **[Runner](src/main/scala/app/impl/macros/Main.scala)
+
+# Shapeless
+
+* **[Generics](src/main/scala/app/impl/shapeless/Generic.scala)
+* **[HList](src/main/scala/app/impl/shapeless/Main.scala)
+* **[Tuples](src/main/scala/app/impl/shapeless/Tuples.scala)
+
