@@ -1,26 +1,34 @@
 package app.impl.macros
 
-import app.impl.macros.DSLValidator.{->}
+import app.impl.macros.Macros.hello
+import app.impl.scalaz.TestDSL
 import org.junit.Test
-
 
 /**
   * Created by pabloperezgarcia on 09/07/2017.
   */
-class Main {
+class Main extends TestDSL{
 
   @Test
   def helloWorld(): Unit = {
-    Macros.hello("world!")
+    hello("world!")
   }
 
   @Test
   def TestDSL(): Unit = {
-    Macros hello "world"
-    Macros Given ->("Make a request to server")
+    hello("world")
+    Given(:: -> "Make a request to server")
     println("End")
 
+  }
 
+
+  def Given(message: String) = {
+    println(message)
+  }
+
+  def When(message: String) = {
+    println("When")
   }
 
 

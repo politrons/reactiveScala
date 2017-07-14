@@ -2,7 +2,7 @@ Author Pablo Perez Garcia
 
 # RXScala
 
-![My image](src/main/resources/img/flatMap.png)
+![My image](scala_features/src/main/resources/img/flatMap.png)
 
 Marble diagrams are not clear enough?.
 
@@ -14,99 +14,99 @@ To reference to the real documentation go here https://github.com/ReactiveX/RxJa
 
 RxJava examples [here](https://github.com/politrons/reactive)
 
- ![My image](src/main/resources/img/rsz_reactive-extensions.png)
+ ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
  
 All the most common features of Observable
 
-* **[Combining](src/main/scala/app/impl/rx/Combining.scala)**
+* **[Combining](scala_features/src/main/scala/app/impl/rx/Combining.scala)**
 
-    ![My image](src/main/resources/img/rsz_1zipo.png)
+    ![My image](scala_features/src/main/resources/img/rsz_1zipo.png)
 
-* **[Creating](src/main/scala/app/impl/rx/Creating.scala)**
+* **[Creating](scala_features/src/main/scala/app/impl/rx/Creating.scala)**
 
-    ![My image](src/main/resources/img/rsz_1createc.png)
+    ![My image](scala_features/src/main/resources/img/rsz_1createc.png)
 
     
-* **[Filtering](src/main/scala/app/impl/rx/Filtering.scala)**
+* **[Filtering](scala_features/src/main/scala/app/impl/rx/Filtering.scala)**
 
-    ![My image](src/main/resources/img/rsz_1filter.png)
+    ![My image](scala_features/src/main/resources/img/rsz_1filter.png)
 
 
-* **[Transforming](src/main/scala/app/impl/Transforming.scala)**
+* **[Transforming](scala_features/src/main/scala/app/impl/Transforming.scala)**
 
-    ![My image](src/main/resources/img/rsz_flatmap.png)
+    ![My image](scala_features/src/main/resources/img/rsz_flatmap.png)
     
-* **[Scheduler](src/main/scala/app/impl/rx/Scheduler.scala)**
+* **[Scheduler](scala_features/src/main/scala/app/impl/rx/Scheduler.scala)**
 
-    ![My image](src/main/resources/img/rsz_2subscribeonc.png)
+    ![My image](scala_features/src/main/resources/img/rsz_2subscribeonc.png)
     
-* **[Implicit](src/main/scala/app/impl/rx/ImplicitObservables.scala)**
+* **[Implicit](scala_features/src/main/scala/app/impl/rx/ImplicitObservables.scala)**
         
-    ![My image](src/main/resources/img/rsz_1buffer.png)
+    ![My image](scala_features/src/main/resources/img/rsz_1buffer.png)
 
-![My image](src/main/resources/img/rsz_scala.gif)
-
-
-* **[Collections](src/main/scala/app/impl/scala/Collections.scala)**
-
-* **[Algorithmic](src/main/scala/app/impl/scala/Algorithmic.scala)**
-
-* **[Implicit](src/main/scala/app/impl/scala/Implicit.scala)**
-
-* **[Matches Pattern](src/main/scala/app/impl/scala/MatchesPattern.scala)**
-
-* **[For Comprenhensions](src/main/scala/app/impl/scala/ForComprenhensions.scala)**
-
-* **[Type Classes](src/main/scala/app/impl/scala/TypeClasses.scala)**
-
-* **[Interpolation](src/main/scala/app/impl/scala/Interpolation.scala)**
-
-* **[Functions](src/main/scala/app/impl/scala/Functions.scala)**
-
-* **[Factory](src/main/scala/app/impl/scala/Factory.scala)**
-
-* **[Compound Types](src/main/scala/app/impl/scala/CompoundTypes.scala)**
-
-* **[Self Reference](src/main/scala/app/impl/scala/SelfReference.scala)**
-
-* **[Generics](src/main/scala/app/impl/scala/Generics.scala)**
-
-* **[Covariant SubType](src/main/scala/app/impl/scala/CovariantSubType.scala)**
-
-* **[Partial function](src/main/scala/app/impl/scala/PartialFunctions.scala)**
-
-* **[Extractor](src/main/scala/app/impl/scala/Extractor.scala)**
-
-* **[Try](src/main/scala/app/impl/scala/Try.scala)**
-
-* **[Fold](src/main/scala/app/impl/scala/FoldFunction.scala)**
-
-* **[Utils](src/main/scala/app/impl/scala/Utils.scala)**
+![My image](scala_features/src/main/resources/img/rsz_scala.gif)
 
 
-![My image](src/main/resources/img/design.png)
+* **[Collections](scala_features/src/main/scala/app/impl/scala/Collections.scala)**
+
+* **[Algorithmic](scala_features/src/main/scala/app/impl/scala/Algorithmic.scala)**
+
+* **[Implicit](scala_features/src/main/scala/app/impl/scala/Implicit.scala)**
+
+* **[Matches Pattern](scala_features/src/main/scala/app/impl/scala/MatchesPattern.scala)**
+
+* **[For Comprenhensions](scala_features/src/main/scala/app/impl/scala/ForComprenhensions.scala)**
+
+* **[Type Classes](scala_features/src/main/scala/app/impl/scala/TypeClasses.scala)**
+
+* **[Interpolation](scala_features/src/main/scala/app/impl/scala/Interpolation.scala)**
+
+* **[Functions](scala_features/src/main/scala/app/impl/scala/Functions.scala)**
+
+* **[Factory](scala_features/src/main/scala/app/impl/scala/Factory.scala)**
+
+* **[Compound Types](scala_features/src/main/scala/app/impl/scala/CompoundTypes.scala)**
+
+* **[Self Reference](scala_features/src/main/scala/app/impl/scala/SelfReference.scala)**
+
+* **[Generics](scala_features/src/main/scala/app/impl/scala/Generics.scala)**
+
+* **[Covariant SubType](scala_features/src/main/scala/app/impl/scala/CovariantSubType.scala)**
+
+* **[Partial function](scala_features/src/main/scala/app/impl/scala/PartialFunctions.scala)**
+
+* **[Extractor](scala_features/src/main/scala/app/impl/scala/Extractor.scala)**
+
+* **[Try](scala_features/src/main/scala/app/impl/scala/Try.scala)**
+
+* **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
+
+* **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
+
+
+![My image](scala_features/src/main/resources/img/design.png)
 # Design patterns
 
-* **[Creational](src/main/scala/app/impl/patterns/creational)**
+* **[Creational](scala_features/src/main/scala/app/impl/patterns/creational)**
 
-* **[Structural](src/main/scala/app/impl/patterns/structural)**
+* **[Structural](scala_features/src/main/scala/app/impl/patterns/structural)**
 
-* **[Behavioral](src/main/scala/app/impl/patterns/behavioral)**
+* **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
 
-![My image](src/main/resources/img/lambda.ico)
+![My image](scala_features/src/main/resources/img/lambda.ico)
 # ScalaZ
 
-* **[Free monads](src/main/scala/app/impl/scalaz/FreeMonad.scala)**
-* **[Features](src/main/scala/app/impl/scalaz/Features.scala)**
-* **[Tagging](src/main/scala/app/impl/scalaz/Tagging.scala)**
+* **[Free monads](scala_features/src/main/scala/app/impl/scalaz/FreeMonad.scala)**
+* **[Features](scala_features/src/main/scala/app/impl/scalaz/Features.scala)**
+* **[Tagging](scala_features/src/main/scala/app/impl/scalaz/Tagging.scala)**
 
-![My image](src/main/resources/img/finagle.png)
+![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
 
-* **[Http Client](src/main/scala/app/impl/finagle/HttpClient.scala)**
-* **[Http Server](src/main/scala/app/impl/finagle/HttpServers.scala)**
-* **[Service](src/main/scala/app/impl/finagle/FinagleService.scala)**
-* **[Filter](src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
+* **[Http Client](scala_features/src/main/scala/app/impl/finagle/HttpClient.scala)**
+* **[Http Server](scala_features/src/main/scala/app/impl/finagle/HttpServers.scala)**
+* **[Service](scala_features/src/main/scala/app/impl/finagle/FinagleService.scala)**
+* **[Filter](scala_features/src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
 
 # Macros
 
@@ -115,7 +115,7 @@ All the most common features of Observable
 
 # Shapeless
 
-* [Generics](src/main/scala/app/impl/shapeless/Generic.scala)
-* [HList](src/main/scala/app/impl/shapeless/Main.scala)
-* [Tuples](src/main/scala/app/impl/shapeless/Tuples.scala)
+* [Generics](scala_features/src/main/scala/app/impl/shapeless/Generic.scala)
+* [HList](scala_features/src/main/scala/app/impl/shapeless/Main.scala)
+* [Tuples](scala_features/src/main/scala/app/impl/shapeless/Tuples.scala)
 

@@ -25,19 +25,19 @@ import scala.reflect.macros.blackbox
   * of the compilation returning the tree, or abort the compilation or throw an error, or just an echo or warning.
   *
   */
-object DSLValidator {
+object :: {
 
   import scala.language.experimental.macros
 
-  def ->(message: String): String = macro checkActionImpl
+  def ->(action: String): String = macro checkActionImpl
 
-  def checkActionImpl(c: blackbox.Context)(message: c.Tree): c.Tree = {
+  def checkActionImpl(c: blackbox.Context)(action: c.Tree): c.Tree = {
     import c.universe._
     def isValidAction(s: String): Boolean = checkMessage(s)
 
-    message match {
+    action match {
       case _tree@Literal(Constant(s: String)) if isValidAction(s) => _tree
-      case _ => c.abort(c.enclosingPosition, "Invalid action for DSL. Check the allowed actions in RegexActions")
+      case _ => c.abort(c.enclosingPosition, "Invalid action for Test framework DSL. Check the allowed actions in RegexActions")
     }
   }
 

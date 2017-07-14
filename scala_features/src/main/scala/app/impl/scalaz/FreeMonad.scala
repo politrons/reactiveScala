@@ -26,11 +26,11 @@ object FreeMonad extends App {
 
   sealed trait Orders[A]
 
-  case class ListStocks() extends Orders[List[Symbol]]
+  case class _ListStocks() extends Orders[Any]
 
-  case class Buy(stock: Symbol, amount: Int) extends Orders[Response]
+  case class _Buy(stock: Symbol, amount: Int) extends Orders[Any]
 
-  case class Sell(stock: Symbol, amount: Int) extends Orders[Response]
+  case class _Sell(stock: Symbol, amount: Int) extends Orders[Any]
 
   /**
     * A Free monad it´s kind like an Observable,
@@ -38,29 +38,23 @@ object FreeMonad extends App {
     */
   type OrdersFree[A] = Free[Orders, A]
 
-  def listStocks(): OrdersFree[List[Symbol]] = {
-    liftF[Orders, List[Symbol]](ListStocks())
-  }
+  def ListStocks(): OrdersFree[Any] = liftF[Orders, Any](_ListStocks())
 
   /**
     * With liftF we specify to introduce a function into the Free Monad
     */
-  def buyStock(stock: Symbol, amount: Int): OrdersFree[Response] = {
-    liftF[Orders, Response](Buy(stock, amount))
-  }
+  def BuyStock(stock: Symbol, amount: Int): OrdersFree[Any] = liftF[Orders, Any](_Buy(stock, amount))
 
-  def sellStock(stock: Symbol, amount: Int): OrdersFree[Response] = {
-    liftF[Orders, Response](Sell(stock, amount))
-  }
+  def SellStock(stock: Symbol, amount: Int): OrdersFree[Any] = liftF[Orders, Any](_Sell(stock, amount))
 
 
   val freeMonad =
-    listStocks()
-      .flatMap(symbols => {
+    ListStocks()
+      .map(symbols => {
         var value = ""
         var amount = 100
         try {
-          value = symbols
+          value = symbols.asInstanceOf[List[Symbol]]
             .filter(symbol => symbol.eq("FB"))
             .head
         } catch {
@@ -68,23 +62,33 @@ object FreeMonad extends App {
             value = s"ERROR $e"
             amount = 0
         }
-        buyStock(value, amount)
+        BuyStock(value, amount)
       })
       .flatMap(pair => {
-        sellStock(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100)
+        SellStock(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100)
       })
+//
+//  ListStocks()
+//    .Buy("")
+//    .Sell("")
+//    .run
 
-//  (for {
-//    stocks <- listStocks()
-//    response <- buyStock(stocks.head, 1)
-//    _ <- sellStock(null, 1)
-//  } yield ()).run
-//
-//  implicit class customFree(free:Free[FreeMonad.Orders,Unit]){
-//
-//    def run() = free.foldMap(orderInterpreter1)
-//
-//  }
+
+  //  (for {
+  //    stocks <- listStocks()
+  //    response <- buyStock(stocks.head, 1)
+  //    _ <- sellStock(null, 1)
+  //  } yield ()).run
+  //
+  implicit class customFree(free: Free[FreeMonad.Orders, Any]) {
+
+    def run() = free.foldMap(orderInterpreter1)
+
+    def Buy(value:String):Free[FreeMonad.Orders, Any] = free.map(value => BuyStock(value.asInstanceOf[List[Symbol]].head, 1))
+
+    def Sell(value:String):Free[FreeMonad.Orders, Any] = free.map(pair => SellStock(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100))
+
+  }
 
   /**
     * This function return a function which receive an Order type of A and return that type
@@ -95,13 +99,13 @@ object FreeMonad extends App {
     */
   def orderInterpreter1: Orders ~> Id = new (Orders ~> Id) {
     def apply[A](order: Orders[A]): Id[A] = order match {
-      case ListStocks() =>
+      case _ListStocks() =>
         println(s"Getting list of stocks: FB, TWTR")
         List("FB", "TWTR")
-      case Buy(stock, amount) =>
+      case _Buy(stock, amount) =>
         println(s"Buying $amount of $stock")
         new Pair(stock, amount)
-      case Sell(stock, amount) =>
+      case _Sell(stock, amount) =>
         println(s"Selling $amount of $stock")
         "done interpreter 1"
     }
@@ -115,13 +119,13 @@ object FreeMonad extends App {
     */
   def orderInterpreter2: Orders ~> Id = new (Orders ~> Id) {
     def apply[A](order: Orders[A]): Id[A] = order match {
-      case ListStocks() =>
+      case _ListStocks() =>
         println(s"Getting list of stocks: FB, TWTR")
         null
-      case Buy(stock, amount) =>
+      case _Buy(stock, amount) =>
         println(s"Buying $amount of $stock")
         new Pair(stock, amount)
-      case Sell(stock, amount) =>
+      case _Sell(stock, amount) =>
         println(s"Selling $amount of $stock")
         "done interpreter 2"
     }
@@ -129,13 +133,13 @@ object FreeMonad extends App {
 
   def orderInterpreter3: Orders ~> Id = new (Orders ~> Id) {
     def apply[A](order: Orders[A]): Id[A] = order match {
-      case ListStocks() =>
+      case _ListStocks() =>
         println(s"Getting list of stocks: FB, TWTR")
         List("TWTR")
-      case Buy(stock, amount) =>
+      case _Buy(stock, amount) =>
         println(s"Buying $amount of $stock")
         new Pair(stock, amount)
-      case Sell(stock, amount) =>
+      case _Sell(stock, amount) =>
         println(s"Selling $amount of $stock")
         "done interpreter 3"
     }

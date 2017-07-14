@@ -9,14 +9,6 @@ import scala.reflect.macros.blackbox
 
 object Macros {
 
-  def Given(message: String) = {
-    println(message)
-  }
-
-  def When(message: String) = {
-    println("When")
-  }
-
   def hello(message: String): Unit = macro helloImpl
 
   def helloImpl(c: blackbox.Context)(message: c.Expr[String]): c.Expr[Unit] = {
