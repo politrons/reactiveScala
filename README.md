@@ -32,7 +32,7 @@ All the most common features of Observable
     ![My image](scala_features/src/main/resources/img/rsz_1filter.png)
 
 
-* **[Transforming](scala_features/src/main/scala/app/impl/Transforming.scala)**
+* **[Transforming](scala_features/src/main/scala/app/impl/rx/Transforming.scala)**
 
     ![My image](scala_features/src/main/resources/img/rsz_flatmap.png)
     
