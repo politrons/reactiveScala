@@ -22,13 +22,7 @@ class TestDSL {
     */
   sealed trait Action[A]
 
-  case class _Given(action: String, any: Any) extends Action[Any]
-
-  case class _When(action: String, any: Any) extends Action[Any]
-
-  case class _Then(action: String, any: Any) extends Action[Any]
-
-  case class _And(action: String, any: Any) extends Action[Any]
+  case class _Action(action: String, any: Any) extends Action[Any]
 
   val PARAM = "(.*)"
   val ADD = s"add '$PARAM'".r
@@ -42,20 +36,20 @@ class TestDSL {
     */
   type ActionMonad[A] = Free[Action, A]
 
-  def Given(action: String, any: Any): ActionMonad[Any] = liftF[Action, Any](_Given(action, any))
+  def Given(action: String, any: Any): ActionMonad[Any] = liftF[Action, Any](_Action(action, any))
 
   implicit class customFree(free: Free[Action, Any]) {
 
     def When(action: String): ActionMonad[Any] = {
-      free.flatMap(any => liftF[Action, Any](_When(action, any)))
+      free.flatMap(any => liftF[Action, Any](_Action(action, any)))
     }
 
     def Then(action: String): ActionMonad[Any] = {
-      free.flatMap(any => liftF[Action, Any](_Then(action, any)))
+      free.flatMap(any => liftF[Action, Any](_Action(action, any)))
     }
 
     def And(action: String): ActionMonad[Any] = {
-      free.flatMap(any => liftF[Action, Any](_And(action, any)))
+      free.flatMap(any => liftF[Action, Any](_Action(action, any)))
     }
 
     def runScenario = free.foldMap(actionInterpreter)
@@ -71,14 +65,7 @@ class TestDSL {
     */
   def actionInterpreter: Action ~> Id = new (Action ~> Id) {
     def apply[A](order: Action[A]): Id[A] = order match {
-      case _Given(action, any) =>
-        processAction(action, any)
-      case _When(action, any) =>
-        processAction(action, any)
-      case _Then(action, any) =>
-        processAction(action, any)
-      case _And(action, any) =>
-        processAction(action, any)
+      case _Action(action, any) => processAction(action, any)
     }
   }
 
