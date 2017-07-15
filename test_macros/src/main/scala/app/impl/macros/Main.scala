@@ -7,7 +7,7 @@ import org.junit.Test
 /**
   * Created by pabloperezgarcia on 09/07/2017.
   */
-class Main extends TestDSL{
+class Main extends TestDSL {
 
   @Test
   def helloWorld(): Unit = {
@@ -15,11 +15,26 @@ class Main extends TestDSL{
   }
 
   @Test
-  def TestDSL(): Unit = {
+  def TestDSLValidator(): Unit = {
     hello("world")
     Given(:: -> "Make a request to server")
     println("End")
+  }
 
+  @Test
+  def testDSL(): Unit = {
+    Given("Giving a number", 1)
+      .When("multiply by '20'")
+      .Then("The result should be higher than '10'")
+      .runScenario
+  }
+
+  @Test
+  def testErrorDSL(): Unit = {
+    Given("Giving a number", 1)
+      .When("multiply by '20'")
+      .Then("The result should be higher than '100'")
+      .runScenario
   }
 
 

@@ -10,6 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="test_macros_main" />
     <orderEntry type="library" name="Gradle: org.scala-lang:scala-library:2.11.8" level="project" />
     <orderEntry type="library" name="Gradle: io.reactivex:rxscala_2.11:0.26.5" level="project" />
     <orderEntry type="library" name="Gradle: io.vertx:vertx-core:3.3.3" level="project" />
@@ -59,7 +60,6 @@
     <orderEntry type="library" name="Gradle: org.scala-lang.modules:scala-xml_2.11:1.0.5" level="project" />
     <orderEntry type="library" name="Gradle: org.scala-lang.modules:scala-parser-combinators_2.11:1.0.4" level="project" />
     <orderEntry type="library" name="Gradle: org.typelevel:macro-compat_2.11:1.1.1" level="project" />
-    <orderEntry type="module" module-name="test_macros_main" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-dns:4.1.5.Final" level="project" />
     <orderEntry type="library" name="Gradle: com.thoughtworks.paranamer:paranamer:2.8" level="project" />
     <orderEntry type="library" name="Gradle: com.twitter:util-function_2.11:6.42.0" level="project" />

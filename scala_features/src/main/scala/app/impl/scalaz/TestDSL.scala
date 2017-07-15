@@ -20,7 +20,6 @@ class TestDSL {
   /**
     * The next classes are our ADT algebraic data types
     */
-
   sealed trait Action[A]
 
   case class _Given(action: String, any: Any) extends Action[Any]
@@ -28,6 +27,14 @@ class TestDSL {
   case class _When(action: String, any: Any) extends Action[Any]
 
   case class _Then(action: String, any: Any) extends Action[Any]
+
+  case class _And(action: String, any: Any) extends Action[Any]
+
+  val PARAM = "(.*)"
+  val REPLACE = s"replace '$PARAM' to '$PARAM'".r
+  val MULTIPLY = s"multiply by '$PARAM'".r
+  val HIGHER_THAN = s"The result should be higher than '$PARAM'".r
+
 
   /**
     * A Free monad it´s kind like an Observable,
@@ -39,11 +46,17 @@ class TestDSL {
 
   implicit class customFree(free: Free[Action, Any]) {
 
-    def When(action: String): Free[Action, Any] = free.map(any => liftF[Action, Any](_When(action, any)))
+    def When(action: String): ActionMonad[Any] = {
+      free.flatMap(any => liftF[Action, Any](_When(action, any)))
+    }
 
-    def Then(action: String): Free[Action, Any] = free.map(any => liftF[Action, Any](_Then(action, any)))
+    def Then(action: String): ActionMonad[Any] = {
+      free.flatMap(any => liftF[Action, Any](_Then(action, any)))
+    }
 
-    def And(action: String): Free[Action, Any] = free.map(any => liftF[Action, Any](_Then(action, any)))
+    def And(action: String): ActionMonad[Any] = {
+      free.flatMap(any => liftF[Action, Any](_And(action, any)))
+    }
 
     def runScenario = free.foldMap(actionInterpreter)
 
@@ -59,20 +72,23 @@ class TestDSL {
   def actionInterpreter: Action ~> Id = new (Action ~> Id) {
     def apply[A](order: Action[A]): Id[A] = order match {
       case _Given(action, any) =>
-        any.asInstanceOf[String].toUpperCase()
+        processAction(action, any)
       case _When(action, any) =>
-        any.asInstanceOf[String].toUpperCase() + "!"
+        processAction(action, any)
       case _Then(action, any) =>
-        println(s"Assert:${any.asInstanceOf[String]}")
-        any
+        processAction(action, any)
+      case _And(action, any) =>
+        processAction(action, any)
     }
   }
 
-
-  Given("A message", "hello DSL world")
-    .When("I put in upper case")
-    .Then("The result should be showed")
-    .runScenario
-
+  private def processAction(action: String, any: Any): Any = {
+    action match {
+      case "Giving a number" => any
+      case MULTIPLY(value) => any.asInstanceOf[Int] * value.asInstanceOf[String].toInt
+      case REPLACE(a, b) => any.asInstanceOf[String].replace(a, b)
+      case HIGHER_THAN(value) => assert(any.asInstanceOf[Int] > value.asInstanceOf[String].toInt); any
+    }
+  }
 
 }
