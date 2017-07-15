@@ -43,11 +43,19 @@ object :: {
 
   val PARAMS = "(.*)=(.*)"
   val PAYLOAD_VALUE_REGEX = s"^Payload $PARAMS".r
+  val PARAM = "(.*)"
+  val ADD = s"add '$PARAM'".r
+  val MULTIPLY = s"multiply by '$PARAM'".r
+  val HIGHER_THAN = s"The result should be higher than '$PARAM'".r
 
   def checkMessage(action: String): Boolean = {
     action match {
       case PAYLOAD_VALUE_REGEX(c, c1) => true
       case "Make a request to server" => true
+      case "Giving a number" => true
+      case MULTIPLY(value) => true
+      case ADD(value) => true
+      case HIGHER_THAN(value) => true
       case _ => false
     }
   }
