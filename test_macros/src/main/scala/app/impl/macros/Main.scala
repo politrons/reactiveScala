@@ -24,8 +24,9 @@ class Main extends TestDSL {
   @Test
   def testDSL(): Unit = {
     Given("Giving a number", 1)
-      .When("multiply by '20'")
-      .Then("The result should be higher than '10'")
+      .When("add '10'")
+      .And("multiply by '20'")
+      .Then("The result should be higher than '100'")
       .runScenario
   }
 

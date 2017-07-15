@@ -31,7 +31,7 @@ class TestDSL {
   case class _And(action: String, any: Any) extends Action[Any]
 
   val PARAM = "(.*)"
-  val REPLACE = s"replace '$PARAM' to '$PARAM'".r
+  val ADD = s"add '$PARAM'".r
   val MULTIPLY = s"multiply by '$PARAM'".r
   val HIGHER_THAN = s"The result should be higher than '$PARAM'".r
 
@@ -86,7 +86,7 @@ class TestDSL {
     action match {
       case "Giving a number" => any
       case MULTIPLY(value) => any.asInstanceOf[Int] * value.asInstanceOf[String].toInt
-      case REPLACE(a, b) => any.asInstanceOf[String].replace(a, b)
+      case ADD(value) => any.asInstanceOf[Int] + value.asInstanceOf[String].toInt
       case HIGHER_THAN(value) => assert(any.asInstanceOf[Int] > value.asInstanceOf[String].toInt); any
     }
   }
