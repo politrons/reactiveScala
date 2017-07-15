@@ -99,6 +99,7 @@ All the most common features of Observable
 * **[Free monads](scala_features/src/main/scala/app/impl/scalaz/FreeMonad.scala)**
 * **[Features](scala_features/src/main/scala/app/impl/scalaz/Features.scala)**
 * **[Tagging](scala_features/src/main/scala/app/impl/scalaz/Tagging.scala)**
+* **[Test DSL](scala_features/src/main/scala/app/impl/scalaz/TestDSL.scala)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
