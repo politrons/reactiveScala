@@ -21,9 +21,11 @@ dependencies {
     compile group: 'org.scalatest', name: 'scalatest_2.11', version: '3.0.1'
     compile 'com.chuusai:shapeless_2.11:2.3.2'
     compile group: 'org.scalameta', name: 'scalameta_2.11', version: '1.7.0'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.192'
 
-    compile project(':macros')
-    compile project(':h2')
+}
 
 
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.useAnt = false
 }

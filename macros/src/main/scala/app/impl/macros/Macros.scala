@@ -13,15 +13,24 @@ object Macros {
 
   def helloImpl(c: blackbox.Context)(message: c.Expr[String]): c.Expr[Unit] = {
     import c.universe._
-    //    println(showRaw(q"""println("hello " + ${message.tree} + "!")"""))
     c.Expr(q"""println("hello " + ${message.tree} + "!")""")
   }
-}
 
-//Error:(12, 7) macro definition needs to be enabled
-//by making the implicit value scala.language.experimental.macros visible.
-//This can be achieved by adding the import clause 'import scala.language.experimental.macros'
-//or by setting the compiler option -language:experimental.macros.
-//See the Scaladoc for value scala.language.experimental.macros for a discussion
-//why the feature needs to be explicitly enabled.
-//def hello: Unit = macro helloImpl
+  def printparam(param: Any): Unit = macro printparam_impl
+
+  def printparam_impl(c: blackbox.Context)(param: c.Expr[Any]): c.Expr[Unit] = {
+    import c.universe._
+    reify { println(param.splice) }
+  }
+
+  def debug(param: Any): Unit = macro debug_impl
+
+  def debug_impl(c: blackbox.Context)(param: c.Expr[Any]): c.Expr[Unit] = {
+    import c.universe._
+    val paramRep = show(param.tree)
+    val paramRepTree = Literal(Constant(paramRep))
+    val paramRepExpr = c.Expr[String](paramRepTree)
+    reify { println(paramRepExpr.splice + " = " + param.splice) }
+  }
+
+}

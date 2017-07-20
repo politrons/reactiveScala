@@ -33,22 +33,28 @@ object :: {
 
   def checkActionImpl(c: blackbox.Context)(action: c.Tree): c.Tree = {
     import c.universe._
-    def isValidAction(s: String): Boolean = checkMessage(s)
 
     action match {
       case _tree@Literal(Constant(s: String)) if isValidAction(s) => _tree
-      case _ => c.abort(c.enclosingPosition, "Invalid action for Test framework DSL. Check the allowed actions in RegexActions")
+      case _tree@Literal(Constant(s: String)) => c.abort(c.enclosingPosition, getErrorMessage(s))
     }
   }
 
+  val PAYLOAD_STATUS = "(empty|non_empty)"
+  val RESPONSE_CODE = "([2-5][0-10][0-10])"
+  val VERSION = "([0-2].0)"
   val PARAMS = "(.*)=(.*)"
-  val PAYLOAD_VALUE_REGEX = s"^Payload $PARAMS".r
   val PARAM = "(.*)"
+  val PAYLOAD_VALUE = s"^Payload".r
+  val PAYLOAD_VALUE_REGEX = s"$PAYLOAD_VALUE $PARAMS".r
   val ADD = s"add '$PARAM'".r
+  val MESSAGE = s"A message with version".r
+  val MESSAGE_WRONG = s"$MESSAGE $PARAM".r
+  val MESSAGE_GOOD = s"$MESSAGE $VERSION".r
   val MULTIPLY = s"multiply by '$PARAM'".r
   val HIGHER_THAN = s"The result should be higher than '$PARAM'".r
 
-  def checkMessage(action: String): Boolean = {
+  def isValidAction(action: String): Boolean = {
     action match {
       case PAYLOAD_VALUE_REGEX(c, c1) => true
       case "Make a request to server" => true
@@ -56,9 +62,17 @@ object :: {
       case MULTIPLY(value) => true
       case ADD(value) => true
       case HIGHER_THAN(value) => true
+      case MESSAGE_GOOD(version) => true
       case _ => false
     }
   }
 
+  def getErrorMessage(action: String): String = {
+    action match {
+      case PAYLOAD_VALUE(value) => s"The value of payload ($value)is wrong"
+      case MESSAGE_WRONG(code) => s"The message has a wrong version ($code), only 1.0 and 2.0 allowed"
+        case _ => "Invalid action for Test framework DSL. Check the allowed actions in RegexActions"
+    }
+  }
 
 }

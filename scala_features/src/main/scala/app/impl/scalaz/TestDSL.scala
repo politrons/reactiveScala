@@ -25,7 +25,9 @@ class TestDSL {
   case class _Action(action: String, any: Any) extends Action[Any]
 
   val PARAM = "(.*)"
+  val VERSION = "([0-2].0)"
   val ADD = s"add '$PARAM'".r
+  val MESSAGE = s"A message with version $VERSION".r
   val MULTIPLY = s"multiply by '$PARAM'".r
   val HIGHER_THAN = s"The result should be higher than '$PARAM'".r
 
@@ -41,7 +43,9 @@ class TestDSL {
   implicit class customFree(free: Free[Action, Any]) {
 
     def When(action: String): ActionMonad[Any] = {
-      free.flatMap(any => liftF[Action, Any](_Action(action, any)))
+      free.flatMap(any => {
+        liftF[Action, Any](_Action(action, any))
+      })
     }
 
     def Then(action: String): ActionMonad[Any] = {
@@ -72,6 +76,7 @@ class TestDSL {
   private def processAction(action: String, any: Any): Any = {
     action match {
       case "Giving a number" => any
+      case MESSAGE(version) => any
       case MULTIPLY(value) => any.asInstanceOf[Int] * value.asInstanceOf[String].toInt
       case ADD(value) => any.asInstanceOf[Int] + value.asInstanceOf[String].toInt
       case HIGHER_THAN(value) => assert(any.asInstanceOf[Int] > value.asInstanceOf[String].toInt); any
