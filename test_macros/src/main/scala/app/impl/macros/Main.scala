@@ -26,7 +26,7 @@ class Main extends TestDSL {
   }
 
   @Test
-  def testPrintln(): Unit ={
+  def testPrintln(): Unit = {
     test()
   }
 
@@ -41,19 +41,31 @@ class Main extends TestDSL {
 
   @Test
   def testErrorDSL(): Unit = {
-    Given(:: -> "Giving a number",1)
+    Given(:: -> "Giving a number", 1)
       .When(:: -> "multiply by '20'")
       .Then(:: -> "The result should be higher than '100'")
       .runScenario
   }
 
   @Test
-  def testX(): Unit ={
+  def testCheckResponse(): Unit = {
+    val x: String = "1"
+    Given(:: -> "A message with version 2.0", "1")
+      .flatMap(value => {
+        println(s"class:${value.getClass}")
+//        ResponseValidator.check(value.asInstanceOf[Int])
+        Given("", value)
+      }).runScenario
+
+  }
+
+  @Test
+  def testX(): Unit = {
     testMain()
   }
 
   def testMain(): Unit = {
-   println("done")
+    println("done")
   }
 
 }

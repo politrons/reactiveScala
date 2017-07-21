@@ -43,9 +43,7 @@ class TestDSL {
   implicit class customFree(free: Free[Action, Any]) {
 
     def When(action: String): ActionMonad[Any] = {
-      free.flatMap(any => {
-        liftF[Action, Any](_Action(action, any))
-      })
+      free.flatMap(any => liftF[Action, Any](_Action(action, any)))
     }
 
     def Then(action: String): ActionMonad[Any] = {

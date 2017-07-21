@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.jnr:jnr-posix:3.0.27">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jnr/jnr-posix/3.0.27/f7441d13187d93d59656ac8f800cba3043935b59/jnr-posix-3.0.27.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jnr/jnr-posix/3.0.27/75832149e7f877044cdee1f018c8dfe2a00e1069/jnr-posix-3.0.27-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
