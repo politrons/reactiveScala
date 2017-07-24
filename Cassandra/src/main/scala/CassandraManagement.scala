@@ -42,17 +42,18 @@ object CassandraManagement extends App {
     println(s"Keyspace $keySpace created")
   }
 
-  def createTable(script: String = defaultTable) {
+  def createTable(script: String = defaultTable): Unit = {
     session.execute(script)
     println(s"Table created")
   }
 
-  def loadData(script: String) = {
+  def loadData(script: String): Unit = {
     session.execute(script)
   }
 
   def deleteData(keySpace: String, table: String): Unit = {
     session.execute(s"""truncate  $keySpace.$table""")
+    println(s"Table $keySpace.$table deleted")
   }
 
   def close() {
