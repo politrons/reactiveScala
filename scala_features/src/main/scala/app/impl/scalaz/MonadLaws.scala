@@ -57,6 +57,9 @@ class MonadLaws {
   /**
     * The final monad law says that when we have a chain of monadic function applications with flatMap,
     * it shouldn’t matter how they’re nested.
+    *
+    * If you have a box (monad) and a chain of functions that operates on it as the previous two did,
+    * then it should not matter how you nest the flatMappings of those functions.
     */
   @Test
   def associativity = {
@@ -64,17 +67,20 @@ class MonadLaws {
     val f2: (Int => List[Int]) = x => List(x * -1)
     val m = List(1, 2, 3, 4, 5)
     val list1 = m.flatMap(f1).flatMap(f2)
-    val list2 = m.flatMap(f2).flatMap(f1)
+    val list2 = m.flatMap(f1(_).flatMap(f2))
+
+    assert(list1 == list2)
 
     println(list1)
     println(list2)
 
     val option1 = Option(30).flatMap(globalFunction1).flatMap(globalFunction2)
-    val option2 = Option(30).flatMap(globalFunction2).flatMap(globalFunction1)
+    val option2 = Option(30).flatMap(globalFunction1(_).flatMap(globalFunction2))
 
     println(option1)
     println(option2)
 
+    assert(option1 == option2)
   }
 
 
