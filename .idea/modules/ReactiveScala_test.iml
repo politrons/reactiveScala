@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":macros:test" external.linked.project.path="$MODULE_DIR$/../../../macros" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="ReactiveScala" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="ReactiveScala:test" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9" inherit-compiler-output="false">
-    <output-test url="file://$MODULE_DIR$/../../../macros/build/classes/test" />
+    <output-test url="file://$MODULE_DIR$/../../build/classes/test" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../macros/src/test">
-      <sourceFolder url="file://$MODULE_DIR$/../../../macros/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../macros/src/test/scala" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../macros/src/test/resources" type="java-test-resource" />
+    <content url="file://$MODULE_DIR$/../../src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/test/scala" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/test/resources" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="macros_main" />
+    <orderEntry type="module" module-name="ReactiveScala_main" />
     <orderEntry type="library" name="Gradle: io.reactivex:rxscala_2.11:0.26.5" level="project" />
     <orderEntry type="library" name="Gradle: io.vertx:vertx-core:3.3.3" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
@@ -98,5 +98,5 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.8.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-socks:4.1.8.Final" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="macros_main" />
+  <component name="TestModuleProperties" production-module="ReactiveScala_main" />
 </module>

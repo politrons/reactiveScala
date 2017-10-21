@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalameta:tokenizers_2.11:1.7.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/tokenizers_2.11/1.7.0/652e03796ea80057d02def5f29f12f51bbd8e3b5/tokenizers_2.11-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/tokenizers_2.11/1.7.0/262b5e4c53f6942dae9bd2259e56553521fb075b/tokenizers_2.11-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

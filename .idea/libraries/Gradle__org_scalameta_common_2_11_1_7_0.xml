@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalameta:common_2.11:1.7.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/common_2.11/1.7.0/8307622b736d6d31d29e0d1ad634d96f89a5bc68/common_2.11-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/common_2.11/1.7.0/3681720f14157943a771cfa17c557d14935007c9/common_2.11-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

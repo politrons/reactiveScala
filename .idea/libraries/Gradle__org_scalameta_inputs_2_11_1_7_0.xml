@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalameta:inputs_2.11:1.7.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/inputs_2.11/1.7.0/77a99b8d094ed2e59ba73810dffc4150b4d35a3b/inputs_2.11-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/inputs_2.11/1.7.0/6d8c07966ec1d8f88631c3377a05241cceba3a3/inputs_2.11-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

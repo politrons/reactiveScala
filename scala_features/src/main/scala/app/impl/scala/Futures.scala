@@ -2,9 +2,8 @@ package app.impl.scala
 
 import org.junit.Test
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
-
-import ExecutionContext.Implicits.global
 
 
 /**
@@ -13,16 +12,29 @@ import ExecutionContext.Implicits.global
 class Futures {
 
 
-  @Test def testFuture(): Unit ={
-    future.onComplete(x=> println(s"List emitted:${x.get}"))
+  @Test def testFuture(): Unit = {
+    future.onComplete(x => println(s"Value emitted:${x.get}"))
     println(s"Main thread:${Thread.currentThread().getName}")
+    Thread.sleep(1000)
   }
 
-  val future: Future[List[Int]] = Future {
+  @Test def testFallback(): Unit = {
+    errorFuture
+      .fallbackTo(future)
+      .onComplete(x => println(s"Value emitted:${x.get}"))
+
+    println(s"Main thread:${Thread.currentThread().getName}")
+    Thread.sleep(1000)
+  }
+
+  val future: Future[String] = Future {
     println(s"Future thread:${Thread.currentThread().getName}")
-    List[Int](1,2,3)
+    "result"
   }
 
+  val errorFuture: Future[String] = Future {
+    throw new NullPointerException
+  }
 
 
 }

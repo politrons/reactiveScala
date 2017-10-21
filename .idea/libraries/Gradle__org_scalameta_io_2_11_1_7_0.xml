@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalameta:io_2.11:1.7.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/io_2.11/1.7.0/d61b8678b486382e97be71612703b688b2305ac6/io_2.11-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/io_2.11/1.7.0/6f4458d3bd168a1d7b05bdf552481cf4c0283402/io_2.11-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

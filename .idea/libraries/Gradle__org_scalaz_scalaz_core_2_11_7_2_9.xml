@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalaz:scalaz-core_2.11:7.2.9">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalaz/scalaz-core_2.11/7.2.9/a4047a7750b45396f1c657e87f524a7ccd45fee1/scalaz-core_2.11-7.2.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalaz/scalaz-core_2.11/7.2.9/b3e03054de7744aecb4d847abc32a13d6497397c/scalaz-core_2.11-7.2.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

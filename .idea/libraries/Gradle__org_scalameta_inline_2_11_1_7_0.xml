@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalameta:inline_2.11:1.7.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/inline_2.11/1.7.0/776c0c096d0951f47027c9576a012437613c24d7/inline_2.11-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/inline_2.11/1.7.0/b36de1bfa586b3e0027a7d3379a0710f2677ca5a/inline_2.11-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

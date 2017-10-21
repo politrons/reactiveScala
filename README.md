@@ -96,6 +96,7 @@ All the most common features of Observable
 ![My image](scala_features/src/main/resources/img/lambda.ico)
 # ScalaZ
 
+* **[Monad laws](scala_features/src/main/scala/app/impl/scalaz/MonadLaws.scala)**
 * **[Free monads](scala_features/src/main/scala/app/impl/scalaz/FreeMonad.scala)**
 * **[Features](scala_features/src/main/scala/app/impl/scalaz/Features.scala)**
 * **[Tagging](scala_features/src/main/scala/app/impl/scalaz/Tagging.scala)**

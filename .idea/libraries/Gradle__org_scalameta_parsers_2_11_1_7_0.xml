@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalameta:parsers_2.11:1.7.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/parsers_2.11/1.7.0/6733fb3bb762375bf53ddf20f8a425b0473a1fbf/parsers_2.11-1.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalameta/parsers_2.11/1.7.0/dbf2f565337338c50d7225fa36e9f7c5016158ff/parsers_2.11-1.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
