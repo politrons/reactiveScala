@@ -79,6 +79,8 @@ All the most common features of Observable
 
 * **[Try](scala_features/src/main/scala/app/impl/scala/Try.scala)**
 
+* **[Either](scala_features/src/main/scala/app/impl/scala/EitherFeature.scala)**
+
 * **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
 
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
