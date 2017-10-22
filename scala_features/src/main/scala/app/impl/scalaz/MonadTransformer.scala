@@ -12,40 +12,64 @@ import scalaz.{Free, ~>}
 
 /**
   * Created by pabloperezgarcia on 15/10/2017.
+  *
+  * Using ScalaZ we can create our own monad transformer, as a monad have to respect the 3 monad laws.
+  * We will create a type of monad using the Free[IN, OUT] and then we define our monad transformers just
+  * creating functions that implement liftF and return that type.
+  * once we define our monad transformers we need to create an interpreter to interact with the monad that we
+  * just create. As usual if we use the monad transformer in a for comprehension they must being of the same type.
   */
 class MonadTransformer {
 
-  val future = Future {
-    "hello"
+  val helloFuture = Future {
+    " hello"
+  }
+
+  val monadFuture = Future {
+    " monad"
+  }
+
+  val worldFuture = Future {
+    " world"
   }
 
   @Test
   def customMonad(): Unit = {
-    val value: Id[Any] = getFutureValue
+    val value: Id[String] = getFutureValue
     println(value)
   }
 
   private def getFutureValue = {
     (for {
-      value <- FutureValue(future)
-    } yield value).foldMap(interpreter)
+      world <- FutureValue(worldFuture)
+      monad <- FutureValueConcat(monadFuture, world)
+      hello <- FutureValueConcat(helloFuture, monad)
+    } yield hello).foldMap(interpreter)
+  }
+
+
+  type ActionMonad[A] = Free[Action, A]
+
+  def FutureValue(action: Future[String]): ActionMonad[String] = {
+    liftF[Action, String](ResolveFuture(action))
+  }
+
+  def FutureValueConcat(action: Future[String], value: String): ActionMonad[String] = {
+    liftF[Action, String](ResolveFutureAndConcat(action, value))
   }
 
   type Id[+A] = A
 
   sealed trait Action[A]
 
-  case class _Action(action: Future[Any]) extends Action[Any]
+  case class ResolveFuture(action: Future[String]) extends Action[String]
 
-  type ActionMonad[A] = Free[Action, A]
-
-  def FutureValue(action: Future[Any]): ActionMonad[Any] = {
-    liftF[Action, Any](_Action(action))
-  }
+  case class ResolveFutureAndConcat(action: Future[String], value: String) extends Action[String]
 
   def interpreter: Action ~> Id = new (Action ~> Id) {
     def apply[A](a: Action[A]): Id[A] = a match {
-      case _Action(action) => Await.result(action, Duration.create(5, TimeUnit.SECONDS))
+      case ResolveFuture(action) => Await.result(action, Duration.create(5, TimeUnit.SECONDS))
+      case ResolveFutureAndConcat(action, value) => Await.result(action, Duration.create(5, TimeUnit.SECONDS)) + value
     }
   }
 
