@@ -7,6 +7,7 @@ import org.junit.Test
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+import scala.util.Random
 import scalaz.Free._
 import scalaz.{Free, ~>}
 
@@ -26,7 +27,11 @@ class MonadTransformer {
   }
 
   val monadFuture = Future {
-    " monad"
+    if (new Random().nextBoolean()) {
+      Some(" monad")
+    } else {
+      None
+    }
   }
 
   val worldFuture = Future {
@@ -44,7 +49,7 @@ class MonadTransformer {
   private def getFutureValue = {
     (for {
       world <- FutureValue(worldFuture)
-      monad <- FutureValueConcat(monadFuture, world)
+      monad <- FutureOptionValueConcat(monadFuture, world)
       hello <- FutureValueConcat(helloFuture, monad)
     } yield hello).foldMap(interpreter)
   }
@@ -52,7 +57,7 @@ class MonadTransformer {
   private def getFutureValuePipeline = {
     for {
       sentence <- FutureValue(worldFuture)
-        .ConcatFuture(monadFuture)
+        .ConcatFutureOption(monadFuture)
         .ConcatFuture(helloFuture)
         .runPipeline
     } yield sentence
@@ -68,16 +73,38 @@ class MonadTransformer {
     liftF[Action, String](ResolveFutureAndConcat(action, value))
   }
 
+  def FutureOptionValueConcat(action: Future[Option[String]], value: String): ActionMonad[String] = {
+    liftF[Action, String](ResolveFutureOptionAndConcat(action, value))
+  }
+
   implicit class customFree(free: Free[Action, String]) {
 
     def ConcatFuture(action: Future[String]): ActionMonad[String] = {
       free.flatMap(value => liftF[Action, String](ResolveFutureAndConcat(action, value)))
     }
 
+    def ConcatFutureOption(action: Future[Option[String]]): ActionMonad[String] = {
+      free.flatMap(value => liftF[Action, String](ResolveFutureOptionAndConcat(action, value)))
+    }
+
     def runPipeline = free.foldMap(interpreter)
 
   }
 
+  /**
+    * In scalaz interpreters are the milestone of the monad transformer, is the function that give the monad transformer
+    * a behave, so we could reuse the same monad transformer with so many behaves as interpreters we have.
+    * That even include the return type value.
+    **/
+  def interpreter: Action ~> Id = new (Action ~> Id) {
+    def apply[A](a: Action[A]): Id[A] = a match {
+      case ResolveFuture(action) => Await.result(action, Duration.create(5, TimeUnit.SECONDS))
+      case ResolveFutureAndConcat(action, value) => Await.result(action, Duration.create(5, TimeUnit.SECONDS)) + value
+      case ResolveFutureOptionAndConcat(action, value) =>
+        val result = Await.result(action, Duration.create(5, TimeUnit.SECONDS))
+        if (result.isEmpty) " end of sentence" else result.get + value
+    }
+  }
 
   type Id[+A] = A
 
@@ -87,11 +114,7 @@ class MonadTransformer {
 
   case class ResolveFutureAndConcat(action: Future[String], value: String) extends Action[String]
 
-  def interpreter: Action ~> Id = new (Action ~> Id) {
-    def apply[A](a: Action[A]): Id[A] = a match {
-      case ResolveFuture(action) => Await.result(action, Duration.create(5, TimeUnit.SECONDS))
-      case ResolveFutureAndConcat(action, value) => Await.result(action, Duration.create(5, TimeUnit.SECONDS)) + value
-    }
-  }
+  case class ResolveFutureOptionAndConcat(action: Future[Option[String]], value: String) extends Action[String]
+
 
 }
