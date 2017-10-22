@@ -77,9 +77,6 @@ class OptionTMonadTransformer {
     print(result1)
   }
 
-  /**
-    *
-    */
   @Test
   def futureWithOptionT(): Unit = {
     val result = Await.result(getEmployeeAgeWithOptionT("1", "Tesco"), Duration.create(10, TimeUnit.SECONDS))

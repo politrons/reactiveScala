@@ -29,6 +29,7 @@ dependencies {
     compile 'com.chuusai:shapeless_2.11:2.3.2'
     compile group: 'org.scalameta', name: 'scalameta_2.11', version: '1.7.0'
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.11', version: '2.5.6'
+    compile group: 'org.scalaz', name: 'scalaz-concurrent_2.11', version: '7.1.4'
 
 
 }
