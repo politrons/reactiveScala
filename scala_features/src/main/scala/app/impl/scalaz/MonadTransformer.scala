@@ -37,6 +37,8 @@ class MonadTransformer {
   def customMonad(): Unit = {
     val value: Id[String] = getFutureValue
     println(value)
+    val value1: Id[String] = getFutureValuePipeline
+    println(value1)
   }
 
   private def getFutureValue = {
@@ -47,6 +49,14 @@ class MonadTransformer {
     } yield hello).foldMap(interpreter)
   }
 
+  private def getFutureValuePipeline = {
+    for {
+      sentence <- FutureValue(worldFuture)
+        .ConcatFuture(monadFuture)
+        .ConcatFuture(helloFuture)
+        .runPipeline
+    } yield sentence
+  }
 
   type ActionMonad[A] = Free[Action, A]
 
@@ -57,6 +67,17 @@ class MonadTransformer {
   def FutureValueConcat(action: Future[String], value: String): ActionMonad[String] = {
     liftF[Action, String](ResolveFutureAndConcat(action, value))
   }
+
+  implicit class customFree(free: Free[Action, String]) {
+
+    def ConcatFuture(action: Future[String]): ActionMonad[String] = {
+      free.flatMap(value => liftF[Action, String](ResolveFutureAndConcat(action, value)))
+    }
+
+    def runPipeline = free.foldMap(interpreter)
+
+  }
+
 
   type Id[+A] = A
 
