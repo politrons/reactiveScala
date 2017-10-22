@@ -1,52 +1,41 @@
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+package app.impl.scalaz
+
+
 /**
   * Created by pabloperezgarcia on 15/10/2017.
   */
-object MonadTransformer extends App {
+class MonadTransformer {
 
 
-  //Attributes for this example
-  sealed trait Employee {
-    val id: String
-  }
 
-  final case class EmployeeWithoutDetails(id: String) extends Employee
-
-  final case class EmployeeWithDetails(id: String, name: String, city: String, age: Int) extends Employee
-
-  case class Company(companyName: String, employees: List[EmployeeWithoutDetails])
-
-  //Database class to return elements
-  trait AsyncDBOps {
-    protected def getDetails(employeeId: String): Future[Option[EmployeeWithDetails]]
-
-    protected def getCompany(companyName: String): Future[Option[Company]]
-  }
-
-  class DB extends AsyncDBOps {
-    override def getDetails(employeeId: String): Future[Option[EmployeeWithDetails]] = Future {
-      Some(EmployeeWithDetails("1", "name", "city", 36))
-    }
-
-    override def getCompany(companyName: String): Future[Option[Company]] = Future {
-      Some(Company(companyName, List(EmployeeWithoutDetails("1"))))
-    }
-  }
-
-  //Monad transformer
-  def getEmployeeAge(employeeId: String, companyName: String): Future[Option[Int]] = {
-    val db = new DB
-    val eventualMaybeInt = for {
-      companyOpt: Option[Company] <- db.getCompany(companyName)
-      company: Company = companyOpt.getOrElse(Company("error", List()))
-      if company.employees map (_.id) contains employeeId
-      detailsOpt: Option[EmployeeWithDetails] <- db.getDetails(employeeId)
-    } yield detailsOpt map (_.age)
-    println(eventualMaybeInt)
-    eventualMaybeInt
-  }
-
-  getEmployeeAge("1","Tesco")
+//  //Custom Monads transfomer
+//
+//  @Test
+//  def customMonad(): Unit = {
+//    val value1 = for {
+//      value <- MonadTransfomer(Future {
+//        "hello"
+//      })
+//    } yield value
+//    println(value1)
+//  }
+//
+//  type Id[+A] = A
+//
+//  sealed trait Action[A]
+//
+//  case class _Action(action: Future[String]) extends Action[Any]
+//
+//  type ActionMonad[A] = Free[Action, A]
+//
+//  def MonadTransfomer(action: Future[String]): ActionMonad[Any] = {
+//    liftF[Action, Any](_Action(action)).foldMap(interpreter)
+//  }
+//
+//  def interpreter: Action ~> Id = new (Action ~> Id) {
+//    def apply[A](a: Action[A]): Id[A] = a match {
+//      case _Action(action) => Await.result(action, Duration.create(5, TimeUnit.SECONDS))
+//    }
+//  }
 
 }

@@ -67,19 +67,7 @@ object FreeMonad extends App {
       .flatMap(pair => {
         SellStock(s"GOOG ${pair.asInstanceOf[Pair]._1}", pair.asInstanceOf[Pair]._2 + 100)
       })
-//
-//  ListStocks()
-//    .Buy("")
-//    .Sell("")
-//    .run
 
-
-  //  (for {
-  //    stocks <- listStocks()
-  //    response <- buyStock(stocks.head, 1)
-  //    _ <- sellStock(null, 1)
-  //  } yield ()).run
-  //
   implicit class customFree(free: Free[FreeMonad.Orders, Any]) {
 
     def run() = free.foldMap(orderInterpreter1)

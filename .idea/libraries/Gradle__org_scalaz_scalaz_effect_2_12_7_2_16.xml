@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.scalaz:scalaz-effect_2.12:7.2.16">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalaz/scalaz-effect_2.12/7.2.16/f180d8f67e047d1726cbcd36abe5724c2f73ce51/scalaz-effect_2.12-7.2.16.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scalaz/scalaz-effect_2.12/7.2.16/12da150419a2a1808ef761b974c3930a35e2d1da/scalaz-effect_2.12-7.2.16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
