@@ -1,9 +1,12 @@
 
 
+import java.util.concurrent.TimeUnit
+
 import org.junit.Test
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 import scalaz.std.scalaFuture._
 import scalaz.{EitherT, \/}
 
@@ -46,9 +49,15 @@ class EitherTMonadTransformer {
 
   @Test
   def eitherT(): Unit = {
-    println(getEmailById("good"))//All good
-    println(getEmailById("bad"))//It will fail the first future
-    println(getEmailById("partial"))//It will fail the second future
+    val result = Await.result(getEmailById("good"), Duration.create(10, TimeUnit.SECONDS))
+    //All good
+    println(result)
+    val result1 = Await.result(getEmailById("bad"), Duration.create(10, TimeUnit.SECONDS))
+    //side effect in first future
+    println(result1)
+    val result2 = Await.result(getEmailById("partial"), Duration.create(10, TimeUnit.SECONDS))
+    //side effect in the second future
+    println(result2)
   }
 
 
