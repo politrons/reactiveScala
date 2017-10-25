@@ -1,27 +1,33 @@
 package app.impl.scalaz
 
-import scala.concurrent.Future
+import java.util.concurrent.TimeUnit
+
+import org.junit.Test
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 /**
   * Created by pabloperezgarcia on 24/10/2017.
   *
-  * Since for comprehension basically flatMap the monads that you pass, in case you need a double
+  * Since for comprehension basically flatMap the monad that you pass, in case you need a double
   * flatMap with side effects you can use Monad transformers.
   *
   */
 class MonadTransformer {
 
-  def findUserById(id: Long) = Future {
-    Some("paul")
+  def findUserByName(name: String) = Future {
+    Some(name)
   }
 
   def findAddressByUser(user: String) = Future {
-    Some(s"address of $user")
+    Some(s"Address of $user")
   }
 
 
   /**
-    * This monad transformer receive a Future o Option in his constructor and implement
+    * This monad transformer receive a Future of Option in his constructor and implement
     * map to transform the value of the monad, and flatMap to get the value of the option.
     *
     * @param value
@@ -39,10 +45,16 @@ class MonadTransformer {
       }))
   }
 
-  def findAddressByUserId(id: Long): Future[Option[String]] =
+  def findAddressByUserName(name: String): Future[Option[String]] =
     (for {
-      user <- FutOpt(findUserById(id))
+      user <- FutOpt(findUserByName(name))
       address <- FutOpt(findAddressByUser(user))
     } yield address).value
+
+  @Test
+  def main(): Unit ={
+    val result = Await.result(findAddressByUserName("Paul"), Duration.create(10, TimeUnit.SECONDS))
+    println(result.get)
+  }
 
 }
