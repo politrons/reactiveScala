@@ -1,37 +1,39 @@
 package app.impl.patterns.behavioral
 
-import java.awt.Color
-import java.awt.image.BufferedImage
+import org.junit.Test
 
 
-/**
-  * Thanks to type or case operator we can create immutable classes to represent type values in our classes
-  * which in general always is much better use than the primitive types that language provide.
-  * Increase readability and make our code thread safe
-  */
-object TypeClass extends App{
+class TypeClass {
 
-  //=============================//
-  //        Definition           //
-  //=============================//
-  type Color = (Float, Float, Float)
+  implicit class EqualOps[T](any: T) {
+    def ===(value: T)(implicit instance: EqualTypeClass[T]): Boolean = {
+      instance.equal(value, any)
+    }
+  }
 
-  def color: Color = (234, 122, 144)
+  trait EqualTypeClass[T] {
+    def equal(a: T, b: T): Boolean
+  }
 
-  case class Size(x:Int, y:Int)
+  object EqualTypeClass {
+    def apply[T](func: (T, T) => Boolean) = new EqualTypeClass[T] {
+      def equal(a: T, b: T): Boolean = func.apply(a, b)
+    }
+  }
 
-  def size:Size= Size(100, 200)
+  implicit val intEqual: EqualTypeClass[Int] = EqualTypeClass((a, b) => a == b)
 
+  implicit val stringEqual: EqualTypeClass[String] = EqualTypeClass((a, b) => a.eq(b))
 
-  // create an image
-  val canvas = new BufferedImage(size.x, size.y, BufferedImage.TYPE_INT_RGB)
+  implicit val longEqual: EqualTypeClass[Long] = EqualTypeClass((a, b) => a == b)
 
-  // get Graphics2D for the image
-  val g = canvas.createGraphics()
-
-  // clear background
-  g.setColor(Color.getHSBColor(color._1, color._2, color._3))
-
+  @Test
+  def testEquals() = {
+    println(1 === 2)
+    println("1" === "3")
+    println("1" === "1")
+    println(1l === 1l)
+  }
 
 
 }
