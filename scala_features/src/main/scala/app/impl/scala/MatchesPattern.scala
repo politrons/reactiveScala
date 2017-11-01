@@ -43,13 +43,11 @@ class MatchesPattern {
   }
 
   def matchTest(x: Any): Any = x match {
-    case 1 => {
+    case 1 =>
       "one".toUpperCase
-    }
     case 2 => 2
-    case "test" => {
+    case "test" =>
       "TEST".toLowerCase
-    }
     case _ => "many"
   }
 

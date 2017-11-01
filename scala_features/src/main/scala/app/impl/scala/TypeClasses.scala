@@ -19,7 +19,7 @@ class TypeClasses {
     println(getClassName(1))
     println(getClassName("test"))
     //To show the implicitNotFound message with compiler uncomment next line
-    //println(getClassName(1l))
+//    println(getClassName(1l))
   }
 
   @implicitNotFound("Hey Paul! No member of type class TypeClass in scope for ${T}")

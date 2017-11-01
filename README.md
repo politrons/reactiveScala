@@ -83,6 +83,8 @@ All the most common features of Observable
 
 * **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
 
+* **[Currying](scala_features/src/main/scala/app/impl/scala/Currying.scala)**
+
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
 
 
