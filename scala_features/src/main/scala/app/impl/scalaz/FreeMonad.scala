@@ -55,12 +55,10 @@ class FreeMonad {
   }
 
   private def getFutureValuePipeline = {
-    for {
-      sentence <- FutureValue(worldFuture)
-        .ConcatFutureOption(monadFuture)
-        .ConcatFuture(helloFuture)
-        .runPipeline
-    } yield sentence
+    FutureValue(worldFuture)
+      .ConcatFutureOption(monadFuture)
+      .ConcatFuture(helloFuture)
+      .runPipeline
   }
 
   type ActionMonad[A] = Free[Action, A]
@@ -115,7 +113,6 @@ class FreeMonad {
   case class ResolveFutureAndConcat(action: Future[String], value: String) extends Action[String]
 
   case class ResolveFutureOptionAndConcat(action: Future[Option[String]], value: String) extends Action[String]
-
 
 
 }
