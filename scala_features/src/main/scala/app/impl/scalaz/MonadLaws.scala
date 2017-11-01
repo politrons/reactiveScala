@@ -7,9 +7,6 @@ import org.junit.Test
   */
 class MonadLaws {
 
-  val globalFunction1: (Int => Option[Int]) = x => if (x < 10) None else Some(x * 2)
-  val globalFunction2: (Int => Option[Int]) = x => if (x > 50) Some(x + 1) else None
-
   /**
     * The first monad law states that if we take a value number = 2, put it in a default context with return
     * and then feed it to a function by using List(number).flatMap(f), it’s the same as just taking
@@ -82,6 +79,9 @@ class MonadLaws {
 
     assert(option1 == option2)
   }
+
+  val globalFunction1: (Int => Option[Int]) = x => if (x < 10) None else Some(x * 2)
+  val globalFunction2: (Int => Option[Int]) = x => if (x > 50) Some(x + 1) else None
 
 
 }
