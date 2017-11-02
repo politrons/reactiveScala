@@ -102,8 +102,8 @@ All the most common features of Observable
 
 * **[Monad laws](scala_features/src/main/scala/app/impl/scalaz/MonadLaws.scala)**
 * **[Free monads](scala_features/src/main/scala/app/impl/scalaz/FreeMonad.scala)**
+* **[Reader monad](scala_features/src/main/scala/app/impl/scalaz/ReaderMonad.scala)**
 * **[Monad transformer](scala_features/src/main/scala/app/impl/scalaz/MonadTransformer.scala)**
-* **[Reader transformer](scala_features/src/main/scala/app/impl/scalaz/ReaderMonad.scala)**
 * **[EitherT](scala_features/src/main/scala/app/impl/scalaz/EitherTMonadTransformer.scala)**
 * **[OptionT](scala_features/src/main/scala/app/impl/scalaz/OptionTMonadTransformer.scala)**
 * **[Features](scala_features/src/main/scala/app/impl/scalaz/Features.scala)**
