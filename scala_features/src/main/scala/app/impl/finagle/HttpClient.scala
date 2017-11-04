@@ -13,12 +13,18 @@ import com.twitter.util.{Await, Future}
   */
 object HttpClient extends App {
 
+  HttpServers.start()
+
+  Thread.sleep(1000)
+
+  println("Running client")
   val client: Service[Request, Response] = Http.newService("localhost:1982")
   val request = http.Request(http.Method.Get, "/")
   val response = makeRequest
   defineOnFailure
   defineOnSuccess
-  Await.result(response)
+  private val result = Await.result(response)
+  println(result)
 
   private def makeRequest: Future[Response] = {
     client(request)

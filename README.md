@@ -87,19 +87,10 @@ All the most common features of Observable
 
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
 
-
-![My image](scala_features/src/main/resources/img/design.png)
-# Design patterns
-
-* **[Creational](scala_features/src/main/scala/app/impl/patterns/creational)**
-
-* **[Structural](scala_features/src/main/scala/app/impl/patterns/structural)**
-
-* **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
-
 ![My image](scala_features/src/main/resources/img/lambda.ico)
 # ScalaZ
 
+* **[Functor](scala_features/src/main/scala/app/impl/scalaz/FunctorFeature.scala)**
 * **[Monad laws](scala_features/src/main/scala/app/impl/scalaz/MonadLaws.scala)**
 * **[Free monads](scala_features/src/main/scala/app/impl/scalaz/FreeMonad.scala)**
 * **[Reader monad](scala_features/src/main/scala/app/impl/scalaz/ReaderMonad.scala)**
@@ -109,6 +100,15 @@ All the most common features of Observable
 * **[Features](scala_features/src/main/scala/app/impl/scalaz/Features.scala)**
 * **[Tagging](scala_features/src/main/scala/app/impl/scalaz/Tagging.scala)**
 * **[Test DSL](scala_features/src/main/scala/app/impl/scalaz/TestDSL.scala)**
+
+![My image](scala_features/src/main/resources/img/design.png)
+# Design patterns
+
+* **[Creational](scala_features/src/main/scala/app/impl/patterns/creational)**
+
+* **[Structural](scala_features/src/main/scala/app/impl/patterns/structural)**
+
+* **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle

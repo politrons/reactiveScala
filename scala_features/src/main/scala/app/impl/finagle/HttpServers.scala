@@ -4,7 +4,6 @@ import app.impl.finagle.FinagleService.{responseType, sleepTime}
 import com.twitter.conversions.time._
 import com.twitter.finagle._
 import com.twitter.finagle.http.service.HttpResponseClassifier
-import com.twitter.util.Await
 
 /**
   * Created by pabloperezgarcia on 08/04/2017.
@@ -12,13 +11,16 @@ import com.twitter.util.Await
   * Finagle provide multiple operators features on server side that could be handy
   * Such features as retry policy, error handler, max concurrent connections, timeout and so on.
   */
-object HttpServers extends App {
+object HttpServers {
 
   var service = FinagleService.service
 
   private val port = "1982"
-  Await.ready(mainServer().serve(s"localhost:$port", service))
-  println("Service up")
+
+  def start(): Unit = {
+    println("Service up")
+    mainServer().serve(s"localhost:$port", service)
+  }
 
   /**
     * This is a regular finagle server
