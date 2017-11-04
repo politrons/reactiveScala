@@ -8,6 +8,7 @@ import scala.concurrent.Await._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration._
+
 /**
   * Created by pabloperezgarcia on 04/11/2017.
   *
@@ -21,10 +22,14 @@ class FunctorFeature {
 
   case class Container[A](first: A, second: A)
 
+  case class CustomMonad[A](value: A) {
+    def map[B](f: A => B): CustomMonad[B] = CustomMonad(f(value))
+  }
+
   /**
     * Functor for Container type
     */
-  implicit val customFunctor = new Functor[Container] {
+  implicit val containerFunctor = new Functor[Container] {
     def map[A, B](input: Container[A])(f: A => B): Container[B] = Container(f(input.first), f(input.second))
   }
 
@@ -43,8 +48,15 @@ class FunctorFeature {
   /**
     * Functor for Future type
     */
-  implicit def futureFunctor = new Functor[Future] {
+  implicit val futureFunctor = new Functor[Future] {
     def map[A, B](input: Future[A])(f: A => B): Future[B] = input.map(value => f(value))
+  }
+
+  /**
+    * Functor that use the CustomMonad created
+    */
+  implicit val customFunctor = new Functor[CustomMonad] {
+    def map[A, B](input: CustomMonad[A])(f: A => B): CustomMonad[B] = input.map(value => f(value))
   }
 
   /**
@@ -52,11 +64,27 @@ class FunctorFeature {
     */
   @Test
   def main(): Unit = {
-    println(customFunctor(Container(1, 2))(value => value * 100))
-    println(customFunctor(Container("Hello", "world"))(value => value.toUpperCase))
+    println(containerFunctor(Container(1, 2))(value => value * 100))
+    println(containerFunctor(Container("Hello", "world"))(value => value.toUpperCase))
     println(optionFunctor(Option("Hello world??"))(value => value.toUpperCase))
     println(optionFunctor(Option.empty[String])(value => value.toUpperCase))
-    println(result(futureFunctor(Future {"Will be Hello world"})(value => value.toUpperCase), create(10, SECONDS)))
-    println(result(futureFunctor(Future {10})(value => value * 200), create(10, SECONDS)))
+    println(result(futureFunctor(eventualString)(value => value.toUpperCase), create(10, SECONDS)))
+    println(result(futureFunctor(eventualInt)(value => value * 200), create(10, SECONDS)))
+    println(customFunctor(CustomMonad("Hello custom monad"))(value => value.toUpperCase))
+    println(customFunctor(CustomMonad(1000))(value => value * 9))
+    //    println(customFunctor(Bla("Hello bla monad"))(value => value.asInstanceOf[String].toUpperCase))
+  }
+
+
+  //  case class Bla[A <: String](value: String) extends CustomMonad {
+  //    override def map[B <: String](f: A => B): Bla[B] = Bla(f(value))
+  //  }
+
+  val eventualString = Future {
+    "Will be Hello world"
+  }
+
+  val eventualInt = Future {
+    10
   }
 }
