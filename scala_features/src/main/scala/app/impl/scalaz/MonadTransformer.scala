@@ -22,14 +22,14 @@ class MonadTransformer {
     * map to transform the value of the monad, and flatMap to get the value of the option.
     *
     */
-  case class FutOpt[A](value: Future[Option[A]]) {
+  case class FutOpt[A](run: Future[Option[A]]) {
 
     def map[B](f: A => B): FutOpt[B] =
-      FutOpt(value.map(optA => optA.map(f)))
+      FutOpt(run.map(optA => optA.map(f)))
 
     def flatMap[B](f: A => FutOpt[B]): FutOpt[B] =
-      FutOpt(value.flatMap {
-        case Some(a) => f(a).value
+      FutOpt(run.flatMap {
+        case Some(a) => f(a).run
         case None => Future.successful(None)
       })
   }
@@ -39,12 +39,20 @@ class MonadTransformer {
       user <- FutOpt(findUserByName(name))
       street <- FutOpt(findAddressByUser(user))
       address <- FutOpt(findNumberOfAddress(street))
-    } yield address).value
+    } yield address).run
+
+  def findAddressByUserNameNoSugar(name: String): Future[Option[String]] = {
+    FutOpt(findUserByName(name))
+      .flatMap(user => FutOpt(findAddressByUser(user)))
+      .flatMap(street => FutOpt(findNumberOfAddress(street))).run
+  }
 
   @Test
   def main(): Unit = {
     val result = Await.result(findAddressByUserName("Paul"), Duration.create(10, TimeUnit.SECONDS))
     println(result.get)
+    val result1 = Await.result(findAddressByUserNameNoSugar("Johny"), Duration.create(10, TimeUnit.SECONDS))
+    println(result1.get)
   }
 
   def findUserByName(name: String) = Future {
