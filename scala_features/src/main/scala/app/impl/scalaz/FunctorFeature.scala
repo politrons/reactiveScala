@@ -27,14 +27,17 @@ class FunctorFeature {
   }
 
   /**
-    * Functor for Container type
+    * Functor for Container type implement map to apply the function over the values of container and wrap it up again
+    * in a Container
+    *
     */
   implicit val containerFunctor = new Functor[Container] {
     def map[A, B](input: Container[A])(f: A => B): Container[B] = Container(f(input.first), f(input.second))
   }
 
   /**
-    * Functor for option type
+    * Functor for option type implement map to unwrap the option and get the value apply the function and wrap it up again
+    * in an Option. As side effect if the option does not contain value return None and not apply the function
     */
   implicit val optionFunctor = new Functor[Option] {
     def map[A, B](input: Option[A])(f: A => B): Option[B] = {
@@ -46,14 +49,16 @@ class FunctorFeature {
   }
 
   /**
-    * Functor for Future type
+    * Functor for Future type implement map to unwrap the future and get the value apply the function and wrap it up again
+    * in an Future.
     */
   implicit val futureFunctor = new Functor[Future] {
     def map[A, B](input: Future[A])(f: A => B): Future[B] = input.map(value => f(value))
   }
 
   /**
-    * Functor that use the CustomMonad created
+    * Functor that use the CustomMonad type created. Implement map to unwrap the CustomMonad and get the value apply the function and wrap it up again
+    * in an CustomMonad.
     */
   implicit val customFunctor = new Functor[CustomMonad] {
     def map[A, B](input: CustomMonad[A])(f: A => B): CustomMonad[B] = input.map(value => f(value))
