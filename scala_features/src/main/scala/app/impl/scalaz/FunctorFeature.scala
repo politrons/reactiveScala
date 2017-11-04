@@ -1,7 +1,13 @@
 package app.impl.scalaz
 
+import java.util.concurrent.TimeUnit._
+
 import org.junit.Test
 
+import scala.concurrent.Await._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration._
 /**
   * Created by pabloperezgarcia on 04/11/2017.
   *
@@ -35,13 +41,22 @@ class FunctorFeature {
   }
 
   /**
+    * Functor for Future type
+    */
+  implicit def futureFunctor = new Functor[Future] {
+    def map[A, B](input: Future[A])(f: A => B): Future[B] = input.map(value => f(value))
+  }
+
+  /**
     * Using the functor we pass the fa Value and function f(A=>B)
     */
   @Test
   def main(): Unit = {
     println(customFunctor(Container(1, 2))(value => value * 100))
     println(customFunctor(Container("Hello", "world"))(value => value.toUpperCase))
-    println(optionFunctor(Option("Hello world"))(value => value.toUpperCase))
+    println(optionFunctor(Option("Hello world??"))(value => value.toUpperCase))
     println(optionFunctor(Option.empty[String])(value => value.toUpperCase))
+    println(result(futureFunctor(Future {"Will be Hello world"})(value => value.toUpperCase), create(10, SECONDS)))
+    println(result(futureFunctor(Future {10})(value => value * 200), create(10, SECONDS)))
   }
 }
