@@ -87,9 +87,7 @@ All the most common features of Observable
 # Design patterns
 
 * **[Creational](scala_features/src/main/scala/app/impl/patterns/creational)**
-
 * **[Structural](scala_features/src/main/scala/app/impl/patterns/structural)**
-
 * **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
