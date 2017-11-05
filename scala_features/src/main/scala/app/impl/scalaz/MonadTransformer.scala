@@ -65,7 +65,13 @@ class MonadTransformer {
     */
   case class FutOpt[A](future: Future[Option[A]]) {
 
-    def map[B](f: A => B): FutOpt[B] = FutOpt(future.map(option => option.map(value => f(value))))
+    def map[B](f: A => B): FutOpt[B] = {
+      FutOpt(future.map(option => option.map(value => f(value)))
+        .recoverWith {
+          case e: Exception =>
+            Future.successful(Option.empty)
+        })
+    }
 
     def flatMap[B](f: A => FutOpt[B]): FutOpt[B] =
       FutOpt(future.flatMap(option => option match {
