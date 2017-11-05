@@ -48,43 +48,24 @@ All the most common features of Observable
 
 
 * **[Collections](scala_features/src/main/scala/app/impl/scala/Collections.scala)**
-
 * **[Algorithmic](scala_features/src/main/scala/app/impl/scala/Algorithmic.scala)**
-
 * **[Implicit](scala_features/src/main/scala/app/impl/scala/Implicit.scala)**
-
 * **[Matches Pattern](scala_features/src/main/scala/app/impl/scala/MatchesPattern.scala)**
-
 * **[For Comprenhensions](scala_features/src/main/scala/app/impl/scala/ForComprenhensions.scala)**
-
 * **[Type Classes](scala_features/src/main/scala/app/impl/scala/TypeClasses.scala)**
-
 * **[Interpolation](scala_features/src/main/scala/app/impl/scala/Interpolation.scala)**
-
 * **[Functions](scala_features/src/main/scala/app/impl/scala/Functions.scala)**
-
 * **[Factory](scala_features/src/main/scala/app/impl/scala/Factory.scala)**
-
 * **[Compound Types](scala_features/src/main/scala/app/impl/scala/CompoundTypes.scala)**
-
 * **[Self Reference](scala_features/src/main/scala/app/impl/scala/SelfReference.scala)**
-
 * **[Generics](scala_features/src/main/scala/app/impl/scala/Generics.scala)**
-
 * **[Covariant SubType](scala_features/src/main/scala/app/impl/scala/CovariantSubType.scala)**
-
 * **[Partial function](scala_features/src/main/scala/app/impl/scala/PartialFunctions.scala)**
-
 * **[Extractor](scala_features/src/main/scala/app/impl/scala/Extractor.scala)**
-
 * **[Try](scala_features/src/main/scala/app/impl/scala/Try.scala)**
-
 * **[Either](scala_features/src/main/scala/app/impl/scala/EitherFeature.scala)**
-
 * **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
-
 * **[Currying](scala_features/src/main/scala/app/impl/scala/Currying.scala)**
-
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
 
 ![My image](scala_features/src/main/resources/img/lambda.ico)
