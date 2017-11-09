@@ -72,6 +72,7 @@ All the most common features of Observable
 * **[Functor](scala_features/src/main/scala/app/impl/scalaz/FunctorFeature.scala)**
 * **[Monad laws](scala_features/src/main/scala/app/impl/scalaz/MonadLaws.scala)**
 * **[Free monads](scala_features/src/main/scala/app/impl/scalaz/FreeMonad.scala)**
+* **[Writer monad](scala_features/src/main/scala/app/impl/scalaz/WriterMonad.scala)**
 * **[Reader monad](scala_features/src/main/scala/app/impl/scalaz/ReaderMonad.scala)**
 * **[State monad](scala_features/src/main/scala/app/impl/scalaz/StateMonad.scala)**
 * **[Monad transformer](scala_features/src/main/scala/app/impl/scalaz/MonadTransformer.scala)**
