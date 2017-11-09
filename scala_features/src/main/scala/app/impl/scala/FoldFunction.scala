@@ -69,9 +69,9 @@ class FoldFunction {
   }
 
 
-
   /**
     * If someValue it´s empty fold will return the Value, otherwise it will execute the second function
+    *
     * @param mainClass
     * @param someValue
     * @return
@@ -129,5 +129,20 @@ class FoldFunction {
         formatPath
     }
     println(formatPath)
+  }
+
+  /**
+    * Using foldRight we do the other way around of the previous test.
+    */
+  @Test
+  def foldLeftRightMap() = {
+    val map: Map[String, String] = Map()
+
+    val newMap = keyValue.foldRight(map)((entry, map) => map ++ Map(entry._1 -> entry._2))
+    println(newMap)
+
+    val newMap1 = keyValue.foldLeft(map)((map, entry) => map ++ Map(entry._1 -> entry._2))
+    println(newMap1)
+
   }
 }

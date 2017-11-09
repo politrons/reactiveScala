@@ -37,6 +37,8 @@ class TypeClasses {
 
   implicit val stringName: TypeClass[String] = TypeClass(clazz => clazz.getClass.getName)
 
+//  implicit val longName: TypeClass[Long] = TypeClass(clazz => clazz.getClass.getName)
+
 
   def getClassName[T](className: T)(implicit typeClass: TypeClass[T]): String = {
     typeClass.className(className)
