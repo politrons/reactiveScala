@@ -20,6 +20,7 @@ object HttpServers {
   def start(): Unit = {
     println("Service up")
     mainServer().serve(s"localhost:$port", service)
+
   }
 
   /**
