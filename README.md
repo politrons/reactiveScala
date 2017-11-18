@@ -1,6 +1,6 @@
 Author Pablo Perez Garcia 
 
-# RxScala ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
+# ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
 
 ![My image](scala_features/src/main/resources/img/flatMap.png)
 
@@ -40,7 +40,7 @@ All the most common features of Observable
 
     ![My image](scala_features/src/main/resources/img/rsz_1buffer.png)
 
-![My image](scala_features/src/main/resources/img/rsz_scala.gif)
+# ![My image](scala_features/src/main/resources/img/rsz_scala.gif)
 
 
 * **[Collections](scala_features/src/main/scala/app/impl/scala/Collections.scala)**
