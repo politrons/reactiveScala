@@ -17,31 +17,13 @@ RxJava examples [here](https://github.com/politrons/reactive)
 All the most common features of Observable
 
 * **[Combining](scala_features/src/main/scala/app/impl/rx/Combining.scala)**
-
-    ![My image](scala_features/src/main/resources/img/rsz_1zipo.png)
-
 * **[Creating](scala_features/src/main/scala/app/impl/rx/Creating.scala)**
-
-    ![My image](scala_features/src/main/resources/img/rsz_1createc.png)
-
 * **[Filtering](scala_features/src/main/scala/app/impl/rx/Filtering.scala)**
-
-    ![My image](scala_features/src/main/resources/img/rsz_1filter.png)
-
 * **[Transforming](scala_features/src/main/scala/app/impl/rx/Transforming.scala)**
-
-    ![My image](scala_features/src/main/resources/img/rsz_flatmap.png)
-    
 * **[Scheduler](scala_features/src/main/scala/app/impl/rx/Scheduler.scala)**
-
-    ![My image](scala_features/src/main/resources/img/rsz_2subscribeonc.png)
-    
 * **[Implicit](scala_features/src/main/scala/app/impl/rx/ImplicitObservables.scala)**
 
-    ![My image](scala_features/src/main/resources/img/rsz_1buffer.png)
-
 # ![My image](scala_features/src/main/resources/img/rsz_scala.gif)
-
 
 * **[Collections](scala_features/src/main/scala/app/impl/scala/Collections.scala)**
 * **[Algorithmic](scala_features/src/main/scala/app/impl/scala/Algorithmic.scala)**
