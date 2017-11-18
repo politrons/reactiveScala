@@ -2,8 +2,6 @@ Author Pablo Perez Garcia
 
 # ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
 
-![My image](scala_features/src/main/resources/img/flatMap.png)
-
 Marble diagrams are not clear enough?.
 
 Here we cover with some practical examples, the most common use of the ReactiveX platform for Scala.
@@ -15,6 +13,8 @@ To reference to the real documentation go here https://github.com/ReactiveX/RxJa
 RxJava examples [here](https://github.com/politrons/reactive)
 
 All the most common features of Observable
+
+![My image](scala_features/src/main/resources/img/flatMap.png)
 
 * **[Combining](scala_features/src/main/scala/app/impl/rx/Combining.scala)**
 * **[Creating](scala_features/src/main/scala/app/impl/rx/Creating.scala)**
