@@ -25,6 +25,8 @@ All the most common features of Observable
 
 # ![My image](scala_features/src/main/resources/img/rsz_scala.gif)
 
+Here we cover with some practical examples, the most common use of Scala API.
+
 * **[Collections](scala_features/src/main/scala/app/impl/scala/Collections.scala)**
 * **[Algorithmic](scala_features/src/main/scala/app/impl/scala/Algorithmic.scala)**
 * **[Implicit](scala_features/src/main/scala/app/impl/scala/Implicit.scala)**
@@ -48,6 +50,8 @@ All the most common features of Observable
 
 ![My image](scala_features/src/main/resources/img/lambda.ico)
 # ScalaZ
+
+Here we cover with some practical examples, the most common use of ScalaZ API.
 
 * **[Functor](scala_features/src/main/scala/app/impl/scalaz/FunctorFeature.scala)**
 * **[Monad laws](scala_features/src/main/scala/app/impl/scalaz/MonadLaws.scala)**
