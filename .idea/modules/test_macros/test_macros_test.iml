@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id=":test_macros:test" external.linked.project.path="$MODULE_DIR$/../../../test_macros" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="ReactiveScala" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9" inherit-compiler-output="false">
-    <output-test url="file://$MODULE_DIR$/../../../test_macros/build/classes/test" />
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
+    <output-test url="file://$MODULE_DIR$/../../../test_macros/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../test_macros/src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../../test_macros/src/test/java" isTestSource="true" />
@@ -69,6 +69,7 @@
     <orderEntry type="library" name="Gradle: org.scalameta:trees_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:inline_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:semantic_2.11:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.grizzly:grizzly-http-server:2.4.0" level="project" />
     <orderEntry type="module" module-name="h2_main" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-dns:4.1.5.Final" level="project" />
     <orderEntry type="library" name="Gradle: com.thoughtworks.paranamer:paranamer:2.8" level="project" />
@@ -82,11 +83,13 @@
     <orderEntry type="library" name="Gradle: org.scalameta:tokens_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: com.lihaoyi:scalaparse_2.11:0.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.trueaccord.scalapb:scalapb-runtime_2.11:0.6.0-pre2" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.grizzly:grizzly-http:2.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.192" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:io_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: com.lihaoyi:fastparse_2.11:0.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.trueaccord.lenses:lenses_2.11:0.4.10" level="project" />
     <orderEntry type="library" name="Gradle: com.google.protobuf:protobuf-java:3.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.glassfish.grizzly:grizzly-framework:2.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.lihaoyi:fastparse-utils_2.11:0.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.8.6" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.8.6" level="project" />

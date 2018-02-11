@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$/../../../scala_features">
       <excludeFolder url="file://$MODULE_DIR$/../../../scala_features/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../scala_features/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../scala_features/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

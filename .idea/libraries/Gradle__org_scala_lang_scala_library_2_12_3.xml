@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="Gradle: org.scala-lang:scala-library:2.12.3" type="Scala">
     <properties>
-      <option name="languageLevel" value="Scala_2_12" />
       <compiler-classpath>
         <root url="file://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-compiler/2.12.3/b6b9ca202fc8405260d30e703b9790e91c75cd85/scala-compiler-2.12.3.jar" />
         <root url="file://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.scala-lang/scala-library/2.12.3/f2e496f21af2d80b48e0a61773f84c3a76a0d06f/scala-library-2.12.3.jar" />

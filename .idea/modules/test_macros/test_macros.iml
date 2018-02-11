@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$/../../../test_macros">
       <excludeFolder url="file://$MODULE_DIR$/../../../test_macros/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../test_macros/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../test_macros/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

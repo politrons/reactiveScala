@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="Gradle 1" modules="macros,test_macros,scala_features,h2,ReactiveScala">
+    <profile name="Gradle 1" modules="macros,test_macros,scala_features,h2,ReactiveScala,macros_main,macros_test,test_macros_main,test_macros_test,scala_features_main,scala_features_test,h2_main,h2_test,ReactiveScala_main,ReactiveScala_test">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
-      <parameters>
-        <parameter value="-target:jvm-1.9" />
-      </parameters>
     </profile>
   </component>
 </project>

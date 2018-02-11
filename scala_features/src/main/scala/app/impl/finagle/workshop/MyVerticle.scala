@@ -1,3 +1,5 @@
+package app.impl.finagle.workshop
+
 import io.vertx.core._
 import io.vertx.core.http.HttpServerRequest
 

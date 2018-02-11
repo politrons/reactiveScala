@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$/../../../Cassandra">
       <excludeFolder url="file://$MODULE_DIR$/../../../Cassandra/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../Cassandra/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../Cassandra/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -3,6 +3,8 @@ package app.impl.scala
 import app.impl.Generic
 import org.junit.Test
 
+import scala.concurrent.{Await, Future}
+
 
 class Algorithmic extends Generic[String, Long] {
 
@@ -81,6 +83,35 @@ class Algorithmic extends Generic[String, Long] {
       }
     }
     println(numbers.toList)
+  }
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  global.execute(new Runnable
+
+  {
+
+    override def run() = Future {
+      Thread.sleep(5000)
+      "send"
+    }.onComplete(value => println(value))
+  })
+
+  @Test
+  def main(): Unit = {
+    val fun = () => {
+      println(Thread.currentThread().getName)
+      Thread.sleep(10000)
+      1
+    }
+    f(fun.apply())
+  }
+
+
+  import scala.concurrent.duration._
+
+  def f(fun: => Int) {
+    Await.result(Future.successful(fun), 2 seconds)
   }
 
 
