@@ -34,6 +34,7 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[For Comprenhensions](scala_features/src/main/scala/app/impl/scala/ForComprenhensions.scala)**
 * **[Type Classes](scala_features/src/main/scala/app/impl/scala/TypeClasses.scala)**
 * **[Interpolation](scala_features/src/main/scala/app/impl/scala/Interpolation.scala)**
+* **[Future](scala_features/src/main/scala/app/impl/scala/FutureFeatures.scala)**
 * **[Functions](scala_features/src/main/scala/app/impl/scala/Functions.scala)**
 * **[Factory](scala_features/src/main/scala/app/impl/scala/Factory.scala)**
 * **[Compound Types](scala_features/src/main/scala/app/impl/scala/CompoundTypes.scala)**
@@ -46,7 +47,6 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Either](scala_features/src/main/scala/app/impl/scala/EitherFeature.scala)**
 * **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
 * **[Currying](scala_features/src/main/scala/app/impl/scala/Currying.scala)**
-* **[Future](scala_features/src/main/scala/app/impl/scala/FutureFeatures.scala)
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
 
 ![My image](scala_features/src/main/resources/img/lambda.ico)
