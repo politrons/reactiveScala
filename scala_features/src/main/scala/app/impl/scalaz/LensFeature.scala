@@ -59,17 +59,17 @@ class LensFeature {
   @Test
   def copyAgeWithLens(): Unit = {
     println(pablo)
-    val lenToAge = manLen >=> personLen >=> ageLen
-    val paulWithAge = lenToAge.set(pablo, 29)
-    println(paulWithAge)
+    val lenForAge = manLen >=> personLen >=> ageLen
+    val pabloWithAge = lenForAge.set(pablo, 29)
+    println(pabloWithAge)
   }
 
   @Test
   def copyAgeAndNameWithLens(): Unit = {
     println(pablo)
-    val lenToAge = manLen >=> personLen >=> ageLen
+    val lenForAge = manLen >=> personLen >=> ageLen
     val lenForName = manLen >=> personLen >=> nameLen
-    val paulWithAge = lenToAge.set(lenForName.set(pablo, Name("Paul")), 29)
+    val paulWithAge = lenForAge.set(lenForName.set(pablo, Name("Paul")), 29)
     println(paulWithAge)
   }
 
