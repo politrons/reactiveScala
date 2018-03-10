@@ -46,7 +46,7 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Either](scala_features/src/main/scala/app/impl/scala/EitherFeature.scala)**
 * **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
 * **[Currying](scala_features/src/main/scala/app/impl/scala/Currying.scala)**
-* **[Future](scala_features/src/main/scala/app/impl/scala/FutureSequence.scala)
+* **[Future](scala_features/src/main/scala/app/impl/scala/FutureFeatures.scala)
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
 
 ![My image](scala_features/src/main/resources/img/lambda.ico)
