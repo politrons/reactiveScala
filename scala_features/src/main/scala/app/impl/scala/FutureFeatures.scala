@@ -120,7 +120,7 @@ class FutureFeatures {
   def sequence(): Unit = {
     val eventualEventualAccounts = futureList.map(list => {
       list.map(account => {
-        transform(account.status).map(value => Account(value))
+        upperCaseFuture(account.status).map(value => Account(value))
       })
     }).flatMap(futureOfList => {
       Future.sequence(futureOfList)
@@ -136,7 +136,7 @@ class FutureFeatures {
     List(Account("test"), Account("future"), Account("sequence"))
   }
 
-  def transform(s: String): Future[String] = {
+  def upperCaseFuture(s: String): Future[String] = {
     Future {
       s.toUpperCase
     }
