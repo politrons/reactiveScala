@@ -5,7 +5,7 @@ import org.glassfish.grizzly.http.server.{HttpHandler, HttpServer, Request, Resp
 
 object MyGrizzlyServer extends App {
 
-  val server = HttpServer.createSimpleServer()
+  val server = HttpServer.createSimpleServer("", "localhost", 8080)
   server.getServerConfiguration.addHttpHandler(new HttpHandler() {
     @throws[Exception]
     def service(request: Request, response: Response): Unit = {

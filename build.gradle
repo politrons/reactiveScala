@@ -39,5 +39,7 @@ tasks.withType(ScalaCompile) {
     scalaCompileOptions.useAnt = false
 }
 
+sourceCompatibility = 1.8
+
 
 

@@ -29,6 +29,7 @@ class Try {
       number <- Try(list.map(number => Integer.parseInt(number)))
     } yield number
 
+    println(result.isFailure)
     println(result)
   }
 

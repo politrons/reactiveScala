@@ -4,6 +4,7 @@ import java.net.URL
 
 import com.twitter.finagle.http.{HeaderMap, Request, RequestBuilder, Response}
 import com.twitter.finagle.{Http, Service, http}
+import com.twitter.io.Buf
 import com.twitter.util.{Await, Future}
 
 /**
@@ -18,16 +19,22 @@ object FinagleHttpClient extends App {
   println("Running client")
   var service = Http.client
     //      .withRetryBackoff()
-    .newService("0.0.0.0:8080")
+    .newService("localhost:8080")
+
+
   //  val service: Service[Request, Response] = Http.newService("0.0.0.0:8080")
 
-  val request = http.Request(http.Method.Get, "/hello_server")
-  //  request.host = "http://0.0.0.0:8080/"
-  request.headerMap.add("host", "http://0.0.0.0:8080/")
+  val request = http.Request("/hello_server")
+  request.method(http.Method.Get)
+//  request.host = "localhost:8080"
+//  request.headerMap.add("host", "localhost:8080")
+  request.contentString = ""
+
 
   //  val request = RequestBuilder()
   //    .url(new URL("http://0.0.0.0:8080/hello_server"))
-  //    .buildGet()
+  //    .addHeader("host", "http://0.0.0.0:8080/")
+  //    .buildPost(Buf.Utf8.apply("Hello world!"))
 
   val serviceWithFilter =
     ReplaceFilter("WORLD", "PLANET")
