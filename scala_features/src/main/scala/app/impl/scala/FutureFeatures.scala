@@ -1,16 +1,10 @@
 package app.impl.scala
 
-import java.util.concurrent.TimeUnit
-
+import com.twitter.util.{Future => TwitterFuture}
 import org.junit.Test
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.twitter.util.{Await, Future => TwitterFuture}
-import rx.Observable
-
-import scala.concurrent.{Future => ScalaFuture, Promise => ScalaPromise}
-import scala.util.Try
+import scala.concurrent.Future
 
 /**
   * Future of Scala it´s far more advance that Java 7 Future class, it´s a monad so you can mutate or compose futures
@@ -133,10 +127,10 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
-  private val isStringPartialFunction = new PartialFunction[Any /*Entry type*/ , String /*Output type*/ ] {
-    def apply(d: Any) = d.asInstanceOf[String]
+  private val isStringPartialFunction: PartialFunction[Any /*Entry type*/ , String /*Output type*/ ] = {
 
-    def isDefinedAt(d: Any) = d.isInstanceOf[String]
+    case input if input.isInstanceOf[String] => input.asInstanceOf[String]
+
   }
 
   //######################################
@@ -241,17 +235,4 @@ class FutureFeatures {
 
   case class Number(value: Int)
 
-  /**
-    * Conversion from a Twitter Future to a Scala Future
-    **/
-  def twitterFutureToScalaFuture[T](twitterF: TwitterFuture[T]): ScalaFuture[T] = {
-    val scalaPromise = ScalaPromise[T]
-    twitterF.onSuccess { r: T =>
-      scalaPromise.success(r)
-    }
-    twitterF.onFailure { e: Throwable =>
-      scalaPromise.failure(e)
-    }
-    scalaPromise.future
-  }
 }
