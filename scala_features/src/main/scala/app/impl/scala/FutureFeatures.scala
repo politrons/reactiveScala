@@ -91,10 +91,25 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
-  case class Account(status: String)
+  /**
+    * Creates a new future by applying the left function to the successful result
+    * or the right function to the failed result.
+    */
+  @Test
+  def transformFutures(): Unit = {
+    Future("Let´s|transform|this|future")
+      .map(sentence => sentence.replace("|", " "))
+      .transform(sentence => sentence.toUpperCase, f => CustomException(f.getMessage))
+      .onComplete(sentence => println(sentence))
 
-  var futureList: Future[List[Account]] = Future {
-    List(Account("test"), Account("future"), Account("sequence"))
+    Future("Let´s transform this future")
+      .map(sentence => {
+        sentence.asInstanceOf[Integer]
+        sentence
+      })
+      .transform(sentence => sentence.toUpperCase, _ => CustomException("Error during transformation"))
+      .onComplete(sentence => println(sentence.failed.get))
+    Thread.sleep(1000)
   }
 
   /**
@@ -113,11 +128,45 @@ class FutureFeatures {
     eventualEventualAccounts.foreach(account => println(account))
   }
 
+  case class CustomException(message: String) extends Exception
+
+  case class Account(status: String)
+
+  var futureList: Future[List[Account]] = Future {
+    List(Account("test"), Account("future"), Account("sequence"))
+  }
+
   def transform(s: String): Future[String] = {
     Future {
       s.toUpperCase
     }
   }
+
+  /**
+    * Traverse operator allow you to create a Future from one initial TraversableOnce type as subtype list[A]
+    * into a Future[List[B]] after you apply a function to create a Future of type B  Future[B]
+    */
+  @Test
+  def traverse(): Unit = {
+    val primitiveNumberList = List(1, 2, 3, 4, 5)
+    val numberList = Future.traverse(primitiveNumberList)(x => Future(Number(x)))
+    Thread.sleep(1000)
+    println(numberList)
+
+    val listOfAny = Future.traverse(List("This", "is", 1, "awesome", 2))(x => Future(toUpperCaseString(x)))
+    Thread.sleep(1000)
+    println(listOfAny)
+
+  }
+
+  private def toUpperCaseString(x: Any) = {
+    x match {
+      case str: String => str.toUpperCase
+      case _ => "EJEM"
+    }
+  }
+
+  case class Number(value: Int)
 
   /**
     * Conversion from a Twitter Future to a Scala Future
