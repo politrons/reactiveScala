@@ -3,16 +3,19 @@ package app.impl.scala
 import org.junit.Test
 
 import scala.concurrent.Future
-
 import scala.concurrent.ExecutionContext.Implicits.global
-import com.twitter.util.{Future => TwitterFuture}
+import com.twitter.util.{Await, Future => TwitterFuture}
+
 import scala.concurrent.{Future => ScalaFuture, Promise => ScalaPromise}
+import scala.util.Try
 
 /**
   * Future of Scala it´s far more advance that Java 7 Future class, it´s a monad so you can mutate or compose futures
   * using Map and FlatMap, also add callbacks functions to let you know when future are resolved without have to block the
   * thread waiting for the resolution as Java Future does.
   * The only thing quite similar, and as usual more verbose is CompletableFuture of Java 8 (Jesus even the name is Verbose XD!)
+  *
+  * Sorry to do not use Await but in some examples I have several futures and.... well I´m lazy
   */
 class FutureFeatures {
 
@@ -140,7 +143,22 @@ class FutureFeatures {
 
   private val isStringPF = new PartialFunction[Any /*Entry type*/ , Unit] {
     def apply(d: Any) = println(d)
+
     def isDefinedAt(d: Any) = d.isInstanceOf[String]
+  }
+
+  /**
+    * Reduce operator, just works like in any other monad, we pass an initial TraversableOnce and per iteration
+    * we have a bifunction with the previous iteration value [previous] and the new one [current] to interact to each other.
+    * In this exmaple we decide to combine all them in a unique sentence, but the most common use it´s for arithmetic operations.
+    */
+  @Test
+  def reduce(): Unit = {
+    val futures = List(Future("welcome"), Future("to"), Future("the"), Future("future"))
+    Future.reduce(futures)((previous, current) => previous + " " + current)
+      .map(sentence => sentence.toUpperCase)
+      .onComplete(value => println(value.get))
+    Thread.sleep(1000)
   }
 
   /**
