@@ -112,6 +112,37 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
+  //######################################
+  //####### From Future factory ##########
+  //######################################
+
+
+  /**
+    * Success factory operator create a promise from the type T that you pass and return a future.
+    */
+  @Test
+  def success(): Unit = {
+    Future.successful("This future sentence always will work")
+      .onComplete(sentence => println(sentence))
+
+    Future.successful(() => "This future function always will work")
+      .map(func => func.apply())
+      .onComplete(sentence => println(sentence))
+
+    Future.successful("Success future")
+      .onSuccess(isStringPF)
+
+    Future.successful(1)
+      .onSuccess(isStringPF)
+
+    Thread.sleep(1000)
+  }
+
+  private val isStringPF = new PartialFunction[Any /*Entry type*/ , Unit] {
+    def apply(d: Any) = println(d)
+    def isDefinedAt(d: Any) = d.isInstanceOf[String]
+  }
+
   /**
     * Sequence operator allow you to extract the value from a future without block the thread once it´s resolved
     * Here for instance we pass to have a List[Future[T]] to have a List[T]
