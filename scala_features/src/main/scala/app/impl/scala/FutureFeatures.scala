@@ -53,6 +53,29 @@ class FutureFeatures {
     List(Account("test"), Account("future"), Account("sequence"))
   }
 
+  /**
+    * Future is a Functor/Monad so implement Map operator, where we can mutate the value that is being resolved in the pipeline.
+    */
+  @Test def mapFutures(): Unit = {
+
+    Future("hello|future|world")
+      .map(s => s.replace("|", " "))
+      .map(s => s.toUpperCase)
+      .onComplete(sentence => println(sentence))
+    Thread.sleep(1000)
+  }
+
+  /**
+    * Just like all monads you can use flatMap operator to add a new monad embedded in the other one.
+    */
+  @Test def flatFutures(): Unit = {
+    Future("Hello")
+      .flatMap(s => Future(s + " Future")
+        .flatMap(s1 => Future(s1 + " World")))
+      .onComplete(sentence => println(sentence))
+    Thread.sleep(1000)
+  }
+
 
   /**
     * Sequence operator allow you to extract the value from a future without block the thread once it´s resolved
