@@ -66,6 +66,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Features](scala_features/src/main/scala/app/impl/scalaz/Features.scala)**
 * **[Tagging](scala_features/src/main/scala/app/impl/scalaz/Tagging.scala)**
 * **[Test DSL](scala_features/src/main/scala/app/impl/scalaz/TestDSL.scala)**
+* **[Lens](scala_features/src/main/scala/app/impl/scalaz/LensFeature.scala)**
 
 ![My image](scala_features/src/main/resources/img/design.png)
 # Design patterns
