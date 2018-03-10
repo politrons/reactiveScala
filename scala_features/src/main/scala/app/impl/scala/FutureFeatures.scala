@@ -1,10 +1,13 @@
 package app.impl.scala
 
+import java.util.concurrent.TimeUnit
+
 import org.junit.Test
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.twitter.util.{Await, Future => TwitterFuture}
+import rx.Observable
 
 import scala.concurrent.{Future => ScalaFuture, Promise => ScalaPromise}
 import scala.util.Try
@@ -130,7 +133,7 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
-  private val isStringPartialFunction = new PartialFunction[Any /*Entry type*/ , String/*Output type*/] {
+  private val isStringPartialFunction = new PartialFunction[Any /*Entry type*/ , String /*Output type*/ ] {
     def apply(d: Any) = d.asInstanceOf[String]
 
     def isDefinedAt(d: Any) = d.isInstanceOf[String]

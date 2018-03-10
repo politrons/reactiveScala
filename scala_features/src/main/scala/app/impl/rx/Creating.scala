@@ -48,7 +48,7 @@ class Creating extends Generic[String, Long] {
     Observable.interval(createDuration(100))
       .map(n => "New item emitted:" + n)
       .doOnNext(s => print("\n" + s))
-      .subscribe();
+      .subscribe()
     new TestSubscriber[Subscription].awaitTerminalEvent(1000, TimeUnit.MILLISECONDS);
   }
 
