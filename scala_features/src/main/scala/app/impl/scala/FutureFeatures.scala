@@ -115,6 +115,27 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
+  /**
+    * Create a new future form the preivous one and check with the partial function if the value inside the future is
+    * what you expect. Otherwise throw a [NoSuchElementException]
+    */
+  @Test def collect(): Unit = {
+    Future("Hello collect operator")
+      .collect(isStringPartialFunction)
+      .onComplete(value => println(value))
+
+    Future(1)
+      .collect(isStringPartialFunction)
+      .onComplete(value => println(value))
+    Thread.sleep(1000)
+  }
+
+  private val isStringPartialFunction = new PartialFunction[Any /*Entry type*/ , String/*Output type*/] {
+    def apply(d: Any) = d.asInstanceOf[String]
+
+    def isDefinedAt(d: Any) = d.isInstanceOf[String]
+  }
+
   //######################################
   //####### From Future factory ##########
   //######################################
