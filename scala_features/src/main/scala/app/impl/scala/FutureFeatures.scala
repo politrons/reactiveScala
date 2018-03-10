@@ -10,7 +10,7 @@ import scala.concurrent.{Future => ScalaFuture, Promise => ScalaPromise}
 
 /**
   * Future of Scala it´s far more advance that Java 7 Future class, it´s a monad so you can mutate or compose futures
-  * using Map and FlatMap, also add callbacks functions to let you know when future it´´ resolved without have to block the
+  * using Map and FlatMap, also add callbacks functions to let you know when future are resolved without have to block the
   * thread waiting for the resolution as Java Future does.
   * The only thing quite similar, and as usual more verbose is CompletableFuture of Java 8 (Jesus even the name is Verbose XD!)
   */
@@ -47,17 +47,10 @@ class FutureFeatures {
     throw new NullPointerException
   }
 
-  case class Account(status: String)
-
-  var futureList: Future[List[Account]] = Future {
-    List(Account("test"), Account("future"), Account("sequence"))
-  }
-
   /**
     * Future is a Functor/Monad so implement Map operator, where we can mutate the value that is being resolved in the pipeline.
     */
   @Test def mapFutures(): Unit = {
-
     Future("hello|future|world")
       .map(s => s.replace("|", " "))
       .map(s => s.toUpperCase)
@@ -76,6 +69,33 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
+  /**
+    * Zip is one of the most value operators in Future API, allowing you to compose in parallel multiples futures which
+    * make a big difference when we talk about performance in our systems.
+    * Every zip create a tuple between the two calls, so as you can imagine if I zip two elements, it become
+    * (T,T) and if I zip that tuple I would have a tuple of T and tuple (T,(T,T)) and so on.
+    *
+    */
+  @Test
+  def zipFutures(): Unit = {
+    Future("This")
+      .zip(Future("is"))
+      .zip(Future("a"))
+      .zip(Future("race"))
+      .map(tuple => {
+        val compose = tuple._1._1._1 + " " + tuple._1._1._2 + " " + tuple._1._2 + " " + tuple._2
+        compose
+      })
+      .map(sentence => sentence.toUpperCase)
+      .onComplete(sentence => println(sentence))
+    Thread.sleep(1000)
+  }
+
+  case class Account(status: String)
+
+  var futureList: Future[List[Account]] = Future {
+    List(Account("test"), Account("future"), Account("sequence"))
+  }
 
   /**
     * Sequence operator allow you to extract the value from a future without block the thread once it´s resolved
