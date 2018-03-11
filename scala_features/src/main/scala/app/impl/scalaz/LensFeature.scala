@@ -72,7 +72,7 @@ class LensFeature {
   /**
     * Here instead we use lens for the Name class, as you can see it´s less verbose and most important the already created lens
     * are reusable.
-    * Here we combine lens as links to create a chain [val chain = link >=> link >=> link]  form the origin to the link that contains
+    * Here we combine lens as links to create a chain [val chain = link >=> link >=> link]  from the origin to the link that contains
     * the attribute to change.
     * Once that we have the chain of lens we use it passing the original instance and the value that we want to modify from the
     * original instance.
