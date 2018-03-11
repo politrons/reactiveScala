@@ -1,4 +1,4 @@
-package app.impl.di
+package app.impl.patterns.di
 
 import org.junit.Test
 

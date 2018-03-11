@@ -1,4 +1,4 @@
-package app.impl.di
+package app.impl.patterns.di
 
 /**
   * Created by pabloperezgarcia on 16/06/2017.

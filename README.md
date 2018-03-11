@@ -68,6 +68,8 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Creational](scala_features/src/main/scala/app/impl/patterns/creational)**
 * **[Structural](scala_features/src/main/scala/app/impl/patterns/structural)**
 * **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
+* **[Cake pattern](scala_features/src/main/scala/app/impl/patterns/di/CakePattern.scala)**
+* **[DI Implicit](scala_features/src/main/scala/app/impl/patterns/di/Main.scala)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
