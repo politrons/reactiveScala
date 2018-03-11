@@ -84,6 +84,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * [DSL validator](macros/src/main/scala/app/impl/macros/::.scala)
 * [Runner](test_macros/src/main/scala/app/impl/macros/Main.scala)
 
+![My image](scala_features/src/main/resources/img/miles.jpg)
 # Shapeless
 
 * [Generics](scala_features/src/main/scala/app/impl/shapeless/Generic.scala)
