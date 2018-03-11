@@ -8,8 +8,10 @@ import scalaz.Lens
   * In scala when we manage immutable class and we want to "modify" a value of this class, we create a new class since
   * the other it´s immutable and we copy every value from one to another but the new value which it´s set in the new class.
   * When we have  multiple nested classes the thing get complicated and verbose a little bit.
-  * That´s when Scalaz Lens comes to help us. Basically the Lens pattern it's mean to create links of copy like if the
-  * class and the nested classes would be a chain, where every link it's able to modify a value of that link.
+  *
+  * That´s when Scalaz Lens comes to help us. Basically the Lens pattern it's meant to create "links of copy" like if the
+  * class and the nested classes would be a chain, where every link it's able to modify a value of that chain.
+  *
   * Then the idea is that you can reuse those links and compose chains together to modify values of the chain.
   */
 class LensFeature {
