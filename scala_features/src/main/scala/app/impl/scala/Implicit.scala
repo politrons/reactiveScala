@@ -5,7 +5,6 @@ import org.junit.Test
 
 class Implicit {
 
-
   /**
     * Implicit parameter tell is used in case that there´s no parameters passed to the function,
     * the compiler will take the one implicit val defined.
@@ -106,6 +105,20 @@ class Implicit {
 
     def multiply(n: Int) = i * n
 
+  }
+
+
+  implicit class ci(value: Int) {
+
+    implicit def ===(newValue: String): Boolean = {
+      value.toString == newValue
+    }
+  }
+
+  @Test
+  def equalsDifferentTypes(): Unit = {
+    println(1 === "3")
+    println(3 === "3")
   }
 
 
