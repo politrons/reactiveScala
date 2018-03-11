@@ -21,7 +21,9 @@ class TypeClass {
     }
   }
 
-  implicit val intEqual: EqualTypeClass[Int] = EqualTypeClass((a, b) => a == b)
+  implicit val intEqual: EqualTypeClass[Int] = new EqualTypeClass[Int]() {
+    override def equal(a: Int, b: Int): Boolean = a == b
+  }
 
   implicit val stringEqual: EqualTypeClass[String] = EqualTypeClass((a, b) => a.eq(b))
 

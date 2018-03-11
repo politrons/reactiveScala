@@ -108,17 +108,34 @@ class Implicit {
   }
 
 
-  implicit class ci(value: Int) {
+  /**
+    * Type class implementation power by implicit
+    */
+  implicit class typeClass[T](value: T) {
 
-    implicit def ===(newValue: String): Boolean = {
-      value.toString == newValue
+    implicit def ===(newValue: T)(implicit operator: Operator[T]): Boolean = {
+      operator.equals(value, newValue)
     }
+  }
+
+  trait Operator[T] {
+    def equals(a: T, b: T): Boolean
+  }
+
+  implicit val intOperator: Operator[Int] = new Operator[Int] {
+    override def equals(a: Int, b: Int): Boolean = a == b
+  }
+
+  implicit val stringOperator: Operator[String] = new Operator[String] {
+    override def equals(a: String, b: String): Boolean = a.eq(b)
   }
 
   @Test
   def equalsDifferentTypes(): Unit = {
-    println(1 === "3")
-    println(3 === "3")
+    println(1 === 1)
+    println("3" === "3")
+    println("3" === "4")
+
   }
 
 
