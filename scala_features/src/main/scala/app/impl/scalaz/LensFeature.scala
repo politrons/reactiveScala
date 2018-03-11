@@ -26,6 +26,8 @@ class LensFeature {
 
   //### Original value ######
   val pablo = Me(Man(Person(Name("Pablo"), 36)))
+  val john = Me(Man(Person(Name("Johny"), 30)))
+
 
   //##############
   //### LENS  ####
@@ -118,6 +120,21 @@ class LensFeature {
     println(paul)
     println(man)
     println(person)
+    println(name)
+  }
+
+  /**
+    * You can also not only set value and create new class but get values from the existing one.
+    */
+  @Test
+  def getWithLens(): Unit = {
+    println(pablo)
+    val lensForPerson = manLen >=> personLen
+    val lensForAge = lensForPerson >=> ageLen
+    val lensForName = lensForPerson >=> nameLen
+    val age = lensForAge.get(pablo)
+    val name = lensForName.get(john)
+    println(age)
     println(name)
   }
 }
