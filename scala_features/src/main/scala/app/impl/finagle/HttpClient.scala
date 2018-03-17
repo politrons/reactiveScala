@@ -40,6 +40,7 @@ object HttpClient extends App {
   private def defineOnSuccess = {
     response.onSuccess { rep =>
       print("Response: " + rep)
+      println(s"Header:${rep.headerMap}")
     }
   }
 

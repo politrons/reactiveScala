@@ -17,7 +17,11 @@ object FinagleService {
     def apply(req: http.Request): Future[http.Response] = {
       Thread.sleep(sleepTime)
       responseType match {
-        case "ok" => Future.value(http.Response(req.version, http.Status.Ok))
+        case "ok" => {
+          val rep = req.getResponse()
+          rep.headerMap.add("Cookie", "New header!")
+          Future.value(rep)
+        }
         case "error_retry" =>
           responseType = "ok"
           Future.exception(Failure.rejected("busy"))
