@@ -26,7 +26,10 @@ class MonadTransformer {
 
     def map[B](f: A => B): FutureMonad[B] = FutureMonad(future.map(value => f(value)))
 
-    def flatMap[B](f: A => FutureMonad[B]): FutureMonad[B] = FutureMonad(future.flatMap(value => f(value).future))
+    def flatMap[B](f: A => FutureMonad[B]): FutureMonad[B] = FutureMonad(future.flatMap(value => {
+      val futureMonad = f(value)
+      futureMonad.future
+    }))
 
   }
 
@@ -75,7 +78,9 @@ class MonadTransformer {
 
     def flatMap[B](f: A => FutOpt[B]): FutOpt[B] =
       FutOpt(future.flatMap(option => option match {
-        case Some(a) => f(a).future
+        case Some(a) =>
+          val futOpt = f(a)
+          futOpt.future
         case None => Future.successful(None)
       }))
   }

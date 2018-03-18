@@ -120,13 +120,15 @@ class OptionTMonadTransformer {
   }
 
   class DbAsync extends AsyncDBOps {
-    override def getDetails(employeeId: String): Future[Option[EmployeeWithDetails]] = Future {
-      Some(EmployeeWithDetails("1", "name", "city", 36))
-    }
+    override def getDetails(employeeId: String): Future[Option[EmployeeWithDetails]] =
+      Future {
+        Some(EmployeeWithDetails("1", "name", "city", 36))
+      }
 
-    override def getCompany(companyName: String): Future[Option[Company]] = Future {
-      Some(Company(companyName, List(EmployeeWithoutDetails("1"))))
-    }
+    override def getCompany(companyName: String): Future[Option[Company]] =
+      Future {
+        Some(Company(companyName, List(EmployeeWithoutDetails("1"))))
+      }
   }
 
   class DbHybrid extends HybridDBOps {

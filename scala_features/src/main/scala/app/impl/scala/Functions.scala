@@ -3,6 +3,8 @@ package app.impl.scala
 import org.junit.Test
 import rx.lang.scala.Observable
 
+import scala.util.Try
+
 /**
   * On Scala we define Functions defining the entry and output type
   *
@@ -73,6 +75,15 @@ class Functions {
 
   def passFunction(f: (Int, Int, Int) => String): String = {
     f.apply(1, 2, 3)
+  }
+
+  @Test def functionError(): Unit = {
+    val response = Try(errorThrow("it´s gonna break!"))
+    println(s"Response ${response.failed}")
+  }
+
+  def errorThrow: (Any) => Int = {
+    (a) => a.asInstanceOf[Int]
   }
 
 }
