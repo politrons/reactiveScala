@@ -5,7 +5,7 @@ import org.junit.Test
 /**
   * Matches patter allow you to avoid all the verbose if/else structure, using an elegant switch style.
   */
-class MatchesPattern {
+class PatternMatchingFeature {
 
 
   @Test def matches(): Unit = {

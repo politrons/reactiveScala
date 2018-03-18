@@ -6,13 +6,13 @@ import rx.lang.scala.Observable
 import scala.util.Try
 
 /**
-  * On Scala we define Functions defining the entry and output type
+  * On Scala we define Functions defining the entry and output type as in Java give it functions types:
   *
   * Types:
-  *
-  *    Function:  Any=>Any
-  *    Predicate: Any=>Boolean
-  *    Consumer:  Any=>Unit
+  * Supplier () => Any
+  * Function:  Any=>Any
+  * Predicate: Any=>Boolean
+  * Consumer:  Any=>Unit
   */
 class Functions {
 
@@ -23,6 +23,7 @@ class Functions {
   /**
     * Here we pass as first argument of the method a function, normally you specify a function setting entry value
     * and return if it has any.
+    *
     * @param function
     * @param value
     * @return
@@ -32,10 +33,39 @@ class Functions {
 
   def toStringFunction(v: Int) = String.valueOf(v)
 
+  @Test def functionOverFunction(): Unit = {
+    val sum = highOrderFunction(multiSumFunction)
+    println(sum.apply())
+  }
+
+  /**
+    * An order high fuction it´s function that recieve a function or return a function as result.
+    * In this case we do both. We receive a Function3 and we return a consumer function
+    */
+  def highOrderFunction(f: (Int, Int, Int) => String): () => String = {
+    () => f.apply(1, 2, 3)
+  }
+
+  def multiSumFunction: (Int, Int, Int) => String = {
+    (a, b, c) => "Val:".concat(String.valueOf(a + b + c))
+  }
+
+  /**
+    * using concat function we can trick to pass multiple arguments in several functions invocations.
+    */
+  @Test
+  def concatFunctionsTest(): Unit = {
+    val concat = concatFunction("hello")("functional", "world")("!!!!!")
+    println(concat)
+  }
+
+  def concatFunction: String => (String, String) => String => String = {
+    a => (b, c) => d => a.concat("-").concat(b.concat("-").concat(c)).concat(d)
+  }
 
   @Test def functionsZip(): Unit = {
     Observable.zip(Observable.just(1), Observable.just(2), Observable.just(3))
-      .map(values => multiSum.apply(values._1, values._2, values._3))
+      .map(values => multiSumFunction.apply(values._1, values._2, values._3))
       .subscribe(v => println(v))
   }
 
@@ -45,9 +75,6 @@ class Functions {
       .subscribe(v => println(v))
   }
 
-  def multiSum: (Int, Int, Int) => String = {
-    (a, b, c) => "Val:".concat(String.valueOf(a + b + c))
-  }
 
   def multiValFun: (Int, Long, String) => String = {
     (x, y, z) => z.concat(String.valueOf(x + y))
@@ -68,15 +95,6 @@ class Functions {
     v => println(v + " is higher")
   }
 
-  @Test def functionOverFunction(): Unit = {
-    val sum = passFunction(multiSum)
-    println(sum)
-  }
-
-  def passFunction(f: (Int, Int, Int) => String): String = {
-    f.apply(1, 2, 3)
-  }
-
   @Test def functionError(): Unit = {
     val response = Try(errorThrow("it´s gonna break!"))
     println(s"Response ${response.failed}")
@@ -84,6 +102,42 @@ class Functions {
 
   def errorThrow: (Any) => Int = {
     (a) => a.asInstanceOf[Int]
+  }
+
+  val function: (String, String) => (Int, Int) = {
+    (i, i1) => (i.toInt, i1.toInt)
+  }
+
+  def multiLevelFunction: (String) => (Int) => (Long) => (Double) = {
+    (s) => (i) => (l) => s.toDouble + i.toDouble + l.toDouble
+  }
+
+
+  @Test
+  def threeLevelFunction(): Unit = {
+    val value = multiLevelFunction("1")(2)(3L)
+    println(value)
+  }
+
+  def crazyFunction1: (String, String) => (() => (() => (Double, Double))) = {
+    (s, s1) => {
+      val i = s.toInt
+      val i1 = s1.toInt
+      () => {
+        val d = i.toLong
+        val d1 = i1.toLong
+        () => {
+          (d.toDouble, d1.toDouble)
+        }
+      }
+    }
+
+  }
+
+  @Test
+  def mainCrazyFunction1(): Unit = {
+    val tuple = crazyFunction1.apply("1", "2")()()
+    println(tuple)
   }
 
 }

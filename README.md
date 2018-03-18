@@ -24,7 +24,7 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Collections](scala_features/src/main/scala/app/impl/scala/Collections.scala)**
 * **[Algorithmic](scala_features/src/main/scala/app/impl/scala/Algorithmic.scala)**
 * **[Implicit](scala_features/src/main/scala/app/impl/scala/Implicit.scala)**
-* **[Matches Pattern](scala_features/src/main/scala/app/impl/scala/MatchesPattern.scala)**
+* **[Pattern matching](scala_features/src/main/scala/app/impl/scala/PatternMatchingFeature.scala)**
 * **[For Comprenhensions](scala_features/src/main/scala/app/impl/scala/ForComprenhensions.scala)**
 * **[Type Classes](scala_features/src/main/scala/app/impl/scala/TypeClasses.scala)**
 * **[Interpolation](scala_features/src/main/scala/app/impl/scala/Interpolation.scala)**
