@@ -144,6 +144,15 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
+//  def monadError(either: Either[Throwable, String],
+//                 func: String => Future[Either[Throwable, String]]): Future[Either[Throwable, String]] = {
+//        Future(either).flatMap {
+//          case Right(value) => func.apply(value)
+//          case Left(value) => Left(either.left.get)
+//        }
+//  }
+
+
   private val isStringPartialFunction: PartialFunction[Any /*Entry type*/ , String /*Output type*/ ] = {
 
     case input if input.isInstanceOf[String] => input.asInstanceOf[String]
