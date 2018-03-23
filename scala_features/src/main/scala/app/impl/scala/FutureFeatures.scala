@@ -127,6 +127,23 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
+  /**
+    * You can combine so many futures as you want using flatMap.
+    */
+  @Test def flatMap2(): Unit = {
+
+    val future1 = Future("hello")
+    val future2 = Future(" combining")
+    val future3 = Future(" world")
+
+    val flatMap3 = future1
+      .flatMap(word1 => future2
+        .flatMap(word2 => future3
+          .map(word3 => word1.concat(word2).concat(word3))))
+    flatMap3.onComplete(sentence => println(sentence))
+    Thread.sleep(1000)
+  }
+
   private val isStringPartialFunction: PartialFunction[Any /*Entry type*/ , String /*Output type*/ ] = {
 
     case input if input.isInstanceOf[String] => input.asInstanceOf[String]
