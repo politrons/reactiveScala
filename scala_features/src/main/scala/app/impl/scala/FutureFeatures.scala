@@ -58,7 +58,11 @@ class FutureFeatures {
       .recoverWith(recoverErrorPartialFunction)
       .onComplete(x => println(s"Error on pipeline:${x.get}"))
 
-    println(s"Main thread:${Thread.currentThread().getName}")
+    Future("This future will work")
+      .recoverWith(recoverErrorPartialFunction)
+      .map(value => value.toUpperCase())
+      .onComplete(x => println(s"Pipeline value:${x.get}"))
+
     Thread.sleep(1000)
   }
 
