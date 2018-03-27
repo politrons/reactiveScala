@@ -47,6 +47,28 @@ class FutureFeatures {
     throw new NullPointerException
   }
 
+
+  /**
+    * RecoverWith future in case you´re familiarize with RxJava as onErrorResumeNext giving you the chance in case the
+    * element you expect fails to be obtained you can try to get another future.
+    * Here first future throw an exception so we decide to try with another future.
+    */
+  @Test def recoverWith(): Unit = {
+    errorFuture
+      .recoverWith(recoverErrorPartialFunction)
+      .onComplete(x => println(s"Error on pipeline:${x.get}"))
+
+    println(s"Main thread:${Thread.currentThread().getName}")
+    Thread.sleep(1000)
+  }
+
+
+  private val recoverErrorPartialFunction: PartialFunction[Throwable /*Entry type*/ , Future[String] /*Output type*/ ] = {
+
+    case error if error.isInstanceOf[NullPointerException] => Future("NullPointer exception in pipeline")
+
+  }
+
   /**
     * Future is a Functor/Monad so implement Map operator, where we can mutate the value that is being resolved in the pipeline.
     */
@@ -92,6 +114,23 @@ class FutureFeatures {
   }
 
   /**
+    * You can combine so many futures as you want using flatMapN.
+    */
+  @Test def flatMap2(): Unit = {
+
+    val future1 = Future("hello")
+    val future2 = Future(" combining")
+    val future3 = Future(" world")
+
+    val flatMap3 = future1
+      .flatMap(word1 => future2
+        .flatMap(word2 => future3
+          .map(word3 => word1.concat(word2).concat(word3))))
+    flatMap3.onComplete(sentence => println(sentence))
+    Thread.sleep(1000)
+  }
+
+  /**
     * Creates a new future by applying the left function to the successful result
     * or the right function to the failed result.
     */
@@ -113,7 +152,7 @@ class FutureFeatures {
   }
 
   /**
-    * Create a new future form the preivous one and check with the partial function if the value inside the future is
+    * Create a new future form the previous one and check with the partial function if the value inside the future is
     * what you expect. Otherwise throw a [NoSuchElementException]
     */
   @Test def collect(): Unit = {
@@ -127,31 +166,14 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
-  /**
-    * You can combine so many futures as you want using flatMap.
-    */
-  @Test def flatMap2(): Unit = {
 
-    val future1 = Future("hello")
-    val future2 = Future(" combining")
-    val future3 = Future(" world")
-
-    val flatMap3 = future1
-      .flatMap(word1 => future2
-        .flatMap(word2 => future3
-          .map(word3 => word1.concat(word2).concat(word3))))
-    flatMap3.onComplete(sentence => println(sentence))
-    Thread.sleep(1000)
-  }
-
-//  def monadError(either: Either[Throwable, String],
-//                 func: String => Future[Either[Throwable, String]]): Future[Either[Throwable, String]] = {
-//        Future(either).flatMap {
-//          case Right(value) => func.apply(value)
-//          case Left(value) => Left(either.left.get)
-//        }
-//  }
-
+  //  def monadError(either: Either[Throwable, String],
+  //                 func: String => Future[Either[Throwable, String]]): Future[Either[Throwable, String]] = {
+  //        Future(either).flatMap {
+  //          case Right(value) => func.apply(value)
+  //          case Left(value) => Left(either.left.get)
+  //        }
+  //  }
 
   private val isStringPartialFunction: PartialFunction[Any /*Entry type*/ , String /*Output type*/ ] = {
 

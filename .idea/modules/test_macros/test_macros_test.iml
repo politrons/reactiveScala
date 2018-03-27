@@ -69,6 +69,8 @@
     <orderEntry type="library" name="Gradle: org.scalameta:trees_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:inline_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:semantic_2.11:1.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.scalaz:scalaz-core_2.12:7.2.9" level="project" />
+    <orderEntry type="library" name="Gradle: com.chuusai:shapeless_2.12:2.3.2" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.grizzly:grizzly-http-server:2.4.0" level="project" />
     <orderEntry type="module" module-name="h2_main" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-dns:4.1.5.Final" level="project" />
@@ -83,6 +85,7 @@
     <orderEntry type="library" name="Gradle: org.scalameta:tokens_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: com.lihaoyi:scalaparse_2.11:0.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.trueaccord.scalapb:scalapb-runtime_2.11:0.6.0-pre2" level="project" />
+    <orderEntry type="library" name="Gradle: org.typelevel:macro-compat_2.12:1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.grizzly:grizzly-http:2.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.192" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:io_2.11:1.7.0" level="project" />
@@ -93,7 +96,7 @@
     <orderEntry type="library" name="Gradle: com.lihaoyi:fastparse-utils_2.11:0.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.8.6" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.8.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.scala-lang:scala-library:2.11.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.scala-lang:scala-library:2.12.4" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-http:4.1.8.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-http2:4.1.8.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-handler:4.1.8.Final" level="project" />

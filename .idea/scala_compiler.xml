@@ -5,7 +5,7 @@
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
     </profile>
-    <profile name="Gradle 2" modules="macros_main,macros_test,test_macros_main,test_macros_test,scala_features_main,scala_features_test,h2_main,h2_test,ReactiveScala_main,ReactiveScala_test">
+    <profile name="Gradle 2" modules="ReactiveScala_main,ReactiveScala_test,macros_main,macros_test,test_macros_main,test_macros_test,scala_features_main,scala_features_test,h2_main,h2_test">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <parameters>
