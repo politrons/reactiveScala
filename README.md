@@ -65,6 +65,10 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 # ![My image](scala_features/src/main/resources/img/shapeless.png)
 # Shapeless
 
+Shapeless is a type class and dependent type based generic programming library for Scala.
+
+Here we cover some of the most important features of the library with practical examples.
+
 * **[Generics](scala_features/src/main/scala/app/impl/shapeless/Generic.scala)**
 * **[HList](scala_features/src/main/scala/app/impl/shapeless/HListUtils.scala)**
 * **[Tags](scala_features/src/main/scala/app/impl/shapeless/TagsFeature.scala)**
