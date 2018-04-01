@@ -9,7 +9,7 @@ import shapeless.{::, HNil}
   * HList is a type of collection which allow you to pick up elements from the collection by type
   * Also if you try to pick up an element type that does not exist the code wont compile.
   */
-class Main {
+class HListUtils {
 
   case class User(name: String)
 
@@ -22,6 +22,7 @@ class Main {
     println(Console.MAGENTA + multiList.select[String]) // returns "Hello".
 
     println(Console.GREEN + multiList.select[User]) // returns User.
+
     //multiList.select[List[Int]] // Compilation error. demo does not contain a List[Int]
 
     // Again i is correctly inferred as Int
@@ -33,6 +34,20 @@ class Main {
     println(Console.YELLOW + s)
     println(u)
     println(u1)
+  }
+
+  var a: Int = _
+  var b: String = _
+  var c: Long = _
+
+  @Test
+  def validation(): Unit = {
+    val multiList = HNil
+    a = 1
+    b = "hello"
+    c = 10L
+    val value = multiList :: a :: b :: c :: HNil
+    value.select[String]
   }
 
 
