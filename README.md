@@ -87,6 +87,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 # Shapeless
 
 * [Generics](scala_features/src/main/scala/app/impl/shapeless/Generic.scala)
-* [HList](scala_features/src/main/scala/app/impl/shapeless/Main.scala)
-* [Tuples](scala_features/src/main/scala/app/impl/shapeless/Tuples.scala)
+* [HList](scala_features/src/main/scala/app/impl/shapeless/HListUtils.scala)
+* [Tags](scala_features/src/main/scala/app/impl/shapeless/TagsFeature.scala)
+* [Tuples](scala_features/src/main/scala/app/impl/shapeless/TuplesExtension.scala)
 

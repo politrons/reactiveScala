@@ -4,8 +4,6 @@ import org.junit.Test
 import shapeless.tag
 import shapeless.tag._
 
-import scalapb.descriptors.Reads
-
 
 /**
   * Tags is one of the best features from Shapeless it will help to avoid the boiler plate of create
