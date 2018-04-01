@@ -62,14 +62,13 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Test DSL](scala_features/src/main/scala/app/impl/scalaz/TestDSL.scala)**
 * **[Lens](scala_features/src/main/scala/app/impl/scalaz/LensFeature.scala)**
 
-![My image](scala_features/src/main/resources/img/design.png)
-# Design patterns
+![My image](scala_features/src/main/resources/img/shapeless.webp)
+# Shapeless
 
-* **[Creational](scala_features/src/main/scala/app/impl/patterns/creational)**
-* **[Structural](scala_features/src/main/scala/app/impl/patterns/structural)**
-* **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
-* **[Cake pattern](scala_features/src/main/scala/app/impl/patterns/di/CakePattern.scala)**
-* **[DI Implicit](scala_features/src/main/scala/app/impl/patterns/di/Main.scala)**
+* [Generics](scala_features/src/main/scala/app/impl/shapeless/Generic.scala)
+* [HList](scala_features/src/main/scala/app/impl/shapeless/HListUtils.scala)
+* [Tags](scala_features/src/main/scala/app/impl/shapeless/TagsFeature.scala)
+* [Tuples](scala_features/src/main/scala/app/impl/shapeless/TuplesExtension.scala)
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
@@ -79,15 +78,18 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Service](scala_features/src/main/scala/app/impl/finagle/FinagleService.scala)**
 * **[Filter](scala_features/src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
 
+![My image](scala_features/src/main/resources/img/design.png)
+# Design patterns
+
+* **[Creational](scala_features/src/main/scala/app/impl/patterns/creational)**
+* **[Structural](scala_features/src/main/scala/app/impl/patterns/structural)**
+* **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
+* **[Cake pattern](scala_features/src/main/scala/app/impl/patterns/di/CakePattern.scala)**
+* **[DI Implicit](scala_features/src/main/scala/app/impl/patterns/di/Main.scala)**
+
 # Macros
 
 * [DSL validator](macros/src/main/scala/app/impl/macros/::.scala)
 * [Runner](test_macros/src/main/scala/app/impl/macros/Main.scala)
 
-# Shapeless
-
-* [Generics](scala_features/src/main/scala/app/impl/shapeless/Generic.scala)
-* [HList](scala_features/src/main/scala/app/impl/shapeless/HListUtils.scala)
-* [Tags](scala_features/src/main/scala/app/impl/shapeless/TagsFeature.scala)
-* [Tuples](scala_features/src/main/scala/app/impl/shapeless/TuplesExtension.scala)
 
