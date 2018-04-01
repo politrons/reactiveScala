@@ -4,6 +4,8 @@ Author Pablo Perez Garcia
 
 # Shapeless
 
-shapeless is a type class and dependent type based generic programming library for Scala.
+Shapeless is a type class and dependent type based generic programming library for Scala.
+
+Here we cover some of the most important features of the library with practical examples.
 
 The original project [here](https://github.com/milessabin/shapeless)
