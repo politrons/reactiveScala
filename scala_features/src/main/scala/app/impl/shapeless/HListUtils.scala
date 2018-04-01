@@ -6,8 +6,10 @@ import shapeless.{::, HNil}
 
 /**
   * Created by pabloperezgarcia on 08/07/2017.
-  * HList is a type of collection which allow you to pick up elements from the collection by type
+  * Heterogeneous List(HList) is a type of collection which allow you to pick up elements from the collection by type
   * Also if you try to pick up an element type that does not exist the code wont compile.
+  *
+  * Since it´s an extension of Scala collection you can use all normal scala collection operators.
   */
 class HListUtils {
 
@@ -15,7 +17,7 @@ class HListUtils {
 
   @Test
   def hList(): Unit = {
-    val multiList = 42 :: "Hello" :: User("Julien") :: User("Paul") :: HNil
+    val multiList = 42 :: "Hello" :: User("Politrons") :: User("Paul") :: HNil
 
     // select finds the first element of a given type in a HList
     // Note that scalac will correctly infer the type of s to be String.
@@ -34,6 +36,8 @@ class HListUtils {
     println(Console.YELLOW + s)
     println(u)
     println(u1)
+    println(multiList.filter[String])
+    println(multiList.filter[User])
   }
 
   var a: Int = _

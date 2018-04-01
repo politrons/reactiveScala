@@ -37,12 +37,14 @@ class TuplesExtension {
   }
 
   /**
-    * filter return all elements of type specified
+    * filter operator allow you to filter the elements that you want to extract from your hList
     */
   @Test
   def internalFeatures(): Unit = {
     val tuple = ("hello", 10, 100L, "shapeless", "world")
     println(tuple.filter[String])
+    println(tuple.filterNot[String])
+
   }
 
 
