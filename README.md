@@ -68,6 +68,8 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[HList](scala_features/src/main/scala/app/impl/shapeless/HListUtils.scala)**
 * **[Tags](scala_features/src/main/scala/app/impl/shapeless/TagsFeature.scala)**
 * **[Tuples](scala_features/src/main/scala/app/impl/shapeless/TuplesExtension.scala)**
+* **[HMap](scala_features/src/main/scala/app/impl/shapeless/HMapFeature.scala)**
+
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle

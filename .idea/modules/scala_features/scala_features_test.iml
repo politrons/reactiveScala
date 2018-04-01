@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Gradle: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Gradle: org.clapper:grizzled-slf4j_2.11:1.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.scalatest:scalatest_2.11:3.0.1" level="project" />
-    <orderEntry type="library" name="Gradle: com.chuusai:shapeless_2.12:2.3.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.chuusai:shapeless_2.12:2.3.3" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:scalameta_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.grizzly:grizzly-http-server:2.4.0" level="project" />
     <orderEntry type="module" module-name="macros_main" />

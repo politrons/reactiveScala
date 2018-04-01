@@ -69,7 +69,7 @@
     <orderEntry type="library" name="Gradle: org.scalameta:inline_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: org.scalameta:semantic_2.11:1.7.0" level="project" />
     <orderEntry type="library" name="Gradle: org.scalaz:scalaz-core_2.12:7.2.9" level="project" />
-    <orderEntry type="library" name="Gradle: com.chuusai:shapeless_2.12:2.3.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.chuusai:shapeless_2.12:2.3.3" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.grizzly:grizzly-http-server:2.4.0" level="project" />
     <orderEntry type="module" module-name="h2_main" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-dns:4.1.5.Final" level="project" />
