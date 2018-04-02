@@ -15,3 +15,4 @@ The original project [here](https://github.com/milessabin/shapeless)
 * **[Tags](TagsFeature.scala)**
 * **[Tuples](TuplesExtension.scala)**
 * **[HMap](HMapFeature.scala)**
+* **[Coproduct](CoproductFeature.scala)**

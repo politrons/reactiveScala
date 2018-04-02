@@ -3,6 +3,7 @@ package app.impl.shapeless
 import org.junit.Test
 import shapeless.HNil
 
+
 /**
   * Created by politrons.
   *

@@ -74,6 +74,7 @@ Here we cover some of the most important features of the library with practical 
 * **[Tags](scala_features/src/main/scala/app/impl/shapeless/TagsFeature.scala)**
 * **[Tuples](scala_features/src/main/scala/app/impl/shapeless/TuplesExtension.scala)**
 * **[HMap](scala_features/src/main/scala/app/impl/shapeless/HMapFeature.scala)**
+* **[Coproduct](scala_features/src/main/scala/app/impl/shapeless/CoproductFeature.scala)**
 
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
