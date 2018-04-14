@@ -40,23 +40,39 @@ class TaglessFeature {
     * The implementation it will ve provided by the interpreters in the code below.
     */
   trait MyBridge[ScalaValue] {
-    def apply[Action[_]](implicit L: MyDSL[Action]): Action[ScalaValue]
+    def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[ScalaValue]
+  }
+
+
+  implicit class customBridge(bridge: MyBridge[Int]) {
+
+    def appendNumber(number: Int) = new MyBridge[Int] {
+      override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
+        interpreter.add(interpreter.number(number), bridge.~>)
+      }
+    }
   }
 
   def buildNumber(number: Int) = new MyBridge[Int] {
-    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = interpreter.number(number)
+    override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
+      interpreter.number(number)
+    }
   }
 
   def buildIncrementNumber(number: Int) = new MyBridge[Int] {
-    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = interpreter.increment(interpreter.number(number))
+    override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
+      interpreter.increment(interpreter.number(number))
+    }
   }
 
   def buildIncrementExpression(expression: MyBridge[Int]) = new MyBridge[Int] {
-    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = interpreter.increment(expression.apply)
+    override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
+      interpreter.increment(expression.~>)
+    }
   }
 
   def buildComplexExpression(text: String, a: Int, b: Int) = new MyBridge[String] {
-    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[String] = {
+    override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[String] = {
       val addition = interpreter.add(interpreter.number(a), interpreter.increment(interpreter.number(b)))
       interpreter.concat(interpreter.toUpper(interpreter.text(text)), interpreter.toString(addition))
     }
@@ -114,7 +130,7 @@ class TaglessFeature {
     var nesting = 0
 
     override def number(v: Int): Nested[Int] = new MyBridge[Int] {
-      override def apply[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
+      override def ~>[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
         if (nesting > 0) {
           val temp = nesting
           nesting = 0
@@ -126,20 +142,20 @@ class TaglessFeature {
     }
 
     override def increment(a: MyBridge[Int]): Nested[Int] = new MyBridge[Int] {
-      override def apply[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
+      override def ~>[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
         nesting = nesting + 1
-        a.apply(L)
+        a.~>(L)
       }
     }
 
     override def add(a: MyBridge[Int], b: MyBridge[Int]): Nested[Int] = new MyBridge[Int] {
-      override def apply[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
+      override def ~>[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
         if (nesting > 0) {
           val temp = nesting
           nesting = 0
-          L.add(L.number(temp), L.add(a.apply(L), b.apply(L)))
+          L.add(L.number(temp), L.add(a.~>(L), b.~>(L)))
         } else {
-          L.add(a.apply(L), b.apply(L))
+          L.add(a.~>(L), b.~>(L))
         }
       }
     }
@@ -155,25 +171,30 @@ class TaglessFeature {
 
 
   @Test def mainInterpreter(): Unit = {
-    println(buildNumber(1).apply(interpret))
-    println(buildIncrementNumber(1).apply(interpret))
-    println(buildIncrementExpression(buildNumber(1)).apply(interpret))
-    println(buildComplexExpression("Hello", 10, 20).apply(interpret))
+    println(buildNumber(1) ~> interpret)
+    println(buildIncrementNumber(1) ~> interpret)
+    println(buildIncrementExpression(buildNumber(1)) ~> interpret)
+    println(buildComplexExpression("Hello", 10, 20) ~> interpret)
   }
 
   @Test def mainInterpreterAsPrint(): Unit = {
-    println(buildNumber(1).apply(interpretAsPrint))
-    println(buildIncrementNumber(1).apply(interpretAsPrint))
-    println(buildIncrementExpression(buildNumber(1)).apply(interpretAsPrint))
-    println(buildComplexExpression("Hello", 10, 20).apply(interpretAsPrint))
+    println(buildNumber(1) ~> interpretAsPrint)
+    println(buildIncrementNumber(1) ~> interpretAsPrint)
+    println(buildIncrementExpression(buildNumber(1)) ~> interpretAsPrint)
+    println(buildComplexExpression("Hello", 10, 20) ~> interpretAsPrint)
   }
 
   @Test def mainInterpreterNested(): Unit = {
-    println(buildNumber(1).apply(nestedInterpreter).apply(interpretAsPrint))
+    val value = buildNumber(1) ~> nestedInterpreter ~> interpretAsPrint
+    println(value)
   }
 
   @Test def mainDSL(): Unit = {
-    println(buildNumber(1).apply(nestedInterpreter).apply(interpretAsPrint))
+    val value = buildNumber(10)
+      .appendNumber(20)
+      .appendNumber(20)
+      .appendNumber(20) ~> interpret
+    println(value)
   }
 
 }
