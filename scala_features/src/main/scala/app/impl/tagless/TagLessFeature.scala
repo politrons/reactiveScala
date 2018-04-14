@@ -241,4 +241,12 @@ class TagLessFeature {
     println(value)
   }
 
+  @Test def mainDSLOfFuture(): Unit = {
+    val future = createNumber(10)
+      .sumNumber(20)
+      .multiplyNumber(100)
+      .sumNumber(20) ~> interpretFutureOfEither
+    println(Await.result(future, Duration.create(10, TimeUnit.SECONDS)))
+  }
+
 }
