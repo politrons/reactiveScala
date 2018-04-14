@@ -76,7 +76,6 @@ class TagLessFeature {
     }
   }
 
-  //
   // ####################
   // #   Interpreters   #
   // ####################
@@ -135,6 +134,9 @@ class TagLessFeature {
 
   }
 
+  // ####################
+  // #      Testing     #
+  // ####################
 
   @Test def mainInterpreter(): Unit = {
     println(createNumber(1) ~> interpret)
@@ -153,6 +155,8 @@ class TagLessFeature {
   @Test def mainInterpreterFuture(): Unit = {
     val future = createNumber(100) ~> interpretFuture
     println(Await.result(future, Duration.create(10, TimeUnit.SECONDS)))
+    val future1 = sumNumbers(10, 10) ~> interpretFuture
+    println(Await.result(future1, Duration.create(10, TimeUnit.SECONDS)))
   }
 
   @Test def mainDSL(): Unit = {
