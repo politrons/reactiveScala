@@ -4,8 +4,16 @@ import org.junit.Test
 
 class TaglessFeature {
 
-  //  Language DSL/Actions
+  // ################
+  // #   Algebras   #
+  // ################
+  /**
+    * Here we define the Algebras or actions that our DSL will be able to use.
+    * This Algebras are meant to be used only by the bridges which you can see in
+    * the next section, which are the code that the consumer will use as DSL
+    */
   trait MyDSL[Action[_]] {
+
     def number(v: Int): Action[Int]
 
     def increment(a: Action[Int]): Action[Int]
@@ -22,31 +30,47 @@ class TaglessFeature {
 
   }
 
-  //  Bridges/Algebras
-  trait ScalaToLanguageBridge[ScalaValue] {
+  // ################
+  // #   Bridges    #
+  // ################
+  /**
+    * Bridges aka DSL is the Domain specific Language that our consumers will use.
+    * Bridges use Scala Types class pattern to be a bridge between the value passed and the implementation defined in the Algebra.
+    * As Type class patter provide, depending the type passed as the implicit the implementation can be one or another.
+    * The implementation it will ve provided by the interpreters in the code below.
+    */
+  trait MyBridge[ScalaValue] {
     def apply[Action[_]](implicit L: MyDSL[Action]): Action[ScalaValue]
   }
 
-  def buildNumber(number: Int) = new ScalaToLanguageBridge[Int] {
-    override def apply[Action[_]](implicit L: MyDSL[Action]): Action[Int] = L.number(number)
+  def buildNumber(number: Int) = new MyBridge[Int] {
+    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = interpreter.number(number)
   }
 
-  def buildIncrementNumber(number: Int) = new ScalaToLanguageBridge[Int] {
-    override def apply[Action[_]](implicit L: MyDSL[Action]): Action[Int] = L.increment(L.number(number))
+  def buildIncrementNumber(number: Int) = new MyBridge[Int] {
+    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = interpreter.increment(interpreter.number(number))
   }
 
-  def buildIncrementExpression(expression: ScalaToLanguageBridge[Int]) = new ScalaToLanguageBridge[Int] {
-    override def apply[Action[_]](implicit L: MyDSL[Action]): Action[Int] = L.increment(expression.apply)
+  def buildIncrementExpression(expression: MyBridge[Int]) = new MyBridge[Int] {
+    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = interpreter.increment(expression.apply)
   }
 
-  def buildComplexExpression(text: String, a: Int, b: Int) = new ScalaToLanguageBridge[String] {
-    override def apply[Action[_]](implicit F: MyDSL[Action]): Action[String] = {
-      val addition = F.add(F.number(a), F.increment(F.number(b)))
-      F.concat(F.toUpper(F.text(text)), F.toString(addition))
+  def buildComplexExpression(text: String, a: Int, b: Int) = new MyBridge[String] {
+    override def apply[Action[_]](implicit interpreter: MyDSL[Action]): Action[String] = {
+      val addition = interpreter.add(interpreter.number(a), interpreter.increment(interpreter.number(b)))
+      interpreter.concat(interpreter.toUpper(interpreter.text(text)), interpreter.toString(addition))
     }
   }
 
-  // Interpreters
+  //
+  // ####################
+  // #   Interpreters   #
+  // ####################
+  /**
+    * The interpreter implement the DSL/Algebras to give a implementation with the values that we receive.
+    * As you can see here one of the biggest benefits of use Tagless or Free are that we can have multiples
+    * implementations which are really easy to plug and play as you can see in the execution of the examples.
+    */
   type Id[ScalaValue] = ScalaValue
 
   val interpret = new MyDSL[Id] {
@@ -84,12 +108,12 @@ class TaglessFeature {
     override def toString(v: PrettyPrint[Int]): PrettyPrint[String] = s"(toString $v)"
   }
 
-  type Nested[ScalaValue] = ScalaToLanguageBridge[ScalaValue]
+  type Nested[ScalaValue] = MyBridge[ScalaValue]
 
-  val simplify = new MyDSL[Nested] {
+  val nestedInterpreter = new MyDSL[Nested] {
     var nesting = 0
 
-    override def number(v: Int): Nested[Int] = new ScalaToLanguageBridge[Int] {
+    override def number(v: Int): Nested[Int] = new MyBridge[Int] {
       override def apply[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
         if (nesting > 0) {
           val temp = nesting
@@ -101,14 +125,14 @@ class TaglessFeature {
       }
     }
 
-    override def increment(a: ScalaToLanguageBridge[Int]): Nested[Int] = new ScalaToLanguageBridge[Int] {
+    override def increment(a: MyBridge[Int]): Nested[Int] = new MyBridge[Int] {
       override def apply[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
         nesting = nesting + 1
         a.apply(L)
       }
     }
 
-    override def add(a: ScalaToLanguageBridge[Int], b: ScalaToLanguageBridge[Int]): Nested[Int] = new ScalaToLanguageBridge[Int] {
+    override def add(a: MyBridge[Int], b: MyBridge[Int]): Nested[Int] = new MyBridge[Int] {
       override def apply[Wrapper[_]](implicit L: MyDSL[Wrapper]): Wrapper[Int] = {
         if (nesting > 0) {
           val temp = nesting
@@ -146,7 +170,7 @@ class TaglessFeature {
 
   @Test def mainInterpreterNested(): Unit = {
 
-    println(buildNumber(1).apply(simplify).apply(interpretAsPrint))
+    println(buildNumber(1).apply(nestedInterpreter).apply(interpretAsPrint))
 
 
   }
