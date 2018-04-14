@@ -169,10 +169,11 @@ class TaglessFeature {
   }
 
   @Test def mainInterpreterNested(): Unit = {
-
     println(buildNumber(1).apply(nestedInterpreter).apply(interpretAsPrint))
+  }
 
-
+  @Test def mainDSL(): Unit = {
+    println(buildNumber(1).apply(nestedInterpreter).apply(interpretAsPrint))
   }
 
 }
