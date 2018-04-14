@@ -8,6 +8,9 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
+/**
+  * Pablo Perez Garcia https://github.com/politrons
+  */
 class TagLessFeature {
 
   // ################
@@ -144,6 +147,27 @@ class TagLessFeature {
     }
   }
 
+  /**
+    * For this interpreter we define that we wrap the scala value into a Future[Either].
+    * So now in our Algebras the Action it will be [Future[Either[Throwable, _]]]
+    */
+  type MyFutureEither[ScalaValue] = Future[Either[Throwable, ScalaValue]]
+
+  val interpretFutureOfEither = new MyDSL[MyFutureEither] {
+
+    override def number(a: Int): MyFutureEither[Int] = Future(Right(a))
+
+    override def add(a: MyFutureEither[Int], b: MyFutureEither[Int]): MyFutureEither[Int] = {
+      a.flatMap(value => b.map(value2 => Right(value.right.get + value2.right.get)))
+    }
+
+    override def text(str: String): MyFutureEither[String] = Future(Right(str))
+
+    override def concat(str: MyFutureEither[String], str1: MyFutureEither[String]): MyFutureEither[String] = {
+      str.flatMap(value => str1.map(value2 => Right(value.right.get + value2.right.get)))
+    }
+  }
+
   // ####################
   // #      Testing     #
   // ####################
@@ -166,6 +190,13 @@ class TagLessFeature {
     val future = createNumber(100) ~> interpretFuture
     println(Await.result(future, Duration.create(10, TimeUnit.SECONDS)))
     val future1 = sumNumbers(10, 10) ~> interpretFuture
+    println(Await.result(future1, Duration.create(10, TimeUnit.SECONDS)))
+  }
+
+  @Test def mainInterpreterFutureOfEither(): Unit = {
+    val future = createNumber(100) ~> interpretFutureOfEither
+    println(Await.result(future, Duration.create(10, TimeUnit.SECONDS)))
+    val future1 = sumNumbers(10, 10) ~> interpretFutureOfEither
     println(Await.result(future1, Duration.create(10, TimeUnit.SECONDS)))
   }
 
