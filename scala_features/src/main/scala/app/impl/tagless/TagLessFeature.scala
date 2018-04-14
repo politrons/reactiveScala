@@ -84,6 +84,10 @@ class TagLessFeature {
     * As you can see here one of the biggest benefits of use Tagless or Free are that we can have multiples
     * implementations which are really easy to plug and play as you can see in the execution of the examples.
     */
+
+  /**
+    * This first interpreter does not being wrapped by any monad and is just scala values.
+    */
   type Id[ScalaValue] = ScalaValue
 
   val interpret = new MyDSL[Id] {
@@ -98,6 +102,10 @@ class TagLessFeature {
 
   }
 
+  /**
+    * For this interpreter we define that we wrap the scala value into an Option.
+    * So now in our Algebras the Action it will be [Option[_]]
+    */
   type MyOption[ScalaValue] = Option[ScalaValue]
 
   val interpretOption = new MyDSL[MyOption] {
@@ -113,9 +121,12 @@ class TagLessFeature {
     override def concat(str: MyOption[String], str1: MyOption[String]): MyOption[String] = {
       str.flatMap(value => str1.map(value2 => value + value2))
     }
-
   }
 
+  /**
+    * For this interpreter we define that we wrap the scala value into a Future.
+    * So now in our Algebras the Action it will be [Future[_]]
+    */
   type MyFuture[ScalaValue] = Future[ScalaValue]
 
   val interpretFuture = new MyDSL[MyFuture] {
@@ -131,7 +142,6 @@ class TagLessFeature {
     override def concat(str: MyFuture[String], str1: MyFuture[String]): MyFuture[String] = {
       str.flatMap(value => str1.map(value2 => value + value2))
     }
-
   }
 
   // ####################
