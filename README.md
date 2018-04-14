@@ -76,7 +76,6 @@ Here we cover some of the most important features of the library with practical 
 * **[HMap](scala_features/src/main/scala/app/impl/shapeless/HMapFeature.scala)**
 * **[Coproduct](scala_features/src/main/scala/app/impl/shapeless/CoproductFeature.scala)**
 
-
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
 
@@ -93,6 +92,10 @@ Here we cover some of the most important features of the library with practical 
 * **[Behavioral](scala_features/src/main/scala/app/impl/patterns/behavioral)**
 * **[Cake pattern](scala_features/src/main/scala/app/impl/patterns/di/CakePattern.scala)**
 * **[DI Implicit](scala_features/src/main/scala/app/impl/patterns/di/Main.scala)**
+
+# Tagless
+
+* **[Tagless](scala_features/src/main/scala/app/impl/tagless/TagLessFeature.scala)**
 
 # Macros
 
