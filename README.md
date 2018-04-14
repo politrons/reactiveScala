@@ -93,7 +93,9 @@ Here we cover some of the most important features of the library with practical 
 * **[Cake pattern](scala_features/src/main/scala/app/impl/patterns/di/CakePattern.scala)**
 * **[DI Implicit](scala_features/src/main/scala/app/impl/patterns/di/Main.scala)**
 
-# Tagless
+# Tagless Final
+
+Examples of use Tagless Final encode to enjoy the potential of free structures.
 
 * **[Tagless](scala_features/src/main/scala/app/impl/tagless/TagLessFeature.scala)**
 

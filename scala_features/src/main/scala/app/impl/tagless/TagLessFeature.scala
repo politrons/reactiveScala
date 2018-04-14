@@ -27,6 +27,8 @@ class TagLessFeature {
 
     def add(a: Action[Int], b: Action[Int]): Action[Int]
 
+    def multiply(a: Action[Int], b: Action[Int]): Action[Int]
+
     def text(v: String): Action[String]
 
     def concat(a: Action[String], b: Action[String]): Action[String]
@@ -58,6 +60,12 @@ class TagLessFeature {
     }
   }
 
+  def multiplyNumbers(a: Int, b: Int) = new MyBridge[Int] {
+    override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
+      interpreter.multiply(interpreter.number(a), interpreter.number(b))
+    }
+  }
+
   def createText(text: String) = new MyBridge[String] {
     override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[String] = {
       interpreter.text(text)
@@ -70,9 +78,18 @@ class TagLessFeature {
     }
   }
 
+  /**
+    * We can also use implicit for sugar syntax to glue multiple bridges as pipelines.
+    */
   implicit class customBridge(bridge: MyBridge[Int]) {
 
-    def appendNumber(number: Int) = new MyBridge[Int] {
+    def sumNumber(number: Int) = new MyBridge[Int] {
+      override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
+        interpreter.add(interpreter.number(number), bridge.~>)
+      }
+    }
+
+    def multiplyNumber(number: Int) = new MyBridge[Int] {
       override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
         interpreter.add(interpreter.number(number), bridge.~>)
       }
@@ -99,6 +116,8 @@ class TagLessFeature {
 
     override def add(a: Id[Int], b: Id[Int]): Id[Int] = a + b
 
+    override def multiply(a: Id[Int], b: Id[Int]): Id[Int] = a * b
+
     override def text(v: String): Id[String] = v
 
     override def concat(a: Id[String], b: Id[String]): Id[String] = a + " " + b
@@ -107,7 +126,7 @@ class TagLessFeature {
 
   /**
     * For this interpreter we define that we wrap the scala value into an Option.
-    * So now in our Algebras the Action it will be [Option[_]]
+    * So now in our Algebras the Action it will be [Option]
     */
   type MyOption[ScalaValue] = Option[ScalaValue]
 
@@ -124,11 +143,15 @@ class TagLessFeature {
     override def concat(str: MyOption[String], str1: MyOption[String]): MyOption[String] = {
       str.flatMap(value => str1.map(value2 => value + value2))
     }
+
+    override def multiply(a: MyOption[Int], b: MyOption[Int]): MyOption[Int] = {
+      a.flatMap(value => b.map(value2 => value * value2))
+    }
   }
 
   /**
     * For this interpreter we define that we wrap the scala value into a Future.
-    * So now in our Algebras the Action it will be [Future[_]]
+    * So now in our Algebras the Action it will be [Future]
     */
   type MyFuture[ScalaValue] = Future[ScalaValue]
 
@@ -145,11 +168,15 @@ class TagLessFeature {
     override def concat(str: MyFuture[String], str1: MyFuture[String]): MyFuture[String] = {
       str.flatMap(value => str1.map(value2 => value + value2))
     }
+
+    override def multiply(a: MyFuture[Int], b: MyFuture[Int]): MyFuture[Int] = {
+      a.flatMap(value => b.map(value2 => value * value2))
+    }
   }
 
   /**
     * For this interpreter we define that we wrap the scala value into a Future[Either].
-    * So now in our Algebras the Action it will be [Future[Either[Throwable, _]]]
+    * So now in our Algebras the Action it will be [Future[Either]
     */
   type MyFutureEither[ScalaValue] = Future[Either[Throwable, ScalaValue]]
 
@@ -166,6 +193,10 @@ class TagLessFeature {
     override def concat(str: MyFutureEither[String], str1: MyFutureEither[String]): MyFutureEither[String] = {
       str.flatMap(value => str1.map(value2 => Right(value.right.get + value2.right.get)))
     }
+
+    override def multiply(a: MyFutureEither[Int], b: MyFutureEither[Int]): MyFutureEither[Int] = {
+      a.flatMap(value => b.map(value2 => Right(value.right.get * value2.right.get)))
+    }
   }
 
   // ####################
@@ -175,6 +206,7 @@ class TagLessFeature {
   @Test def mainInterpreter(): Unit = {
     println(createNumber(1) ~> interpret)
     println(sumNumbers(10, 10) ~> interpret)
+    println(multiplyNumbers(10, 10) ~> interpret)
     println(createText("Hello") ~> interpret)
     println(concatText("Hello", " Tagless") ~> interpret)
   }
@@ -182,6 +214,7 @@ class TagLessFeature {
   @Test def mainInterpreterAsOption(): Unit = {
     println(createNumber(1) ~> interpretOption)
     println(sumNumbers(10, 10) ~> interpretOption)
+    println(multiplyNumbers(10, 10) ~> interpretOption)
     println(createText("Hello") ~> interpretOption)
     println(concatText("Hello", " Tagless") ~> interpretOption)
   }
@@ -202,9 +235,9 @@ class TagLessFeature {
 
   @Test def mainDSL(): Unit = {
     val value = createNumber(10)
-      .appendNumber(20)
-      .appendNumber(20)
-      .appendNumber(20) ~> interpret
+      .sumNumber(20)
+      .multiplyNumber(100)
+      .sumNumber(20) ~> interpret
     println(value)
   }
 
