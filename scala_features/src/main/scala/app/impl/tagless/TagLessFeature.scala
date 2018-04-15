@@ -19,8 +19,6 @@ class TagLessFeature {
   // ################
   // #   Algebras   #
   // ################
-
-
   /**
     * Here we define the Algebras or actions that our DSL will be able to use.
     * It can be consider as interface that our interpreters need to implement.
