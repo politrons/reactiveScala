@@ -97,7 +97,7 @@ class TagLessFeature {
 
     def multiplyNumber(number: Int) = new MyBridge[Int] {
       override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
-        interpreter.add(interpreter.number(number), bridge.~>)
+        interpreter.multiply(interpreter.number(number), bridge.~>)
       }
     }
   }
