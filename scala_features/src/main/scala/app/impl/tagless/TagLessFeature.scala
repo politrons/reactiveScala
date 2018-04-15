@@ -37,6 +37,8 @@ class TagLessFeature {
 
     def concat(a: Action[String], b: Action[String]): Action[String]
 
+    def transformToString(v: Any): Action[String]
+
   }
 
   // ################
@@ -87,17 +89,29 @@ class TagLessFeature {
   /**
     * We can also use implicit for sugar syntax to glue multiple bridges as pipelines.
     */
-  implicit class customBridge(bridge: MyBridge[Int]) {
+  implicit class customBridge(bridge: MyBridge[_]) {
 
     def sumNumber(number: Int) = new MyBridge[Int] {
       override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
-        interpreter.add(interpreter.number(number), bridge.~>)
+        interpreter.add(interpreter.number(number), bridge.~>.asInstanceOf[Action[Int]])
       }
     }
 
     def multiplyNumber(number: Int) = new MyBridge[Int] {
       override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[Int] = {
-        interpreter.multiply(interpreter.number(number), bridge.~>)
+        interpreter.multiply(interpreter.number(number), bridge.~>.asInstanceOf[Action[Int]])
+      }
+    }
+
+    def transformToString() = new MyBridge[String] {
+      override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[String] = {
+        interpreter.transformToString(bridge.~>.asInstanceOf[Action[String]])
+      }
+    }
+
+    def concat(str: String) = new MyBridge[String] {
+      override def ~>[Action[_]](implicit interpreter: MyDSL[Action]): Action[String] = {
+        interpreter.concat(bridge.~>.asInstanceOf[Action[String]], interpreter.text(str))
       }
     }
   }
@@ -134,6 +148,7 @@ class TagLessFeature {
 
     override def concat(a: Id[String], b: Id[String]): Id[String] = a + " " + b
 
+    override def transformToString(v: Any): Id[String] = v + ""
   }
 
   /**
@@ -159,6 +174,8 @@ class TagLessFeature {
     override def multiply(a: MyOption[Int], b: MyOption[Int]): MyOption[Int] = {
       a.flatMap(value => b.map(value2 => value * value2))
     }
+
+    override def transformToString(v: Any): MyOption[String] = Some(v + "")
   }
 
   /**
@@ -184,6 +201,8 @@ class TagLessFeature {
     override def multiply(a: MyFuture[Int], b: MyFuture[Int]): MyFuture[Int] = {
       a.flatMap(value => b.map(value2 => value * value2))
     }
+
+    override def transformToString(v: Any): MyFuture[String] = Future(v + "")
   }
 
   /**
@@ -209,6 +228,8 @@ class TagLessFeature {
     override def multiply(a: MyFutureEither[Int], b: MyFutureEither[Int]): MyFutureEither[Int] = {
       a.flatMap(value => b.map(value2 => Right(value.right.get * value2.right.get)))
     }
+
+    override def transformToString(v: Any): MyFutureEither[String] = Future(Right(v + ""))
   }
 
   // ####################
@@ -249,7 +270,9 @@ class TagLessFeature {
     val value = createNumber(10)
       .sumNumber(20)
       .multiplyNumber(100)
-      .sumNumber(20) ~> interpret
+      .sumNumber(20)
+      .transformToString()
+      .concat(" DSL Rocks!") ~> interpret
     println(value)
   }
 
