@@ -10,16 +10,22 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Pablo Perez Garcia https://github.com/politrons
+  *
+  * In this new code example I explain in code how Tagless final works and how having some Algebras, bridges and
+  * Interpreters we can have this Free structure code reusable for multiple types.
   */
 class TagLessFeature {
 
   // ################
   // #   Algebras   #
   // ################
+
+
   /**
     * Here we define the Algebras or actions that our DSL will be able to use.
+    * It can be consider as interface that our interpreters need to implement.
     * This Algebras are meant to be used only by the bridges which you can see in
-    * the next section, which are the code that the consumer will use as DSL
+    * the next section, which are the code that the consumer will use as DSL.
     */
   trait MyDSL[Action[_]] {
 
@@ -40,8 +46,10 @@ class TagLessFeature {
   // ################
   /**
     * Bridges aka DSL is the Domain specific Language that our consumers will use.
-    * Bridges use Scala Types class pattern to be a bridge between the value passed and the implementation defined in the Algebra.
-    * As Type class patter provide, depending the type passed as the implicit the implementation can be one or another.
+    * Bridges use Scala Types class pattern to be a bridge between the value passed and how the implementation defined
+    * in the Algebra is using it.
+    * As Type class pattern provide, depending the type[Action] passed in the implicit, the implementation
+    * can be one or another.
     * The implementation it will ve provided by the interpreters in the code below.
     */
   trait MyBridge[ScalaValue] {
@@ -100,9 +108,15 @@ class TagLessFeature {
   // #   Interpreters   #
   // ####################
   /**
-    * The interpreter implement the DSL/Algebras to give a implementation with the values that we receive.
+    * The interpreter implement the DSL/Algebras to give an implementation with the values that we receive.
     * As you can see here one of the biggest benefits of use Tagless or Free are that we can have multiples
-    * implementations which are really easy to plug and play as you can see in the execution of the examples.
+    * implementations which are really easy to plug and play as you can see in the execution of the examples,
+    * and the different implementations that we have for the same DSL.
+    *
+    * Basically having the DSL now with the interpreters we can define the output type that we want for the inputs
+    * received from the DSL.
+    * In this examples we can see how using the same MyDSL[Type] we can have multiple Types of outputs as
+    * Scala types, Option[Type], Future[Type], Future[Either[Throwable,Type]
     */
 
   /**
