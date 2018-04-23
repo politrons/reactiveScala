@@ -46,9 +46,9 @@ class FiltersFeature {
   @Test
   def main(): Unit = {
 
-    val serviceRequest = filter1
-      .andThen(filter2)
-      .andThen(service)
+    val serviceRequest = filter1//Third
+      .andThen(filter2)//Second
+      .andThen(service)//First
 
     val responseFuture = serviceRequest(request)
     val response = Await.result(responseFuture)
