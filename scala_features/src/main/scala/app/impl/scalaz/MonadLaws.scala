@@ -17,6 +17,16 @@ class MonadLaws {
     */
   @Test
   def leftIdentity = {
+    //Example1
+    val hello = "hello folks"
+    val function: Function[String, String] = a => a.toUpperCase()
+    val maybeString = Some(hello).flatMap(value => Some(function(value)))
+    val someString = Some(function(hello))
+    println(maybeString)
+    println(someString)
+    println(maybeString == someString)
+
+    //Example2
     val f: (Int => List[Int]) = x => List(x, -x)
 
     val number = 2
@@ -43,6 +53,14 @@ class MonadLaws {
     */
   @Test
   def rightIdentity = {
+    //Example1
+    val hello = "hello"
+    val someString = Some(hello)
+    val maybeString = Some(hello).flatMap(Some(_))
+    println(someString)
+    println(maybeString)
+    println(maybeString == someString)
+    //Example2
     val list1 = List(2)
     val list2 = list1.flatMap(List(_))
     assert(list1 == list2)
@@ -60,6 +78,17 @@ class MonadLaws {
     */
   @Test
   def associativity = {
+    //Example1
+    val upperFunction: Function[String, Option[String]] = a => Some(a.toUpperCase)
+    val concatFunction: Function[String, Option[String]] = a => Some(a.concat(" works!"))
+
+    val maybeString = Some(upperFunction("This monad")).flatMap(value => concatFunction(value.get))
+    val someMaybeString = Some(upperFunction("This monad").flatMap(value => concatFunction(value)))
+    println(someMaybeString)
+    println(maybeString)
+    println(maybeString == someMaybeString)
+
+    //Example2
     val f1: (Int => List[Int]) = x => List(x * 10)
     val f2: (Int => List[Int]) = x => List(x * -1)
     val m = List(1, 2, 3, 4, 5)
