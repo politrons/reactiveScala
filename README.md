@@ -54,6 +54,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Writer monad](scala_features/src/main/scala/app/impl/scalaz/WriterMonad.scala)**
 * **[Reader monad](scala_features/src/main/scala/app/impl/scalaz/ReaderMonad.scala)**
 * **[State monad](scala_features/src/main/scala/app/impl/scalaz/StateMonad.scala)**
+* **[IO Effects monad](scala_features/src/main/scala/app/impl/scalaz/io/IOMonad.scala)**
 * **[Monad transformer](scala_features/src/main/scala/app/impl/scalaz/MonadTransformer.scala)**
 * **[EitherT](scala_features/src/main/scala/app/impl/scalaz/EitherTMonadTransformer.scala)**
 * **[OptionT](scala_features/src/main/scala/app/impl/scalaz/OptionTMonadTransformer.scala)**
@@ -61,7 +62,6 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Tagging](scala_features/src/main/scala/app/impl/scalaz/Tagging.scala)**
 * **[Test DSL](scala_features/src/main/scala/app/impl/scalaz/TestDSL.scala)**
 * **[Lens](scala_features/src/main/scala/app/impl/scalaz/LensFeature.scala)**
-* **[IO Effects](scala_features/src/main/scala/app/impl/scalaz/io/IOMonad.scala)**
 
 ![My image](scala_features/src/main/resources/img/shapeless.png)
 # Shapeless
