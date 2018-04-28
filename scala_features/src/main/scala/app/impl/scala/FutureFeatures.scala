@@ -1,6 +1,5 @@
 package app.impl.scala
 
-import com.twitter.util.{Future => TwitterFuture}
 import org.junit.Test
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -286,5 +285,49 @@ class FutureFeatures {
   }
 
   case class Number(value: Int)
+
+  var response: Any = _
+
+  @Test
+  def onResponseSuccess(): Unit = {
+
+    Future("Success future")
+      .map(value => value.toUpperCase())
+      .onSuccess(outPutSuccess(1))
+    Thread.sleep(1000)
+    println(response)
+  }
+
+  @Test
+  def onResponseError(): Unit = {
+    val variable: String = null
+    Future(variable)
+      .map(value => value.toUpperCase())
+      .onFailure(outPutError(666))
+    Thread.sleep(1000)
+    println(response)
+  }
+
+  @Test
+  def onResponseComplete(): Unit = {
+    val variable: String = null
+    Future(variable)
+      .map(value => value.toUpperCase())
+      .onComplete(responseTry => response = responseTry.failed.get)
+    Thread.sleep(1000)
+    println(response)
+  }
+
+  private def outPutSuccess(value: Any) = new PartialFunction[Any /*Entry type*/ , Any] {
+    def apply(d: Any) = response = value
+
+    def isDefinedAt(d: Any) = d.isInstanceOf[String]
+  }
+
+  private def outPutError(value: Any) = new PartialFunction[Any /*Entry type*/ , Any] {
+    def apply(d: Any) = response = value
+
+    def isDefinedAt(d: Any) = d.isInstanceOf[NullPointerException]
+  }
 
 }

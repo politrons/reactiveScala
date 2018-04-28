@@ -8,6 +8,9 @@ import scalaz.ioeffect.{Fiber, IO, RTS}
 
 /**
   *
+  * Monad IO is a monad like Observable that helps to implement pure Functional programing without side effects.
+  * Everything it's typed, and is using an approach similar as the Either where you have a Left or Right type in your
+  * output.
   */
 class IOMonad extends RTS {
 
@@ -34,65 +37,60 @@ class IOMonad extends RTS {
     println(unsafePerformIO(nanoTime))
   }
 
+  /**
+    * Like other monads we can just use map to transform data and flatMap to compose IOs
+    */
   @Test
   def happyMapping(): Unit = {
     val sentence: IO[Throwable, String] =
-      IO.point("Hello pure world")
+      IO.point("Hello impure world")
+        .map(sentence => sentence.replace("impure", "pure"))
         .map(sentence => sentence.toUpperCase())
         .flatMap(sentence => IO.point(sentence.concat("!!!!")))
     println(unsafePerformIO(sentence))
   }
 
 
+  /**
+    * CatchAll operator is really handy when you have to treat with unsafe code that might propaget unexpected side effect
+    * in your pipeline as Throwable.
+    * Since we have this catch in our pipeline whatever not expected effect it will catch and transform in the expected
+    * output type of the IO
+    */
   @Test
   def catchAllOperator(): Unit = {
+    var value:String=null
+    val errorSentence = IO.point[Throwable, String](value)
+      .flatMap(value => IO.syncThrowable(value.toUpperCase()))
+      .catchAll[Throwable](t => IO.now(s"Default value since $t happens"))
+      .map(value => value.toUpperCase())
 
-    //    val value = IO.point[Throwable, File](openFile)
-    //      .map(file => file.getAbsolutePath)
-    //      .catchAll(_ => IO.point[Throwable, String]("No file name"))
-    //    println(unsafePerformIO(value))
-
-    //    val errorSentence = IO.point[Throwable, String](null)
-    //      .flatMap(value => IO.syncThrowable(value.toUpperCase()))
-    //      .catchAll(_ => IO.now[Throwable, String]("Default value"))
-    //    println(unsafePerformIO(errorSentence))
-
-
-    //    val value = IO.point[Throwable, String]("Hello world")
-    //      .map(_ => new NullPointerException)
-    //      .catchAll {
-    //        case value: BusinessError => IO.now[Throwable, String]("Strint")
-    //        case e: Throwable => IO.now[Throwable, String]("sdddd")
-    //        case _ => IO.now[Throwable, String]("sdddd")
-    //      }
-    //    println(unsafePerformIO(value))
-
-
-    //    val fa: IO[Throwable, String] =
-    //
-    //      fa.catchAll {
-    //        case e: MyCustomError => IO.now(Response(e.getMessage, status = BadRequest))
-    //        case e: Throwable => IO.syncThrowable(myLogger.info(e)("Caught unhandled error in application")) *> IO.now(Response(status = InternalServerError))
-    //      }
+    println(unsafePerformIO(errorSentence))
+    value="Now it should works right?"
+    println(unsafePerformIO(errorSentence))
   }
 
-  case class BusinessError() extends Exception
-
-
-  def openFile: File = {
-    new File("bla.json")
-  }
-
+  /**
+    * CatchSome operator is really handy when you have to treat with unsafe code that might propagate unexpected side effect
+    * in your pipeline as Throwable.
+    * Using pattern matching we can decide which type of throwable we want to catch and transform to IO
+    * The behaviour is just like Observable.onErrorResumeNext operator.
+    */
   @Test
   def catchSomeOperator(): Unit = {
-
-    val errorSentence = IO.point[Throwable, String](null)
-      .flatMap(value => IO.syncThrowable(value.toUpperCase()))
+    var value: String = null
+    val errorSentence = IO.point[Throwable, String](value)
+      .flatMap(value => IO.syncThrowable(value.toUpperCase())) //This line will make first test fail
+      .flatMap(value => IO.syncThrowable(value.substring(30, 56))) //This line will make second test fail
       .catchSome {
-        case _: NullPointerException => IO.now("Default value")
-      }
+      case t: NullPointerException => IO.now[Throwable, String]("You had a NPE")
+      case _ => IO.now("What was that?!")
+    }
     println(unsafePerformIO(errorSentence))
-
+    value = "ArrayIndexOutOfBoundException"
+    println(unsafePerformIO(errorSentence))
+    value = "ArrayIndexOutOfBoundException it's not gonna happen now!"
+    println(unsafePerformIO(errorSentence))
   }
 
   /**
