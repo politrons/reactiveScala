@@ -157,8 +157,8 @@ class IOMonad extends RTS {
   }
 
   /**
-    * IO unfortunately has no funcy operators as zip, but maybe I'm one of the fews gusy that I normslly never use
-    * Zip but just flatMap for composition of Futures.
+    * IO unfortunately has no fancy operators as zip, but maybe I'm one of the few guys that I normally never use
+    * Zip but just flatMap for composition of Futures. Anyway you will see Par operator later ;)
     * So here with Fibers we can do pretty much the same.
     * In this example we use some sugar to make the composition of the Fibers created by the Fork.
     */
@@ -199,7 +199,7 @@ class IOMonad extends RTS {
   }
 
   /**
-    * Race feature is a really interesting feature that IO monad introduce. It allow us to start two
+    * Race operator is a really interesting feature that IO monad introduce. It allow us to start two
     * process in parallel in two threads and once of the Threads has finish the process the [race]
     * operator take care of close and clean the unfinished process in the thread and return the finished
     * value.
@@ -214,11 +214,29 @@ class IOMonad extends RTS {
 
   }
 
+  /**
+    * Par operator run in parallel the N process and return tuple, which can contain tuple as value.
+    * Is exactly the same result type that [Future.zip] of scala .
+    */
+  @Test
+  def parallelismFeature(): Unit = {
+    val car1: IO[Throwable, String] = createCar("Porche")
+    val car2: IO[Throwable, String] = createCar("Lotus")
+    val winner = car1.par(car2)
+    val tuple = unsafePerformIO(winner)
+    println(tuple._1)
+    println(tuple._2)
+
+  }
+
+
   private def createCar(car: String): IO[Throwable, String] = IO.point(car)
     .map(car => {
       Thread.sleep((Math.random * 1000).toInt)
       println(Thread.currentThread().getName)
       s" $car win!"
     })
+
+
 }
 
