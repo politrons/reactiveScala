@@ -1,10 +1,11 @@
 package app.impl.scalaz.io
 
+import java.util.Random
+
 import org.junit.Test
 import scalaz.ioeffect.{Fiber, IO, RTS}
 
 import scala.concurrent.duration.Duration
-
 import scala.concurrent.duration._
 
 /**
@@ -197,6 +198,27 @@ class IOMonad extends RTS {
       .delay(1 second)
   }
 
+  /**
+    * Race feature is a really interesting feature that IO monad introduce. It allow us to start two
+    * process in parallel in two threads and once of the Threads has finish the process the [race]
+    * operator take care of close and clean the unfinished process in the thread and return the finished
+    * value.
+    * This can be a powerful tool to get for instance information from two sources.
+    */
+  @Test
+  def raceFeature(): Unit = {
+    val car1: IO[Throwable, String] = createCar("Porche")
+    val car2: IO[Throwable, String] = createCar("Lotus")
+    val winner = car1.race(car2)
+    println(unsafePerformIO(winner))
 
+  }
+
+  private def createCar(car: String): IO[Throwable, String] = IO.point(car)
+    .map(car => {
+      Thread.sleep((Math.random * 1000).toInt)
+      println(Thread.currentThread().getName)
+      s" $car win!"
+    })
 }
 
