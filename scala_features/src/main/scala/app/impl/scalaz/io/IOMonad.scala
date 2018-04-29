@@ -250,7 +250,7 @@ class IOMonad extends RTS {
     */
   @Test
   def raceFeature(): Unit = {
-    val car1: IO[Throwable, String] = createCar("Porche")
+    val car1: IO[Throwable, String] = createCar("Porsche")
     val car2: IO[Throwable, String] = createCar("Lotus")
     val winner = car1.race(car2)
     println(unsafePerformIO(winner))
@@ -263,7 +263,7 @@ class IOMonad extends RTS {
     */
   @Test
   def parallelismFeature(): Unit = {
-    val car1: IO[Throwable, String] = createCar("Porche")
+    val car1: IO[Throwable, String] = createCar("Porsche")
     val car2: IO[Throwable, String] = createCar("Lotus")
     val winner = car1.par(car2)
     val tuple = unsafePerformIO(winner)
