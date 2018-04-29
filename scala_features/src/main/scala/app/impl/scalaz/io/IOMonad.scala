@@ -57,6 +57,21 @@ class IOMonad extends RTS {
   }
 
   /**
+    * Peek operator receive the current value of the pipeline and the function expect that you output will be another
+    * IO but does not really matter since it's ignore. The reason why we need to just return a IO is confusing me,
+    * and I think is just a technical limitation that it will be solved. In java peek it's just a Consumer function.
+    */
+  @Test
+  def peekOperator(): Unit = {
+    val sentence: IO[Throwable, String] =
+      IO.point("Hello impure world")
+        .map(sentence => sentence.replace("impure", "pure"))
+        .peek(_ => IO.point[Throwable, String]("This value it will be ignore"))
+        .flatMap(sentence => IO.point(sentence.concat("!!!!")))
+    println(unsafePerformIO(sentence))
+  }
+
+  /**
     * CatchAll operator is really handy when you have to treat with unsafe code that might propagate unexpected side effect
     * in your pipeline as Throwable.
     * Since we have this catch in our pipeline whatever not expected effect it will catch and transform in the expected
