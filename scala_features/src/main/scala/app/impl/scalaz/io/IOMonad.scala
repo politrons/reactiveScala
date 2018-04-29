@@ -115,7 +115,7 @@ class IOMonad extends RTS {
     * In case we can control a System throwable into business error throwable
     */
   @Test
-  def uglyMapping(): Unit = {
+  def leftMapOperator(): Unit = {
     val sentence: IO[CustomError, String] =
       IO.fail(new NullPointerException)
         .leftMap[Throwable](error => CustomError(s"Wow un error just happen $error"))
