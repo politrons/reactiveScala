@@ -98,9 +98,6 @@ class IOMonad extends RTS {
     println(unsafePerformIO(errorSentence))
   }
 
-
-  case class CustomError(message: String) extends Throwable
-
   /**
     * With fail operator we can create a Monad of Type T thast represent the error on your pipeline.
     * Then with  catchAll operator we can recover from that type of business error.
@@ -111,6 +108,19 @@ class IOMonad extends RTS {
       IO.fail(CustomError("This is my custom error"))
         .catchAll[Throwable](t => IO.now(s"Default value since $t happens"))
     println(unsafePerformIO(error))
+  }
+
+  /**
+    * In case of IO.fail we can use leftMap operator to map the Left side of the monad.
+    * In case we can control a System throwable into business error throwable
+    */
+  @Test
+  def uglyMapping(): Unit = {
+    val sentence: IO[CustomError, String] =
+      IO.fail(new NullPointerException)
+        .leftMap[Throwable](error => CustomError(s"Wow un error just happen $error"))
+        .catchAll[CustomError](t => IO.now(s"Default value since $t happens"))
+    println(unsafePerformIO(sentence))
   }
 
   /**
@@ -254,6 +264,8 @@ class IOMonad extends RTS {
       println(Thread.currentThread().getName)
       s" $car win!"
     })
+
+  case class CustomError(message: String) extends Throwable
 
 
 }
