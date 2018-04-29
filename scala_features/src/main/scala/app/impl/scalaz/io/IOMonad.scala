@@ -19,8 +19,12 @@ class IOMonad extends RTS {
 
   /**
     * just like in Rx if we use now to apply a value to the monad it will be set the value at the moment of the
-    * creation of the monad, but we use **point** it will evaluated the values passed in the IO monad when it
-    * will be interpreter.
+    * creation of the monad, but if we use [point] it will evaluated the values passed in the IO monad when it
+    * will be interpreted.
+    *
+    * to interpret an IO it exactly the same than when in Rx we subscribe to an Observable. It's the moment when
+    * we execute our monad.
+    * In order to do it we have to just pass our IO into unsafePerformIO function.
     */
   @Test
   def normalVsDefer(): Unit = {
@@ -118,7 +122,7 @@ class IOMonad extends RTS {
 
   /**
     * Fiber is like Scala Future, the execution of the process it will executed in another thread.
-    * Here the syntax it's quite clear, when we want to start the execution in a new Thread we use [[fork]]
+    * Here the syntax it's quite clear, when we want to start the execution in a new Thread we use [fork]
     * operator. At that moment IO create a new output type as Fiber[L,R]
     *
     * Just like with futures after we run the execution of the IO function we will have to wait until the other
