@@ -44,7 +44,7 @@ class IOMonad extends RTS {
   }
 
   /**
-    * Like other monads we can just use map to transform data and flatMap to compose IOs
+    * Like other monad we can just use map to transform data and flatMap to compose IOs
     */
   @Test
   def happyMapping(): Unit = {
@@ -56,9 +56,8 @@ class IOMonad extends RTS {
     println(unsafePerformIO(sentence))
   }
 
-
   /**
-    * CatchAll operator is really handy when you have to treat with unsafe code that might propaget unexpected side effect
+    * CatchAll operator is really handy when you have to treat with unsafe code that might propagate unexpected side effect
     * in your pipeline as Throwable.
     * Since we have this catch in our pipeline whatever not expected effect it will catch and transform in the expected
     * output type of the IO
@@ -97,6 +96,21 @@ class IOMonad extends RTS {
     println(unsafePerformIO(errorSentence))
     value = "ArrayIndexOutOfBoundException it's not gonna happen now!"
     println(unsafePerformIO(errorSentence))
+  }
+
+
+  case class CustomError(message: String) extends Throwable
+
+  /**
+    * With fail operator we can create a Monad of Type T thast represent the error on your pipeline.
+    * Then with  catchAll operator we can recover from that type of business error.
+    */
+  @Test
+  def failOperator(): Unit = {
+    val error: IO[Throwable, String] =
+      IO.fail(CustomError("This is my custom error"))
+        .catchAll[Throwable](t => IO.now(s"Default value since $t happens"))
+    println(unsafePerformIO(error))
   }
 
   /**
