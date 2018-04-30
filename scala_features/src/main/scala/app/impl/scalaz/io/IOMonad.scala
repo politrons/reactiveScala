@@ -115,7 +115,7 @@ class IOMonad extends RTS {
   }
 
   /**
-    * With fail operator we can create a Monad of Type T thast represent the error on your pipeline.
+    * With fail operator we can create a Monad of Type T that represent the error on your pipeline.
     * Then with  catchAll operator we can recover from that type of business error.
     */
   @Test
@@ -151,13 +151,16 @@ class IOMonad extends RTS {
   def retryOperator(): Unit = {
     val sentence: IO[Throwable, String] =
       IO.point(getSentence)
-        .flatMap(value => IO.syncThrowable(value.toUpperCase()))
+        .flatMap(value => {
+          println(s"Current value: $value")
+          IO.syncThrowable(value.toUpperCase())
+        })
         .retry
     println(unsafePerformIO(sentence))
   }
 
   def getSentence: String = {
-    if (math.random < 0.0000001) "Hi pure functional world" else null
+    if (math.random < 0.0001) "Hi pure functional world" else null
   }
 
   /**
