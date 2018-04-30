@@ -174,10 +174,9 @@ class IOMonad extends RTS {
   @Test
   def fiberFeature(): Unit = {
     println(s"Before ${Thread.currentThread().getName}")
-    val ioFuture: IO[Throwable, Fiber[Throwable, String]] = IO.point[Throwable, String]("Hello async IO world")
+    val ioFuture: IO[Throwable, Fiber[Throwable, Unit]] = IO.point[Throwable, String]("Hello async IO world")
       .map(sentence => {
-        println(s"Business logic ${Thread.currentThread().getName}")
-        sentence.toUpperCase()
+        println(s"$sentence ${Thread.currentThread().getName}")
       }).delay(1 second)
       .fork[Throwable] //This operator make the execution of the function run in another thread.
 
