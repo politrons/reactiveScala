@@ -1,16 +1,13 @@
 package app.impl.scalaz.io
 
-import java.util.Random
-
 import org.junit.Test
 import scalaz.ioeffect.{Fiber, IO, RTS}
 
-import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
 
 /**
   *
-  * Monad IO is a monad like Observable that helps to implement pure Functional programing without side effects.
+  * Monad IO is a monad like [Observable] of Rx, that helps to implement pure Functional programing without side effects.
   * Everything it's typed, and is using an approach similar as the Either where you have a Left or Right type in your
   * output.
   */
@@ -18,11 +15,11 @@ class IOMonad extends RTS {
 
 
   /**
-    * just like in Rx if we use now to apply a value to the monad it will be set the value at the moment of the
-    * creation of the monad, but if we use [point] it will evaluated the values passed in the IO monad when it
-    * will be interpreted.
+    * Just like in Rx if we use [now] operator to apply a value to the monad it will be set the value at the moment of the
+    * creation of the monad. But if we use [point] it will evaluated the value passed in the IO monad when it
+    * is interpreted.
     *
-    * to interpret an IO it exactly the same than when in Rx we subscribe to an Observable. It's the moment when
+    * To interpret an IO it's exactly the same than when in Rx we subscribe to an Observable. It's the moment when
     * we execute our monad.
     * In order to do it we have to just pass our IO into unsafePerformIO function.
     */
