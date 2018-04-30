@@ -276,7 +276,21 @@ class IOMonad extends RTS {
     val car2: IO[Throwable, String] = createCar("Lotus")
     val winner = car1.race(car2)
     println(unsafePerformIO(winner))
+  }
 
+  /**
+    * Here we show same example but in a Daytona race with more cars.
+    */
+  @Test
+  def daytonaRace(): Unit = {
+    val car1: IO[Throwable, String] = createCar("Porsche")
+    val car2: IO[Throwable, String] = createCar("Lotus")
+    val car3: IO[Throwable, String] = createCar("Maserati")
+    val car4: IO[Throwable, String] = createCar("Ferrari")
+    val car5: IO[Throwable, String] = createCar("Honda")
+
+    val winner = car1.race(car2).race(car3).race(car4).race(car5)
+    println(unsafePerformIO(winner))
   }
 
   /**
@@ -297,8 +311,8 @@ class IOMonad extends RTS {
 
   private def createCar(car: String): IO[Throwable, String] = IO.point(car)
     .map(car => {
-      Thread.sleep((Math.random * 1000).toInt)
-      println(Thread.currentThread().getName)
+      Thread.sleep((Math.random * 1500).toInt)
+      println(s"$car running in ${Thread.currentThread().getName}")
       s" $car win!"
     })
 
