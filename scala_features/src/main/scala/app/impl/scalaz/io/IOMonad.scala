@@ -150,7 +150,7 @@ class IOMonad extends RTS {
   @Test
   def retryOperator(): Unit = {
     val sentence: IO[Throwable, String] =
-      IO.point(getSentence)
+      IO.point(getSentence(0.0001))
         .flatMap(value => {
           println(s"Current value: $value")
           IO.syncThrowable(value.toUpperCase())
@@ -159,8 +159,27 @@ class IOMonad extends RTS {
     println(unsafePerformIO(sentence))
   }
 
-  def getSentence: String = {
-    if (math.random < 0.0001) "Hi pure functional world" else null
+  /**
+    * This operator works just like retry, with a backoff time between every retry with a multiplication factor
+    * against the before time of retry specify in the duration.
+    * Also we provide a first int value, that specify the maximum retries attempts.
+    */
+  @Test
+  def retryBackoffOperator(): Unit = {
+  var startTime: Long = System.currentTimeMillis()
+    val sentence: IO[Throwable, String] =
+      IO.point(getSentence(0.09))
+        .flatMap(value => {
+          println(s"Current value: $value after wait ${System.currentTimeMillis() - startTime}")
+          startTime = System.currentTimeMillis()
+          IO.syncThrowable(value.toUpperCase())
+        })
+        .retryBackoff(10, 2, 10 millis)
+    println(unsafePerformIO(sentence))
+  }
+
+  def getSentence(perc: Double): String = {
+    if (math.random < perc) "Hi pure functional world" else null
   }
 
   /**
