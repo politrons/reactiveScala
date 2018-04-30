@@ -6,6 +6,7 @@ import scalaz.ioeffect.{Fiber, IO, RTS}
 import scala.concurrent.duration._
 
 /**
+  * Created by pabloperezgarcia aka politrons on 30/04/2018.
   *
   * In this examples you will see that I normally compare with another Reactive library [Rx] that's basically since I´ve been
   * working with that library for years and it's a good reference for me to understand better these operators.
