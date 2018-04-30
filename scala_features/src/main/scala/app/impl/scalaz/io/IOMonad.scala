@@ -200,7 +200,26 @@ class IOMonad extends RTS {
 
     println(s"After: ${Thread.currentThread().getName}")
     val sentence = ioFuture.flatMap(fiber => fiber.join)
-    unsafePerformIO(sentence)
+    println(unsafePerformIO(sentence))
+  }
+
+  /**
+    * Same example that before but with more sugar.
+    */
+  @Test
+  def fiberAwaitSugar(): Unit = {
+    println(s"Before ${Thread.currentThread().getName}")
+    val ioFuture: IO[Throwable, String] = IO.point[Throwable, String]("Hello async IO world")
+      .delay(1 seconds)
+      .map(sentence => sentence.toUpperCase())
+
+    val result = for {
+      fiber <- ioFuture.fork
+      value <- fiber.join
+    } yield value
+
+    println(s"After: ${Thread.currentThread().getName}")
+    println(unsafePerformIO(result))
   }
 
   /**
