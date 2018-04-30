@@ -7,6 +7,10 @@ import scala.concurrent.duration._
 
 /**
   *
+  * In this examples you will see that I normally compare with another Reactive library [Rx] that's basically since I´ve been
+  * working with that library for years and it's a good reference for me to understand better these operators.
+  * If you're interested in learn more about RXJava have fun here!. [https://github.com/politrons/reactive]
+  *
   * Monad IO is a monad like [Observable] of Rx, that helps to implement pure Functional programing without side effects.
   * Everything it's typed, and is using an approach similar as the Either where you have a Left or Right type in your
   * output.
@@ -55,7 +59,7 @@ class IOMonad extends RTS {
 
   /**
     * Peek operator receive the current value of the pipeline and the function expect that you output will be another
-    * IO but does not really matter since it's ignore. The reason why we need to just return a IO is confusing me,
+    * IO but does not really matter since it's ignore. The reason why we need to just return an IO is confusing me,
     * and I think is just a technical limitation that it will be solved. In java peek it's just a Consumer function.
     */
   @Test
@@ -91,7 +95,7 @@ class IOMonad extends RTS {
     * CatchSome operator is really handy when you have to treat with unsafe code that might propagate unexpected side effect
     * in your pipeline as Throwable.
     * Using pattern matching we can decide which type of throwable we want to catch and transform to IO
-    * The behaviour is just like Observable.onErrorResumeNext operator.
+    * The behaviour is just like Observable.onErrorResumeNext operator of Rx.
     */
   @Test
   def catchSomeOperator(): Unit = {
