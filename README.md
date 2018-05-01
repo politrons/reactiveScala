@@ -1,21 +1,4 @@
-Author Pablo Perez Garcia 
-
-# ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
-
-Marble diagrams are not clear enough?.
-
-Here we cover with some practical examples, the most common use of the ReactiveX platform for Scala.
-
-RxJava examples [here](https://github.com/politrons/reactive)
-
-![My image](scala_features/src/main/resources/img/flatMap.png)
-
-* **[Combining](scala_features/src/main/scala/app/impl/rx/Combining.scala)**
-* **[Creating](scala_features/src/main/scala/app/impl/rx/Creating.scala)**
-* **[Filtering](scala_features/src/main/scala/app/impl/rx/Filtering.scala)**
-* **[Transforming](scala_features/src/main/scala/app/impl/rx/Transforming.scala)**
-* **[Scheduler](scala_features/src/main/scala/app/impl/rx/Scheduler.scala)**
-* **[Implicit](scala_features/src/main/scala/app/impl/rx/ImplicitObservables.scala)**
+Author Pablo Perez Garcia
 
 # ![My image](scala_features/src/main/resources/img/rsz_scala.gif)
 
@@ -42,6 +25,22 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
 * **[Currying](scala_features/src/main/scala/app/impl/scala/Currying.scala)**
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
+
+
+# ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
+
+Here we cover with some practical examples, the most common use of the ReactiveX platform for Scala.
+
+RxJava examples [here](https://github.com/politrons/reactive)
+
+![My image](scala_features/src/main/resources/img/flatMap.png)
+
+* **[Combining](scala_features/src/main/scala/app/impl/rx/Combining.scala)**
+* **[Creating](scala_features/src/main/scala/app/impl/rx/Creating.scala)**
+* **[Filtering](scala_features/src/main/scala/app/impl/rx/Filtering.scala)**
+* **[Transforming](scala_features/src/main/scala/app/impl/rx/Transforming.scala)**
+* **[Scheduler](scala_features/src/main/scala/app/impl/rx/Scheduler.scala)**
+* **[Implicit](scala_features/src/main/scala/app/impl/rx/ImplicitObservables.scala)**
 
 ![My image](scala_features/src/main/resources/img/lambda.ico)
 # ScalaZ
