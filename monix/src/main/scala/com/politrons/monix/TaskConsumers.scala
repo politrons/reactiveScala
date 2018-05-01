@@ -81,13 +81,29 @@ class TaskConsumers {
   }
 
   /**
-    * The coeval coeval is one of the most amazing operator I've ever seen. He calculate in runtime if a process
+    * The runSyncMaybe is one of the most amazing operator I've ever seen. He calculate in runtime if a process
+    * is already done and we don't need to wait for him, or otherwise create a CancelableFuture to be run async.
+    * It return an Either[CancelableFuture[T], T]
+    */
+  @Test
+  def runSyncMaybeOperator(): Unit = {
+    val either = Task(getSentence(0.5))
+      .map(value => value.toUpperCase)
+      .runSyncMaybe
+    either match {
+      case Right(value) => println(value)
+      case Left(future) => println(Await.result(future, 10 seconds))
+    }
+  }
+
+  /**
+    * The coeval is one of the most amazing operator I've ever seen. He calculate in runtime if a process
     * is already done and we dont need to wait for him, or otherwise create a CancelableFuture to be run async.
-    * It return an Either[Throwable, Either[CancelableFuture[T], T ]]]
+    * It return an Either[Throwable, Either[CancelableFuture[T], T]]
     */
   @Test
   def coevalOperator(): Unit = {
-    val coeval = Task(getSentence(0.5))
+    val coeval = Task(getSentenceWithMaybeError(0.5))
       .map(value => value.toUpperCase)
       .coeval
     coeval.run match {
@@ -101,7 +117,7 @@ class TaskConsumers {
     }
   }
 
-  def getSentence(perc: Double): String = {
+  def getSentenceWithMaybeError(perc: Double): String = {
     if (math.random < perc) {
       throw new NullPointerException()
     } else {
@@ -111,6 +127,15 @@ class TaskConsumers {
       } else {
         "Plain sync process"
       }
+    }
+  }
+
+  def getSentence(perc: Double): String = {
+    if (math.random < perc) {
+      Thread.sleep(1000)
+      "This test should  be executed async"
+    } else {
+      "Plain sync process"
     }
   }
 
