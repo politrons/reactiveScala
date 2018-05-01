@@ -7,4 +7,6 @@ Author Pablo Perez Garcia
 The original project [here](https://monix.io/)
 
 * **[Consumers](src/main/scala/com/politrons/monix/TaskConsumers.scala)**
+* **[Creation](src/main/scala/com/politrons/monix/TaskCreation.scala)**
+
 

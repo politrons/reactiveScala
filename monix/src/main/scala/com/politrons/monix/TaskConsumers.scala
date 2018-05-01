@@ -17,10 +17,6 @@ import scala.concurrent.duration._
   */
 class TaskConsumers {
 
-  //#####################
-  //#     EXECUTORS     #
-  //#####################
-
   /**
     * As we describe before Task is a Producer which has not start producing anything. He just describe what
     * will produce and what he will do with the data emitted in the pipeline.
@@ -107,12 +103,11 @@ class TaskConsumers {
       .map(value => value.toUpperCase)
       .coeval
     coeval.run match {
-      case Right(either) => {
+      case Right(either) =>
         either match {
           case Right(value) => println(s"Right value $value")
           case Left(future) => println(s"We need to run this in a future ${Await.result(future, 10 second)}")
         }
-      }
       case Left(throwable) => println(s"An error just happen $throwable")
     }
   }

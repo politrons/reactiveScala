@@ -84,6 +84,7 @@ Monix is a high-performance Scala library for composing asynchronous, event-base
 Here we cover some of the most important features of the library with practical examples.
 
 * **[Consumers](monix/src/main/scala/com/politrons/monix/TaskConsumers.scala)**
+* **[Creation](monix/src/main/scala/com/politrons/monix/TaskCreation.scala)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
