@@ -53,5 +53,59 @@ class TaskCreation {
     println(result)
   }
 
+  /**
+    * Create a new Task from a previous one and make it run in another thread
+    */
+  @Test
+  def forkOperator(): Unit = {
+    val cancelableFuture = Task.fork(Task("Run task in another thread"))
+      .map(value => value.toUpperCase)
+      .doOnFinish(_ => {
+        Task(println(Thread.currentThread().getName))
+      })
+      .runAsync
+    val result = Await.result(cancelableFuture, 10 seconds)
+    println(result)
+  }
+
+  /**
+    * We can use the famous Zip operator to pass a list of Task of type T, and they it will form a List[T]
+    */
+  @Test
+  def zipListOperator(): Unit = {
+    val cancelableFuture =
+      Task.zipList(Task.fromFuture(Future("Task 1")),
+        Task.now("Task 2"),
+        Task("Task 3"),
+        Task("Task 4"))
+        .map(list => list
+          .map(value => value.toUpperCase))
+        .runAsync
+    val result = Await.result(cancelableFuture, 10 seconds)
+    println(result)
+  }
+
+  /**
+    * If instead of use ZipList we rather pass a specify number of Task, Task monad has up to 5 task that you can pass in
+    * the operators zipN, and for every task passed it will output a scala type with the n(T)
+    */
+  @Test
+  def zip4Operator(): Unit = {
+    val cancelableFuture =
+      Task.zip4(Task.fromFuture(Future("Task 1")),
+        Task.now("Task 2"),
+        Task("Task 3"),
+        Task("Task 4"))
+        .map(fourple => {
+          (fourple._1.toUpperCase,
+            fourple._2.toUpperCase,
+            fourple._3.toUpperCase,
+            fourple._4.toUpperCase)
+        })
+        .runAsync
+    val result = Await.result(cancelableFuture, 10 seconds)
+    println(result)
+  }
+
 
 }
