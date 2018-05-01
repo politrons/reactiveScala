@@ -3,4 +3,5 @@ include 'macros'
 include 'h2'
 include 'test_macros'
 include 'Cassandra'
+include 'monix'
 
