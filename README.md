@@ -77,6 +77,15 @@ Here we cover some of the most important features of the library with practical 
 * **[HMap](scala_features/src/main/scala/app/impl/shapeless/HMapFeature.scala)**
 * **[Coproduct](scala_features/src/main/scala/app/impl/shapeless/CoproductFeature.scala)**
 
+![My image](monix/src/main/resources/monix.png)
+# Monix
+
+Monix is a high-performance Scala library for composing asynchronous, event-based programs.
+
+Here we cover some of the most important features of the library with practical examples.
+
+* **[Consumers](monix/src/main/scala/com/politrons/monix/TaskConsumers.scala)**
+
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
 
