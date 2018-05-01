@@ -70,4 +70,25 @@ class ObservableFeature {
       .subscribe()
   }
 
+  /**
+    * Very interesting operator that we don't have in RxJava AFAIN, basically we cache the output of the observable
+    * emitted and the second time that a subscriber subscribe we dont process the element in the pipeline, but
+    * give the output elements from the first emission.
+    */
+  @Test
+  def cacheOperator(): Unit = {
+    val observer = Observable.fromIterable(List(1, 2, 3, 4))
+      .map(value => value * 100)
+      .doOnNext(value => println(s"processing $value"))
+      .cache
+    observer
+      .subscribe(response => {
+        Future(Ack.Continue)
+      }, t => println(t), () => println("We end the emission"))
+    observer
+      .subscribe(response => {
+        Future(Ack.Continue)
+      }, t => println(t), () => println("We end the emission"))
+  }
+
 }
