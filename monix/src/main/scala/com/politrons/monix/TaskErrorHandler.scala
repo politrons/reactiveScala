@@ -8,7 +8,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 
-class TaskTransforming {
+class TaskErrorHandler {
 
   /**
     * In case of error we retry the whole emission until the specific number we pass to the operator
@@ -38,6 +38,23 @@ class TaskTransforming {
         value.toUpperCase()
       })
       .onErrorRestartIf(t => t.isInstanceOf[NullPointerException])
+      .runAsync
+    val result = Await.result(cancelableFuture, 10 seconds)
+    println(result)
+  }
+
+  /**
+    * The operator onErrorRecover use a partial function to check the type of throwable, and recover with the default
+    * value that we pass to the function.
+    */
+  @Test
+  def onErrorRecoverOperator(): Unit = {
+    val value:String=null
+    val cancelableFuture = Task(value)
+      .map(value => value.toUpperCase())
+      .onErrorRecover {
+        case t: NullPointerException => s"Default value since $t"
+      }
       .runAsync
     val result = Await.result(cancelableFuture, 10 seconds)
     println(result)

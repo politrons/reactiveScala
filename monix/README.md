@@ -6,8 +6,9 @@ Author Pablo Perez Garcia
 
 The original project [here](https://monix.io/)
 
-* **[Consumers](src/main/scala/com/politrons/monix/TaskConsumers.scala)**
-* **[Creation](src/main/scala/com/politrons/monix/TaskCreation.scala)**
+* **[Task Consumers](src/main/scala/com/politrons/monix/TaskConsumers.scala)**
+* **[Task Creation](src/main/scala/com/politrons/monix/TaskCreation.scala)**
+* **[Task Error handler](src/main/scala/com/politrons/monix/TaskErrorHandler.scala)**
 * **[Observable](src/main/scala/com/politrons/monix/ObservableFeature.scala)**
 
 
