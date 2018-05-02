@@ -85,6 +85,7 @@ Here we cover some of the most important features of the library with practical 
 
 * **[Consumers](monix/src/main/scala/com/politrons/monix/TaskConsumers.scala)**
 * **[Creation](monix/src/main/scala/com/politrons/monix/TaskCreation.scala)**
+* **[Observable](monix/src/main/scala/com/politrons/monix/ObservableFeature.scala)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
