@@ -44,6 +44,21 @@ class TaskErrorHandler {
   }
 
   /**
+    * The most simple handle error, it does not check the throwable type, just in case a throwable happens
+    * in the pipeline we recover the throwable and we emit whatever we want.
+    */
+  @Test
+  def onErrorHandlerOperator(): Unit = {
+    val value:String=null
+    val cancelableFuture = Task(value)
+      .map(value => value.toUpperCase())
+      .onErrorHandle(t => s"Default value since $t happens")
+      .runAsync
+    val result = Await.result(cancelableFuture, 10 seconds)
+    println(result)
+  }
+
+  /**
     * The operator onErrorRecover use a partial function to check the type of throwable, and recover with the default
     * value that we pass to the function.
     */
