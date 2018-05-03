@@ -7,7 +7,10 @@ import org.junit.Test
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-
+/**
+  * One of the most important parts to be reactive is being responsive, so the error handler it takes a huge important here
+  * Task offers many operators to retry and recover from situations where not pure source might brings unexpected side effects
+  */
 class TaskErrorHandler {
 
   /**
