@@ -1,6 +1,5 @@
 package com.politrons.monix
 
-import monix.eval.Task
 import monix.execution.Ack
 import monix.execution.Scheduler.Implicits.global
 import monix.reactive.Observable
