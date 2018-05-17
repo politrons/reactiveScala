@@ -44,7 +44,7 @@ object ApplicativeFeature extends App {
 
   val optionStringValue = applicativeOption.pure("hello")
   private val maybeString: Option[String] = applicativeOption.map(optionStringValue)(a => s"$a applicative world")
-  println(optionString)
+  println(maybeString)
 
   val optionStringValue1 = applicativeOption.pure("hello")
   val optionStringValue2 = applicativeOption.pure(" world")

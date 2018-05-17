@@ -99,6 +99,13 @@ The original project [here](https://monix.io/)
 * **[Service](scala_features/src/main/scala/app/impl/finagle/FinagleService.scala)**
 * **[Filter](scala_features/src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
 
+#Pure FP
+
+* **[Monoid](monix/src/main/scala/types/MonoidFeature.scala)**
+* **[Applicative](monix/src/main/scala/types/ApplicativeFeature.scala)**
+* **[Monad](monix/src/main/scala/types/monadFeature.scala)**
+
+
 ![My image](scala_features/src/main/resources/img/design.png)
 # Design patterns
 
