@@ -91,6 +91,12 @@ The original project [here](https://monix.io/)
 * **[Observable](monix/src/main/scala/com/politrons/monix/ObservableFeature.scala)**
 * **[Circuit breaker](monix/src/main/scala/com/politrons/monix/CircuitBreakerFeature.scala)**
 
+# ![My image](monix/src/main/resources/pure.png)
+
+* **[Monoid](monix/src/main/scala/types/MonoidFeature.scala)**
+* **[Applicative](monix/src/main/scala/types/ApplicativeFeature.scala)**
+* **[Monad](monix/src/main/scala/types/monadFeature.scala)**
+
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
 
@@ -98,14 +104,6 @@ The original project [here](https://monix.io/)
 * **[Http Server](scala_features/src/main/scala/app/impl/finagle/HttpServers.scala)**
 * **[Service](scala_features/src/main/scala/app/impl/finagle/FinagleService.scala)**
 * **[Filter](scala_features/src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
-
-
-# ![My image](monix/src/main/resources/pure.png)
-
-* **[Monoid](monix/src/main/scala/types/MonoidFeature.scala)**
-* **[Applicative](monix/src/main/scala/types/ApplicativeFeature.scala)**
-* **[Monad](monix/src/main/scala/types/monadFeature.scala)**
-
 
 ![My image](scala_features/src/main/resources/img/design.png)
 # Design patterns
