@@ -95,7 +95,6 @@ The original project [here](https://monix.io/)
 # Category Theory
 
 * **[Monoid](category_theory/src/main/scala/types/MonoidFeature.scala)**
-
 * **[Applicative](category_theory/src/main/scala/types/ApplicativeFeature.scala)**
 * **[Monad](category_theory/src/main/scala/types/monadFeature.scala)**
 
