@@ -99,6 +99,7 @@ The original project [here](https://monix.io/)
 * **[Service](scala_features/src/main/scala/app/impl/finagle/FinagleService.scala)**
 * **[Filter](scala_features/src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
 
+![My image](monix/src/main/resources/pure.png)
 # Pure FP
 
 * **[Monoid](monix/src/main/scala/types/MonoidFeature.scala)**
