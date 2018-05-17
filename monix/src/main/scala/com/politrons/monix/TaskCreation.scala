@@ -1,6 +1,6 @@
 package com.politrons.monix
 
-import monix.eval.Task
+import monix.eval.{MVar, Task}
 import monix.execution.Scheduler.Implicits.global
 import org.junit.Test
 
@@ -107,5 +107,21 @@ class TaskCreation {
     println(result)
   }
 
+  @Test
+  def zipListOperatorRunOnComplete(): Unit = {
+    val cancelableFuture =
+      Task.zipList(Task.fromFuture(Future("Task 1")),
+        Task.now("Task 2"),
+        Task("Task 3"),
+        Task("Task 4"))
+
+    cancelableFuture.runAsync
+
+    cancelableFuture
+      .runOnComplete(tryList => tryList.get
+        .map(value => println(value.toUpperCase)))
+
+    Thread.sleep(1000)
+  }
 
 }
