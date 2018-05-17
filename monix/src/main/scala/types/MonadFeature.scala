@@ -57,10 +57,6 @@ object MonadFeature extends App {
 
   //  println(runOption(Some(10), a => a))
 
-  //
-  //  def runOption[A, B](a: Option[A], f: A => B)(implicit applicativeType: ApplicativeType[Option[A]]): Option[B] = {
-  //    applicativeType.map(a)(f)
-  //  }
 
 
 }

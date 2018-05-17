@@ -44,7 +44,7 @@ object ApplicativeFeature extends App {
 
   val optionStringValue = applicativeOption.pure("hello")
   private val maybeString: Option[String] = applicativeOption.map(optionStringValue)(a => s"$a applicative world")
-  println(maybeString)
+  println(optionString)
 
   val optionStringValue1 = applicativeOption.pure("hello")
   val optionStringValue2 = applicativeOption.pure(" world")
@@ -69,6 +69,21 @@ object ApplicativeFeature extends App {
   private val stringValue: Future[String] = applicativeFuture.pure("Hello")
   val future = applicativeFuture.map(stringValue)(value => s"$value Applicative world in the future")
   println(Await.result(future, 10 seconds))
+
+
+  //  Type Class
+  //_____________
+  private val optionString = runType[String, String, Option](applicativeOption.pure("Hello"), a => s"$a applicative Option type class")
+    .map(value => value.concat("!!!!"))
+  println(optionString)
+
+  private val futureString = runType[String, String, Future](stringValue, a => s"$a applicative future type class")
+    .map(value => value.toUpperCase)
+  println(Await.result(futureString, 10 seconds))
+
+  def runType[A, B, F[_]](a: F[A], f: A => B)(implicit applicativeType: ApplicativeType[F]): F[B] = {
+    applicativeType.map(a)(f)
+  }
 
 
 }
