@@ -70,7 +70,6 @@ object ApplicativeFeature extends App {
   val future = applicativeFuture.map(stringValue)(value => s"$value Applicative world in the future")
   println(Await.result(future, 10 seconds))
 
-
   //  Type Class
   //_____________
   private val optionString = runType[String, String, Option](applicativeOption.pure("Hello"), a => s"$a applicative Option type class")
