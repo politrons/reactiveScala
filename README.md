@@ -96,7 +96,7 @@ The original project [here](https://monix.io/)
 
 * **[Monoid](category_theory/src/main/scala/types/MonoidFeature.scala)**
 * **[Applicative](category_theory/src/main/scala/types/ApplicativeFeature.scala)**
-* **[Monad](category_theory/src/main/scala/types/monadFeature.scala)**
+* **[Monad](category_theory/src/main/scala/types/MonadFeature.scala)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
