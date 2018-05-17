@@ -4,4 +4,5 @@ include 'h2'
 include 'test_macros'
 include 'Cassandra'
 include 'monix'
+include 'category_theory'
 

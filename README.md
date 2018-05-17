@@ -91,12 +91,12 @@ The original project [here](https://monix.io/)
 * **[Observable](monix/src/main/scala/com/politrons/monix/ObservableFeature.scala)**
 * **[Circuit breaker](monix/src/main/scala/com/politrons/monix/CircuitBreakerFeature.scala)**
 
-![My image](monix/src/main/resources/pure.png)
+![My image](category_theory/src/main/resources/pure.png)
 # Category Theory
 
-* **[Monoid](monix/src/main/scala/types/MonoidFeature.scala)**
-* **[Applicative](monix/src/main/scala/types/ApplicativeFeature.scala)**
-* **[Monad](monix/src/main/scala/types/monadFeature.scala)**
+* **[Monoid](category_theory/src/main/scala/types/MonoidFeature.scala)**
+* **[Applicative](category_theory/src/main/scala/types/ApplicativeFeature.scala)**
+* **[Monad](category_theory/src/main/scala/types/monadFeature.scala)**
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
