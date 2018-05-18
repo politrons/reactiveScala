@@ -108,6 +108,10 @@ class Implicit {
   }
 
 
+  trait Operator[T] {
+    def equals(a: T, b: T): Boolean
+  }
+
   /**
     * Type class implementation power by implicit
     */
@@ -116,25 +120,29 @@ class Implicit {
     implicit def ===(newValue: T)(implicit operator: Operator[T]): Boolean = {
       operator.equals(value, newValue)
     }
+
+    implicit def !==(newValue: T)(implicit operator: Operator[T]): Boolean = {
+      !operator.equals(value, newValue)
+    }
   }
 
-  trait Operator[T] {
-    def equals(a: T, b: T): Boolean
-  }
+  /**
+    * Since the trait only have one method Scala allow you to use sugar syntax and just use a lambda since
+    * it can inference which method it will be executed.
+    * Just need to pass the arguments specifying the type since are generic in the function.
+    */
+  implicit val intOperator: Operator[Int] = (a: Int, b: Int) => a == b
 
-  implicit val intOperator: Operator[Int] = new Operator[Int] {
-    override def equals(a: Int, b: Int): Boolean = a == b
-  }
-
-  implicit val stringOperator: Operator[String] = new Operator[String] {
-    override def equals(a: String, b: String): Boolean = a.eq(b)
-  }
+  implicit val stringOperator: Operator[String] = (a: String, b: String) => a.eq(b)
 
   @Test
   def equalsDifferentTypes(): Unit = {
     println(1 === 1)
     println("3" === "3")
     println("3" === "4")
+
+    println("5" !== "5")
+    println("5" !== "6")
 
   }
 
