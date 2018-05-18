@@ -15,6 +15,9 @@ object FunctorFeature extends App {
     */
   trait functorType[F[_]] {
 
+    /**
+      * Pure just receive an element A and wrap in a constructor F[A]
+      */
     def pure[A](a: A): F[A]
 
     /**

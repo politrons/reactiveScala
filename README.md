@@ -42,7 +42,7 @@ RxJava examples [here](https://github.com/politrons/reactive)
 * **[Scheduler](scala_features/src/main/scala/app/impl/rx/Scheduler.scala)**
 * **[Implicit](scala_features/src/main/scala/app/impl/rx/ImplicitObservables.scala)**
 
-![My image](scala_features/src/main/resources/img/lambda.ico)
+![My image](scala_features/src/main/resources/img/scalaz.jpeg)
 # ScalaZ
 
 Here we cover with some practical examples, the most common use of ScalaZ API.
