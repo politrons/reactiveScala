@@ -8,6 +8,7 @@ Here we cover with some examples all class types that comfort the category theor
 * **[Monoid](category_theory/src/main/scala/types/MonoidFeature.scala)**
 * **[Functor](category_theory/src/main/scala/types/FunctorFeature.scala)**
 * **[Applicative](category_theory/src/main/scala/types/ApplicativeFeature.scala)**
+* **[Monoidal](category_theory/src/main/scala/types/MonoidalFeature.scala)**
 * **[Monad](category_theory/src/main/scala/types/MonadFeature.scala)**
 
 
