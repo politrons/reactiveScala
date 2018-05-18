@@ -6,6 +6,9 @@ object ApplicativeFeature extends App {
     * Applicative type class has a constructor of Type T and is used when we have a function that receive two argumemnts
     * as the function just process the first element it apply curried so it return a function so here what we have is that
     * situation when I have the second argument F[A] to process and they pass me a function inside the constructor F[A => B]
+    *
+    * In haskell since we have curried by default, a function with two arguments like
+    * a => b => c if we apply func(a) it will return another function waiting for b func(b) in order to return [c]
     */
   trait ApplicativeType[F[_]] {
 
@@ -38,7 +41,6 @@ object ApplicativeFeature extends App {
   val oVal1 = applicativeOption.pure("hello applicative world")
   private val maybeTuple: Option[String] = applicativeOption.ap(oVal1)(applicativeOption.pure(x => x.toUpperCase))
   println(maybeTuple)
-
 
   //    Type Class
   //  _____________
