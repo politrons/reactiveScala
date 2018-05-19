@@ -171,7 +171,7 @@ class Algorithm {
     if (meridian == "PM") {
       if (s.substring(0, 2) == "12") {
         s.replace("PM", "")
-      }else{
+      } else {
         val new_hour = s.substring(0, 2).toLong + 12
         new_hour + s.substring(2, s.length).replace("PM", "")
       }
@@ -182,6 +182,53 @@ class Algorithm {
         s.replace("AM", "")
       }
     }
+  }
+
+  @Test
+  def maximumToys: Unit = {
+    assert(maximumToys(Array(1, 12, 5, 111, 200, 1000, 10), 50) == 4)
+
+  }
+
+  def maximumToys(prices: Array[Int], k: Int): Int = {
+    var money = k
+    val sorted = prices.sorted
+    var presents = 0
+    sorted.foreach(price => {
+      if (money - price > 0) {
+        money -= price
+        presents += 1
+      }
+    })
+    presents
+  }
+
+  @Test
+  def getMinimumCost: Unit = {
+    println(getMinimumCost(2, 3, Array(2, 5, 6)))
+
+  }
+
+
+  def getMinimumCost(people: Int, numberOfFlowers: Int, flowers: Array[Int]): Int = {
+    val sorted = flowers.sorted.reverse
+    val iterations = numberOfFlowers / people
+    val mod = numberOfFlowers % people
+    var purchases = 1
+    var count = 0
+    var total = 0
+    0 until iterations foreach (_ => {
+      0 until people foreach (_ => {
+        total += sorted(count) * purchases
+        count += 1
+      })
+      purchases += 1
+    })
+    0 until mod foreach(_=>{
+      total += sorted(count) * purchases
+      count += 1
+    })
+    total
   }
 
 }
