@@ -14,9 +14,17 @@ object ApplicativeFeature extends App {
 
     def pure[A](a: A): F[A]
 
-    def ap[A, B](fa: F[A])(f: F[A => B]): F[B]
+    /**
+      * Curried operator receive a function with more arguments that you actually receive as input, so instead of
+      * perform the execution of the function return another function expecting one argument less than initially.
+      */
+    def curried[A, B](a: F[A])(func: A => A => B): F[A => B]
 
-    def product[A, B, C](a: F[A], b: F[B])(func: A => B => C): F[C]
+    /**
+      * Apply operator it receive an input and a function wrapped in a constructor F[A=>B] since it was an output
+      * of the curried operator. Here we unwrap the input value and also the function and apply.
+      */
+    def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
 
   }
 
@@ -26,21 +34,27 @@ object ApplicativeFeature extends App {
 
     override def pure[A](a: A): Option[A] = Some(a)
 
-    override def ap[A, B](input: Option[A])(f: Option[A => B]): Option[B] = {
+    override def curried[A, B](a: Option[A])(func: A => A => B): Option[A => B] = {
+      a.map(value => func(value))
+    }
+
+    override def apply[A, B](input: Option[A])(f: Option[A => B]): Option[B] = {
       input.flatMap(value => f.map(func => func(value)))
     }
 
-    override def product[A, B, C](a: Option[A], b: Option[B])(func: A => B => C): Option[C] = {
-      a.flatMap(aVal => b.map(bVal => {
-        val bToC = func(aVal)
-        bToC(bVal)
-      }))
-    }
   }
 
+  //  apply
   val oVal1 = applicativeOption.pure("hello applicative world")
-  private val maybeTuple: Option[String] = applicativeOption.ap(oVal1)(applicativeOption.pure(x => x.toUpperCase))
+  private val maybeTuple: Option[String] = applicativeOption.apply(oVal1)(applicativeOption.pure(x => x.toUpperCase))
   println(maybeTuple)
+
+  //  curried
+  val oval2 = applicativeOption.pure(" again!!!")
+  private val curriedFunc: Option[String => String] = applicativeOption.curried(oVal1)(a => b => a + b)
+  private val maybeString: Option[String] = applicativeOption.apply(oval2)(curriedFunc)
+  println(maybeString)
+
 
   //    Type Class
   //  _____________
@@ -48,7 +62,7 @@ object ApplicativeFeature extends App {
   println(optionString)
 
   def runType[A, B, F[_]](a: F[A], f: F[A => B])(implicit applicativeType: ApplicativeType[F]): F[B] = {
-    applicativeType.ap(a)(f)
+    applicativeType.apply(a)(f)
   }
 
 

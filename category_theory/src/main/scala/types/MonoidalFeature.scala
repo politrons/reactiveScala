@@ -57,10 +57,10 @@ object MonoidalFeature extends App {
 
   //    Type Class
   //  _____________
-  private val optionString = runType[String, String, Option](oVal1,oVal2, a => s"$a applicative Option type class")
+  private val optionString = runType[String, String, Option](oVal1,oVal2, a => s"$a monoidal Option type class")
   println(optionString)
 
-  private val futureString = runType[String, String, Future](fVaL1,fVaL2, a => s"$a applicative future type class")
+  private val futureString = runType[String, String, Future](fVaL1,fVaL2, a => s"$a monoidal Future type class")
   println(Await.result(futureString, 10 seconds))
 
   def runType[A, B, F[_]](a: F[A], b: F[A], f: A => B)(implicit applicativeType: MonoidalType[F]): F[(B,B)] = {

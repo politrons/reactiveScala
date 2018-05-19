@@ -30,6 +30,13 @@ object FunctorFeature extends App {
       */
     def map[A, B](input: F[A])(f: A => B): F[B]
 
+    /**
+      * Map2 works exactly like map but we need to unwrap a and the b and apply the function to one and the
+      * using curried the other value b.
+      * This Map can be extended as much as you want.
+      */
+    def map2[A, B](a: F[A], b: F[A])(f: A => A => B): F[B]
+
   }
 
   //  Option
@@ -44,12 +51,16 @@ object FunctorFeature extends App {
         case None => None
       }
     }
+
+    override def map2[A, B](a: Option[A], b: Option[A])(f: A => A => B): Option[B] = {
+      a.flatMap(aVal => b.map(bVal => f(aVal)(bVal)))
+    }
   }
 
   /**
     * Here we have our present, but then we want to transform and add a lovely message ;)
     */
-  val optionStringValue:Option[String] = functorOption.pure("Present")
+  val optionStringValue: Option[String] = functorOption.pure("Present")
   private val maybeString: Option[String] =
     functorOption.map(optionStringValue)(a => s"$a I love you!")
   println(maybeString)
@@ -57,6 +68,12 @@ object FunctorFeature extends App {
   val optionIntValue = functorOption.pure(10)
   private val maybeInt: Option[Int] = functorOption.map(optionIntValue)(a => a * 100)
   println(maybeInt)
+
+  val o1 = functorOption.pure(10)
+  val o2 = functorOption.pure(20)
+
+  private val sumInt: Option[Int] = functorOption.map2(o1, o2)(a => b => a + b)
+  println(sumInt)
 
 
   //  Future
@@ -68,6 +85,8 @@ object FunctorFeature extends App {
     override def map[A, B](input: Future[A])(f: A => B): Future[B] = {
       input.map(value => f(value))
     }
+
+    override def map2[A, B](a: Future[A], b: Future[A])(f: A => A => B): Future[B] = ???
   }
 
   private val stringValue: Future[String] = functorFuture.pure("Hello")
