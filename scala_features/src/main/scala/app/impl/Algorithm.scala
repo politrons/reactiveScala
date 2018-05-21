@@ -2,6 +2,9 @@ package app.impl
 
 import org.junit.Test
 
+import collection.immutable.Map
+import collection.immutable.List
+
 class Algorithm {
 
   @Test
@@ -224,11 +227,121 @@ class Algorithm {
       })
       purchases += 1
     })
-    0 until mod foreach(_=>{
+    0 until mod foreach (_ => {
       total += sorted(count) * purchases
       count += 1
     })
     total
   }
+
+  @Test
+  def angryChildren: Unit = {
+    print(angryChildren(4, Array(10, 4, 1, 2, 3, 4, 10, 20, 30, 40, 100, 200)))
+  }
+
+
+  def angryChildren(k: Int, arr: Array[Int]): Int = {
+    var total = 0
+    val sorted = arr.sorted
+    0 to sorted.length - k foreach (i => {
+      val tmp = sorted(i + k - 1) - sorted(i)
+      if (total == 0) {
+        total = tmp
+      } else if (tmp <= total) {
+        total = tmp
+      }
+    })
+    total
+  }
+
+  @Test
+  def jimOrders: Unit = {
+    val orders: Array[Array[Int]] = Array(Array(), Array(), Array(), Array(), Array())
+    orders.update(0, Array(8, 1))
+    orders.update(1, Array(4, 2))
+    orders.update(2, Array(5, 6))
+    orders.update(3, Array(3, 1))
+    orders.update(4, Array(4, 3))
+
+    val ints = jimOrders(orders)
+    print(ints.mkString(" "))
+  }
+
+  def jimOrders(orders: Array[Array[Int]]): Array[Int] = {
+    var orderOrders: Map[Int, List[Int]] = Map()
+    var fasterOrders: Array[Int] = Array()
+    orders.indices foreach (customer => {
+      val order = orders(customer)(0)
+      val preparation = orders(customer)(1)
+      val serveTime: Int = order + preparation
+
+      val customers = orderOrders.find(f => f._1 == serveTime)
+      if (customers.isDefined) {
+        orderOrders = orderOrders ++ Map(serveTime -> (customers.get._2 ++ List(customer)))
+      } else {
+        orderOrders = orderOrders ++ Map(serveTime -> List(customer))
+      }
+      fasterOrders = fasterOrders ++ Array(serveTime)
+    })
+    var outPutArray: Array[Int] = Array()
+    fasterOrders.sorted foreach (time => {
+      val customers = orderOrders(time).sorted
+      customers foreach (customer => {
+        outPutArray = outPutArray ++ Array(customer + 1)
+      })
+    })
+    outPutArray
+  }
+
+  @Test
+  def twoArrays: Unit = {
+    val A = Array(4, 4, 3, 2, 1, 4, 4, 3, 2, 4)
+    val B = Array(2, 3, 0, 1, 1, 3, 1, 0, 0, 2)
+    println(twoArrays(4, A, B))
+  }
+
+  def twoArrays(k: Int, A: Array[Int], B: Array[Int]): String = {
+    val Ar = A.sorted
+    val Br = B.sorted.reverse
+    var higher = true
+    A.indices foreach (index => {
+      if (Ar(index) + Br(index) < k) {
+        higher = false
+      }
+    })
+    if (higher) {
+      "YES"
+    } else {
+      "NO"
+    }
+  }
+
+  @Test
+  def gradingStudents: Unit = {
+    val ints = gradingStudents(Array(73, 67, 38, 33))
+    println(ints.mkString(" "))
+  }
+
+  def gradingStudents(grades: Array[Int]): Array[Int] = {
+    var outputArray: Array[Int] = Array()
+    grades foreach (grade => {
+      var output = grade
+      if (grade >= 38) {
+        val mod = grade % 10
+        val total = Math.abs(mod - 10)
+        if (total < 3) {
+          output = grade + total
+        } else if (total >= 5) {
+          val newTotal = total - 5
+          if (newTotal < 3) {
+            output = grade + newTotal
+          }
+        }
+      }
+      outputArray = outputArray ++ Array(output)
+    })
+    outputArray
+  }
+
 
 }
