@@ -1,6 +1,7 @@
 package app.impl
 
 import org.junit.Test
+import org.scalatest.fixture
 
 import collection.immutable.Map
 import collection.immutable.List
@@ -341,6 +342,187 @@ class Algorithm {
       outputArray = outputArray ++ Array(output)
     })
     outputArray
+  }
+
+
+  @Test
+  def countApplesAndOranges: Unit = {
+    countApplesAndOranges(7, 11, 5, 15, Array(-2, 2, 1), Array(5, -6))
+  }
+
+  def countApplesAndOranges(s: Int, t: Int, a: Int, b: Int, apples: Array[Int], oranges: Array[Int]) {
+    var totalApple = 0
+    apples.map(distance => {
+      if (distance < 0) {
+        a - Math.abs(distance)
+      } else {
+        a + distance
+      }
+    }).filter(position => position >= s && position <= t)
+      .foreach(_ => totalApple += 1)
+
+    var totalOrange = 0
+    oranges foreach (distance => {
+      val position = if (distance < 0) {
+        b - Math.abs(distance)
+      } else {
+        b + distance
+      }
+      if (position >= s && position <= t) {
+        totalOrange += 1
+      }
+    })
+    println(totalApple)
+    println(totalOrange)
+  }
+
+  @Test
+  def kangaroo: Unit = {
+    //    print(kangaroo(0, 3, 4, 2))
+    print(kangaroo(0, 2, 5, 3))
+  }
+
+  def kangaroo(x1: Int, v1: Int, x2: Int, v2: Int): String = {
+    if (x2 < x1 && v1 > v2) {
+      return "NO"
+    }
+    if (x2 > x1 && v1 < v2) {
+      return "NO"
+    }
+    if (x2 > x1 && v2 == v1) {
+      return "NO"
+    }
+    if (x2 < x1 && v2 == v1) {
+      return "NO"
+    }
+    val jumps = Math.abs(x2 - x1) % Math.abs(v1 - v2)
+    if (jumps == 0) {
+      "YES"
+    } else {
+      "NO"
+    }
+  }
+
+  @Test
+  def getTotalX: Unit = {
+    print(getTotalX(Array(2, 4), Array(16, 32, 96)))
+  }
+
+  def getTotalX(a: Array[Int], b: Array[Int]): Int = {
+    var output = 0
+    a.max to b.min foreach (number => {
+      var condition = true
+      a.foreach(value => {
+        if (number % value > 0) {
+          condition = false
+        }
+      })
+      b.foreach(value => {
+        if (value % number > 0) {
+          condition = false
+        }
+      })
+      if (condition) {
+        output += 1
+      }
+    })
+    output
+  }
+
+  @Test
+  def breakingRecords: Unit = {
+    print(breakingRecords(Array(0, 9, 3, 10, 2, 20)).mkString(" "))
+  }
+
+  def breakingRecords(score: Array[Int]): Array[Int] = {
+    var best = 0
+    var worst = 0
+    var bestCount = 0
+    var worstCount = 0
+    var first = true
+    score.foreach(score => {
+      if (first) {
+        best = score
+        worst = score
+        first = false
+      } else {
+        if (best < score) {
+          best = score
+          bestCount += 1
+        }
+        if (worst > score) {
+          worst = score
+          worstCount += 1
+        }
+      }
+    })
+    Array(bestCount, worstCount)
+  }
+
+  @Test
+  def solve: Unit = {
+    print(solve(5, Array(1, 2, 1, 3, 2), 3, 2))
+
+  }
+
+
+  def solve(n: Int, s: Array[Int], d: Int, m: Int): Int = {
+    (0 to n).flatMap(position => {
+      var index = 0
+      var total = 0
+      (position until s.length)
+        .map(i => {
+          total += s(i)
+          index += 1
+          (total, index)
+        })
+        .filter(tuple => tuple._1 == d && tuple._2 == m)
+    }).toList
+      .length
+  }
+
+  @Test
+  def divisibleSumPairs: Unit = {
+    print(divisibleSumPairs(6, 3, Array(1, 3, 2, 6, 1, 2)))
+  }
+
+  def divisibleSumPairs(n: Int, k: Int, ar: Array[Int]): Int = {
+    ar.indices.flatMap(i => {
+      ar.indices.filter(j => i < j && ((ar(i) + ar(j)) % k == 0))
+    }).toList.length
+  }
+
+  @Test
+  def migratoryBirds: Unit = {
+    print(migratoryBirds(Array(1, 4, 4, 4, 5, 3)))
+  }
+
+  def migratoryBirds(ar: Array[Int]): Int = {
+    var previousBird = 0
+    var countBird = 1
+    var birds: Map[Int, Int] = Map()
+    ar.sorted foreach (bird => {
+      if (bird == previousBird) {
+        countBird += 1
+      } else {
+        countBird = 1
+      }
+      previousBird = bird
+      birds = birds ++ Map(bird -> countBird)
+    })
+    var maxCount = 0
+    var birdType = birds.keys.head
+    birds foreach (entry => {
+      if (entry._2 == maxCount && entry._1 < birdType) {
+        maxCount = entry._2
+        birdType = entry._1
+      }
+      if (entry._2 > maxCount) {
+        maxCount = entry._2
+        birdType = entry._1
+      }
+    })
+    birdType
   }
 
 
