@@ -525,5 +525,136 @@ class Algorithm {
     birdType
   }
 
+  //##########################
+  //        SORTING
+  //##########################
 
+  def introTutorial: Unit = {
+    print(introTutorial(4, Array(1, 4, 5, 7, 9, 12)))
+  }
+
+  def introTutorial(V: Int, arr: Array[Int]): Int = {
+    var output: Int = 0
+    arr.indices.filter(i => output == 0 && arr(i) == V)
+      .foreach(i => output = i)
+    output
+  }
+
+  @Test
+  def insertionSort1: Unit = {
+    insertionSort1(5, Array(2, 4, 6, 8, 3))
+  }
+
+  def insertionSort1(n: Int, arr: Array[Int]) {
+    arr.length - 1 to 0 by -1 foreach (_ => {
+      arr.length - 1 to 0 by -1 foreach (j => {
+        val valueX = arr(j)
+        val valueJ = if (j == 0) arr(0) else arr(j - 1)
+        if (valueX < valueJ) {
+          arr(j) = arr(j - 1)
+          println(arr.mkString(" "))
+          arr(j - 1) = valueX
+        }
+      })
+    })
+    println(arr.mkString(" "))
+  }
+
+  @Test
+  def insertionSort2: Unit = {
+    insertionSort2(5, Array(1, 4, 3, 5, 6, 2))
+
+  }
+
+  def insertionSort2(n: Int, arr: Array[Int]) {
+    arr.indices foreach (i => {
+      val count = i
+      if (count > 0) println(arr.mkString(" "))
+      arr.indices foreach (_ => {
+        0 to count foreach (i => {
+          val nextIndex = if (i == arr.length - 1) arr.length - 1 else i + 1
+          val valL = arr(i)
+          val valR = arr(nextIndex)
+          if (valL > valR) {
+            val tmp = arr(nextIndex)
+            arr(nextIndex) = arr(i)
+            arr(i) = tmp
+          }
+        })
+      })
+    })
+
+  }
+
+  @Test
+  def bigSorting: Unit = {
+    print(bigSorting(Array("31415926535897932384626433832795", "1", "3", "10", "3", "5")).mkString(" "))
+  }
+
+  def bigSorting(unsorted: Array[String]): Array[String] = {
+    var lastIndexFound = unsorted.length - 1
+    unsorted.sorted.indices foreach (x => {
+      var isSorted = false
+      0 until lastIndexFound foreach (j => {
+        val rightIndex = if (j == unsorted.length - 1) unsorted.length - 1 else j + 1
+        if (BigDecimal(unsorted(j)) > BigDecimal(unsorted(rightIndex))) {
+          val tmp = unsorted(j)
+          unsorted(j) = unsorted(rightIndex)
+          unsorted(rightIndex) = tmp
+          isSorted = true
+        }
+      })
+      if (!isSorted) {
+        return unsorted
+      }
+      lastIndexFound -= x
+    })
+    unsorted
+    //    var last: = ""
+    //    unsorted.sortBy(a => a)
+    //#########
+    //Efficient
+    //#########
+    //    unsorted.sortWith((a, b) => BigDecimal(a) < BigDecimal(b))
+    //    unsorted.sortWith((a, b) => {
+    //      if (a.length > Integer.MAX_VALUE && b.length > Integer.MAX_VALUE) {
+    //        BigDecimal(a) < BigDecimal(b)
+    //      }
+    //      else if (a.length < Integer.MAX_VALUE && b.length > Integer.MAX_VALUE) {
+    //        a.toInt < BigDecimal(b)
+    //      } else if (a.length > Integer.MAX_VALUE && b.length < Integer.MAX_VALUE) {
+    //        BigDecimal(a) < b.toInt
+    //      } else {
+    //        a.toInt < b.toInt
+    //      }
+    //    })
+  }
+
+  @Test
+  def runningTime: Unit = {
+    println(runningTime(Array(2, 1, 3, 1, 2)))
+  }
+
+  def runningTime(arr: Array[Int]): Int = {
+    var shifted = 0
+    var sortedIndex: Int = arr.length - 1
+    var isSorted = false
+    arr.indices foreach (_ => {
+      0 until sortedIndex foreach (i => {
+        if (arr(i) > arr(i + 1)) {
+          val tmp = arr(i)
+          arr(i) = arr(i + 1)
+          arr(i + 1) = tmp
+          shifted += 1
+          isSorted = true
+        }
+      })
+      if (!isSorted) {
+        return shifted
+      }
+      sortedIndex -= 1
+    })
+    shifted
+  }
 }
+
