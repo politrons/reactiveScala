@@ -47,13 +47,17 @@ class LogicAlgorithm {
 
   @Test
   def diagonalMatrix: Unit = {
-    val matrix: Array[Array[Int]] = Array(Array(), Array(), Array())
+    val matrix: Array[Array[Int]] = new Array(3)
     matrix.update(0, Array(11, 2, 4))
     matrix.update(1, Array(4, 5, 6))
     matrix.update(2, Array(10, 8, -12))
-    diagonalDifference(matrix)
+    print(diagonalDifference(matrix))
   }
 
+  /**
+    * Here having two index from left to right and right to left and index from up to down we finally manage to have
+    * the diagonals values of the matrix which we sum.
+    */
   def diagonalDifference(matrix: Array[Array[Int]]): Int = {
     val dimension = matrix.length - 1
     var dimensionX = 0
@@ -522,6 +526,41 @@ class LogicAlgorithm {
     })
     birdType
   }
+
+  @Test
+  def notRepeatedWords: Unit = {
+    val sentence = "This is a for is repeated many many times this it should be repeated removed duplicity"
+
+    var output: List[String] = List()
+    sentence.split(" ").foreach(word => {
+      if (!output.contains(word)) {
+        output = output ++ Array(word)
+      }
+    })
+
+    print(output.mkString(" "))
+  }
+
+  @Test
+  def findElementInMatrix(): Unit = {
+    val element = 16
+    val matrix: Array[Array[Int]] = new Array(4)
+    matrix.update(0, Array(1, 5, 13, 29))
+    matrix.update(1, Array(11, 16, 25, 38))
+    matrix.update(2, Array(45, 49, 52, 57))
+    matrix.update(3, Array(51, 54, 59, 66))
+
+    var founded = false
+    0 until matrix.length - 1 foreach (i => {
+      0 until matrix.length - 1 foreach (j => {
+        if (matrix(i)(j) == element) {
+          founded = true
+        }
+      })
+    })
+    print(founded)
+  }
+
 
 }
 

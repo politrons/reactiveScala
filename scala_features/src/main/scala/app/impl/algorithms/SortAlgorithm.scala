@@ -31,12 +31,12 @@ class SortAlgorithm {
   def insertionSort1(n: Int, arr: Array[Int]) {
     arr.length - 1 to 0 by -1 foreach (_ => {
       arr.length - 1 to 0 by -1 foreach (j => {
-        val valueX = arr(j)
         val valueJ = if (j == 0) arr(0) else arr(j - 1)
-        if (valueX < valueJ) {
+        if (arr(j) < valueJ) {
+          val tmp = arr(j)
           arr(j) = arr(j - 1)
           println(arr.mkString(" "))
-          arr(j - 1) = valueX
+          arr(j - 1) = tmp
         }
       })
     })
@@ -156,28 +156,75 @@ class SortAlgorithm {
     * and otherwise it goes to the left
     */
   @Test
-  def quickSort: Unit = {
-    println(quickSort(Array(4, 5, 3, 7, 2)).mkString(" "))
+  def quickSort() {
+    val array = Array(8, 5, 3, 7, 2, 4, 10, 1)
+    print(quickSort(array).mkString(" "))
   }
 
-  def quickSort(arr: Array[Int]): Array[Int] = {
-    var left: Array[Int] = Array()
-    val eq = Array(arr.head)
-    var right: Array[Int] = Array()
-    arr.foreach(value => {
-      if (value > arr.head) {
-        right = right ++ Array(value)
-      } else if (value < arr.head) {
-        left = left ++ Array(value)
-      }
-    })
-    left ++ eq ++ right
+  def quickSort(array: Array[Int]): Array[Int] =
+    if (array.length < 2) array
+    else {
+      val pivot = array(array.length / 2)
+      val leftArray = quickSort(array.filter(e => pivot > e))
+      val rightArray = quickSort(array.filter(e => pivot < e))
+      leftArray ++ Array(pivot) ++ rightArray
+    }
+
+
+  //Merge sort
+
+  @Test
+  def mergeSort(): Unit = {
+    val array = Array(45, 23, 11, 89, 77, 98, 4, 28, 65, 43)
+    print(divideParts(array).mkString(" "))
   }
+
+  /**
+    * We first divide all elements of the array in left and right from the middle.
+    * Until we have the undivide since we have simple numbers. And from there we go from
+    * inside out.
+    */
+  def divideParts(array: Array[Int]): Array[Int] = {
+    val middle = array.length / 2
+    if (middle == 0) array // no more elements to split.
+    else {
+      val (left, right) = array.splitAt(middle)
+      val arrayOne = divideParts(left)
+      val arrayTwo = divideParts(right)
+      mergeParts(arrayOne, arrayTwo)
+    }
+  }
+
+  def mergeParts(arrayOne: Array[Int], arrayTwo: Array[Int]): Array[Int] = {
+    var orderArray: Array[Int] = Array()
+    var a = arrayOne
+    var b = arrayTwo
+    while (!a.isEmpty && !b.isEmpty) {
+      if (a(0) > b(0)) {
+        orderArray = orderArray ++ Array(b(0))
+        b = b.filter(e => e != b(0))
+      } else {
+        orderArray = orderArray ++ Array(a(0))
+        a = a.filter(e => e != a(0))
+      }
+    }
+    //Now a or b should empty. But we put the rest not compared at the end of the order array
+    while (!a.isEmpty) {
+      orderArray = orderArray ++ Array(a(0))
+      a = a.filter(e => e != a(0))
+    }
+    while (!b.isEmpty) {
+      orderArray = orderArray ++ Array(b(0))
+      b = b.filter(e => e != b(0))
+    }
+    orderArray
+  }
+
 
   //####### Counting sort
   @Test
   def countingSort: Unit = {
-    print(countingSort(Array(1, 1, 3, 2, 1)).mkString(" "))
+    print(countingSort(Array(1, 4, 1, 3, 5, 6, 2, 7, 1)).mkString(" "))
   }
 
   /**
@@ -185,7 +232,7 @@ class SortAlgorithm {
     * Then in the original array we just use the value in every iteration to be used as the index of the counter array
     * and in every index we increase the counter.
     *
-    * At the end, run through your counter array, printing the value of each non-zero valued index that number of times.
+    * At the end, run through your counter array, printing the value of each non-zero valued index that number of times in case the number was repeated.
     */
   def countingSort(arr: Array[Int]): Array[Int] = {
     var counter: Array[Int] = Array()
@@ -195,14 +242,287 @@ class SortAlgorithm {
     arr foreach (value => {
       counter(value) = counter(value) + 1
     })
-    var sortedArray:Array[Int] = Array()
-    counter.indices foreach(i => {
+    var sortedArray: Array[Int] = Array()
+    counter.indices foreach (i => {
       if (counter(i) > 0)
-        0 until counter(i) foreach(_ => {
+        0 until counter(i) foreach (_ => {
           sortedArray = sortedArray ++ Array(i)
         })
     })
     sortedArray
   }
+
+  @Test
+  def allAlgorithm(): Unit = {
+    val array: Array[Array[Any]] = Array(
+      Array(0, "ab"),
+      Array(6, "cd"),
+      Array(0, "ef"),
+      Array(6, "gh"),
+      Array(4, "ij"),
+      Array(0, "ab"),
+      Array(6, "cd"),
+      Array(0, "ef"),
+      Array(6, "gh"),
+      Array(0, "ij"),
+      Array(4, "that"),
+      Array(3, "be"),
+      Array(0, "to"),
+      Array(1, "be"),
+      Array(5, "question"),
+      Array(1, "or"),
+      Array(2, "not"),
+      Array(4, "is"),
+      Array(2, "to"),
+      Array(4, "the"))
+
+
+    val tuple = splitArray(array)
+    val centerArray: Array[Array[Any]] = tuple._2
+
+    val lineArray = 0 to ((tuple._1.length - 1) / 2) map (_ => "-")
+
+    centerArray.indices foreach (i => {
+      centerArray.indices foreach (i => {
+        val next = if (i == centerArray.length - 1) centerArray.length - 1 else i + 1
+        if (centerArray(i)(0).asInstanceOf[Int] > centerArray(next)(0).asInstanceOf[Int]) {
+          val tmp = centerArray(next)
+          centerArray(next) = centerArray(i)
+          centerArray(i) = tmp
+        }
+      })
+    })
+
+    val outputSeakspear = centerArray.indices map (i => {
+      if (centerArray(i)(1) == "that") {
+        "- " + centerArray(i)(1).asInstanceOf[String]
+      } else {
+        centerArray(i)(1).asInstanceOf[String]
+      }
+    })
+    print((lineArray ++ outputSeakspear ++ lineArray.dropRight(1)).mkString(" "))
+  }
+
+  def splitArray(array: Array[Array[Any]]): (Array[Array[Any]], Array[Array[Any]]) = {
+    var leftArray: Array[Array[Any]] = Array()
+    var rightArray: Array[Array[Any]] = Array()
+    val half = (array.length - 1) / 2
+    array.indices foreach (i => {
+      if (i <= half) {
+        leftArray = leftArray ++ Array(array(i))
+      } else {
+        rightArray = rightArray ++ Array(array(i))
+      }
+    })
+    (leftArray, rightArray)
+  }
+
+  @Test
+  def closestNumbers: Unit = {
+    println(closestNumbers(Array(-20, -3916237, -357920, -3620601, 7374819, -7330761, 30, 6246457, -6461594, 266854)).mkString(" "))
+    //    println(closestNumbers(Array(-20, -3916237, -357920, -3620601, 7374819, -7330761, 30, 6246457, -6461594, 266854, -520, -470)).mkString(" "))
+  }
+
+  def closestNumbers(arr: Array[Int]): Array[Int] = {
+
+    val totalMap: Map[(Int, Int), Int] =
+      arr.flatMap(valueA => {
+        arr.filter(valueB => (valueA - valueB) > 0)
+          .map(valueB => Map[(Int, Int), Int]((valueA, valueB) -> (valueA - valueB)))
+      }).reduce((m, m1) => m ++ m1)
+
+    val entriesArray = totalMap.iterator.toArray
+    totalMap foreach (_ => {
+      entriesArray.indices foreach (i => {
+        val rightIndex = if (i == entriesArray.length - 1) entriesArray.length - 1 else i + 1
+        if (entriesArray(i)._2 > entriesArray(rightIndex)._2) {
+          val tmp = entriesArray(rightIndex)
+          entriesArray(rightIndex) = entriesArray(i)
+          entriesArray(i) = tmp
+        }
+      })
+    })
+
+    var minDiffer = entriesArray.head._2
+    val output: Array[Int] =
+      entriesArray.filter(entry => entry._2 <= minDiffer)
+        .flatMap(entry => {
+          minDiffer = entry._2
+          Array(entry._1._2, entry._1._1)
+        })
+    output
+  }
+
+  @Test
+  def findMedian: Unit = {
+    print(findMedian(Array(0, 1, 2, 4, 6, 5, 3)))
+  }
+
+  /**
+    * For find median we use counting sort algorithm
+    */
+  def findMedian(arr: Array[Int]): Int = {
+    val counter = (0 to arr.max).map(_ => 0).toArray
+    arr foreach (value => {
+      counter(value) = counter(value) + 1
+    })
+    var output: Array[Int] = Array()
+    counter.indices foreach (i => {
+      if (counter(i) > 0) {
+        0 until counter(i) foreach (_ => {
+          output = output ++ Array(i)
+        })
+      }
+    })
+    println(output.mkString(" "))
+    arr((output.length - 1) / 2)
+    //    Efficient
+    //    val x = arr.sorted
+    //    x((arr.length - 1) / 2)
+  }
+
+  @Test
+  def activityNotifications: Unit = {
+    println(activityNotifications(Array(2, 3, 4, 2, 3, 6, 8, 4, 5), 5))
+    println(activityNotifications(Array(1, 2, 3, 4, 4), 4))
+  }
+
+  def activityNotifications(expenditure: Array[Int], d: Int): Int = {
+    var alarm: Int = 0
+    var from = 0
+    var lastDay = d
+    val average = new Array[Int](d)
+    lastDay until expenditure.length foreach (expense => {
+      Array.copy(expenditure, from, average, 0, d)
+      val sorted = average.sorted
+      if (expense >= sorted(d / 2) * 2) {
+        alarm += 1
+      }
+      from += 1
+      lastDay += 1
+    })
+    alarm
+  }
+
+  @Test
+  def sortMultipleArraysByCounter(): Unit = {
+    val a1 = Array(1, 5, 8, 9, 11)
+    val a2 = Array(2, 12, 24, 44)
+    val a3 = Array(1, 10, 20, 40, 60)
+
+    val total = a1 ++ a2 ++ a3
+
+    val counter: Array[Int] = new Array(total.max + 1)
+    total foreach (e => {
+      counter(e) = counter(e) + 1
+    })
+
+    var output: Array[Int] = Array()
+    counter.indices foreach (i => {
+      if (counter(i) > 0) {
+        0 until counter(i) foreach (_ => {
+          output = output ++ Array(i)
+        })
+      }
+    })
+    print(output.mkString(" "))
+  }
+
+  @Test
+  def sortMultipleArraysByQuickSort(): Unit = {
+    val a1 = Array(1, 5, 8, 9, 11)
+    val a2 = Array(2, 12, 24, 44)
+    val a3 = Array(1, 10, 20, 40, 60)
+
+    var total = a1 ++ a2 ++ a3
+
+    0 until total.length - 1 foreach (i => {
+      val eq = total(i)
+      var left: Array[Int] = Array()
+      var right: Array[Int] = Array()
+      total foreach (value => {
+        if (eq > value) {
+          left = left ++ Array(value)
+        } else if (eq < value) {
+          right = right ++ Array(value)
+        }
+      })
+      total = left ++ Array(eq) ++ right
+    })
+    print(total.mkString(" "))
+  }
+
+  @Test
+  def bubbleSort(): Unit = {
+    val array = Array(4, 2, 6, 1, 3, 5, 9, 7, 8)
+    0 until array.length - 1 foreach (_ => {
+      0 until array.length - 1 foreach (i => {
+        if (array(i) > array(i + 1)) {
+          val tmp = array(i + 1)
+          array(i + 1) = array(i)
+          array(i) = tmp
+        }
+      })
+    })
+    print(array.mkString(" "))
+  }
+
+  @Test
+  def quickSortFast(): Unit = {
+    var array = Array(8, 5, 3, 7, 2, 4, 10, 1)
+    array.indices foreach (i => {
+      val eq = array(i)
+      var left: Array[Int] = Array()
+      var right: Array[Int] = Array()
+      array.indices foreach (j => {
+        if (array(j) < eq) {
+          left = left ++ Array(array(j))
+        } else if (array(j) > eq) {
+          right = right ++ Array(array(j))
+        }
+      })
+      array = left ++ Array(eq) ++ right
+    })
+    print(array.mkString(" "))
+  }
+
+  @Test
+  def counterFast(): Unit = {
+    val array = Array(8, 5, 3, 7, 2, 4, 10, 1)
+    var counter: Array[Int] = Array()
+    0 to array.max foreach (i => {
+      counter = counter ++ Array(0)
+    })
+    array foreach (value => {
+      counter(value) = counter(value) + 1
+    })
+    var output: Array[Int] = Array()
+    counter.indices foreach (i => {
+      if (counter(i) > 0) {
+        0 until counter(i) foreach (_ => {
+          output = output ++ Array(i)
+        })
+      }
+    })
+    print(output.mkString(" "))
+  }
+
+  @Test
+  def quickSortFast2(): Unit = {
+    val array = Array(8, 5, 3, 7, 2, 4, 10, 1)
+    print(quickSortFast2(array).mkString(" "))
+  }
+
+  def quickSortFast2(array: Array[Int]): Array[Int] = {
+    if(array.length == 0) {
+      return array
+    }
+    val pivot = array(array.length / 2)
+    val left = quickSortFast2(array.filter(e => pivot > e))
+    val right = quickSortFast2(array.filter(e => pivot < e))
+    left ++ Array(pivot) ++ right
+  }
+
+
 }
 
