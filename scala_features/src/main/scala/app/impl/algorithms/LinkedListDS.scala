@@ -34,12 +34,12 @@ class LinkedListDS {
     * is more about Russian doll. If you want to put nodes in the middle just link the old chain into the new one,
     * and this new one with the other right link of the chain.
     */
-  def insertNodeAtPosition(node: SinglyLinkedListNode, data: Int, position: Int): SinglyLinkedListNode = {
+  def insertNodeAtPosition(node: SinglyLinkedListNode, nedwNodeData: Int, position: Int): SinglyLinkedListNode = {
     if (position > 0) {
-      insertNodeAtPosition(node.next, data, position - 1)
+      insertNodeAtPosition(node.next, nedwNodeData, position - 1)
     } else {
       val nextNode = new SinglyLinkedListNode(node.data, node.next) //We create a new node which we set the current value of the node that we will override.
-      node.data = data
+      node.data = nedwNodeData
       node.next = nextNode //The previous node it will continue having this node pointer, now with a new value.
     }
     node

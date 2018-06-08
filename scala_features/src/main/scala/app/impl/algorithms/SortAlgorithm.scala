@@ -45,7 +45,7 @@ class SortAlgorithm {
 
   @Test
   def insertionSort2: Unit = {
-    insertionSort2(5, Array(1, 4, 3, 5, 6, 2))
+    insertionSort2(5, Array(1, 4, 3, 6, 5, 2))
 
   }
 
@@ -514,7 +514,7 @@ class SortAlgorithm {
   }
 
   def quickSortFast2(array: Array[Int]): Array[Int] = {
-    if(array.length == 0) {
+    if (array.length == 0) {
       return array
     }
     val pivot = array(array.length / 2)
@@ -523,6 +523,29 @@ class SortAlgorithm {
     left ++ Array(pivot) ++ right
   }
 
+  /**
+    * Divide and conquer since it chop the half of the data in every iteration is consider one of the most efficients
+    * algorthims and containsRE: Personal tax payment the Big O grasde O(log n)
+    */
+  @Test
+  def findNumberWithDivideAndCoquer(): Unit = {
+    print(divideAndConquer(Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), 13))
+  }
+
+  def divideAndConquer(array: Array[Int], number: Int): Unit = {
+    val middle = array((array.length - 1) / 2)
+    if (middle != number) {
+      println("Chopping")
+      val (left, right) = array.splitAt((array.length - 1) / 2)
+      if (middle > number) {
+        divideAndConquer(left, number)
+      } else {
+        divideAndConquer(right, number)
+      }
+    } else {
+      println(s"Founded $middle")
+    }
+  }
 
 }
 

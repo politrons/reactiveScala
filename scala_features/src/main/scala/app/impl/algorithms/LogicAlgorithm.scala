@@ -561,6 +561,5 @@ class LogicAlgorithm {
     print(founded)
   }
 
-
 }
 
