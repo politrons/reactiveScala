@@ -103,4 +103,18 @@ class StringAlgorithm {
     maxLength
   }
 
+  /**
+    * Check if a sentence can be consider as a circle.
+    */
+  @Test
+  def stringCircle(): Unit = {
+    println(stringCircle("circle is when start and finish with circle"))
+    println(stringCircle("Otherwise is not consider as a circle circle"))
+  }
+
+  def stringCircle(sentence: String): Boolean = {
+    val strings = sentence.split(" ")
+    strings.head == strings.last
+  }
+
 }

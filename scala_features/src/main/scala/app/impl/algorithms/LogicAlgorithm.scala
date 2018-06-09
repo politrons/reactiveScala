@@ -561,5 +561,67 @@ class LogicAlgorithm {
     print(founded)
   }
 
+  @Test
+  def increaseAndDecrease(): Unit = {
+    increaseAndDecrease(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7))
+  }
+
+  def increaseAndDecrease(array: Array[Int]): Unit = {
+    val middle = array.length - 1 / 2
+    if (array.length >= 3) {
+      val left = array(middle - 1)
+      val right = array(middle + 1)
+      val center = array(middle)
+      if (center > left && center < right) {
+        println(center)
+      } else {
+        increaseAndDecrease()
+      }
+
+    }
+
+  }
+
+  @Test
+  def secondLarger(): Unit = {
+    secondLarger(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7))
+  }
+
+  var first = 0
+  var second = 0
+
+  def secondLarger(array: Array[Int]): Unit = {
+    array.foreach(_ => {
+      array.foreach(value => {
+        if (value > first) first = value
+        if (value > second && value < first) second = value
+      })
+    })
+    print(second)
+  }
+
+  @Test
+  def binarySearchFirstOcurence(): Unit = {
+    print(binarySearchFirstOrLastOcurence(Array(1, 2, 3, 3, 4, 5, 6, 6, 7, 8), 6))
+  }
+
+  var result: Integer = -1
+
+  def binarySearchFirstOrLastOcurence(array: Array[Int], node: Int): Integer = {
+    if (array.length > 1) {
+      val middle = array.length / 2
+      val center = array(middle)
+      val (left, right) = array.splitAt(middle)
+      if (node == center) {
+        result = middle
+        binarySearchFirstOrLastOcurence(left, node)//If we want last ocurrence just modify left by right
+      } else if (node < center) {
+        binarySearchFirstOrLastOcurence(left, node)
+      } else {
+        binarySearchFirstOrLastOcurence(right, node)
+      }
+    }
+    result
+  }
 }
 

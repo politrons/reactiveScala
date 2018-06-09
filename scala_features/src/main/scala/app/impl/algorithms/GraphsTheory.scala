@@ -115,6 +115,79 @@ class GraphsTheory {
         searchNewNode(vertx, nodes, visited)
       }
     })
-
   }
+
+  val totalRow = 3
+  val totalCol = 3
+
+  /**
+    * This rowN and colN combination (rowN-colN) are all cell index around a particular cell in the matrix
+    * (-1,-1),(-1,0)(-1,1)(0,-1) and so on.
+    */
+  val rowN: Array[Int] = Array(-1, -1, -1, 0, 0, 1, 1, 1)
+  val colN: Array[Int] = Array(-1, 0, 1, -1, 1, -1, 0, 1)
+
+  @Test
+  def findIsland(): Unit = {
+    val graph: Array[Array[Int]] = new Array(3)
+    graph.update(0, Array(1, 1, 0))
+    graph.update(1, Array(0, 0, 1))
+    graph.update(2, Array(1, 0, 1))
+    print(s"Number of Islands:${findIsland(graph)}")
+  }
+
+  /**
+    * Find island algorithm teach is how we can check around the position of the matrix all around that value,
+    * and then recursively to find spot of the seam island.
+    */
+  def findIsland(graph: Array[Array[Int]]): Int = {
+    val visited: Array[Array[Boolean]] = Array.ofDim(totalRow, totalCol)
+    var count = 0
+    0 until totalRow foreach (row => {
+      0 until totalCol foreach (col => {
+        if (isAnIslandSpotNotVisited(graph, visited, row, col)) {
+          // if value 1 is not visited yet, then new island found, Visit all
+          // cells in this island and then increment the island count
+          // Then in next iterations only those not marked as visited are consider as new islands.
+          DFS(graph, row, col, visited)
+          count += 1
+        }
+      })
+    })
+    count
+  }
+
+  /**
+    * A utility function to do Depth first search for a 2D boolean matrix.
+    * It only considers the 8 neighbors as adjacent vertices
+    */
+  def DFS(graph: Array[Array[Int]], row: Int, col: Int, visited: Array[Array[Boolean]]): Unit = {
+    visited(row)(col) = true
+    0 until 8 foreach (i => {
+      val neighbourRow = row + rowN(i)
+      val neighbourCol = col + colN(i)
+      if (isValidCell(graph, neighbourRow, neighbourCol, visited)) {
+        DFS(graph, neighbourRow, neighbourCol, visited)
+      }
+    })
+  }
+
+  /**
+    * A function to check if a given cell(row, col) can be used in the recursive call of DFS
+    */
+  def isValidCell(graph: Array[Array[Int]], row: Int, col: Int, visited: Array[Array[Boolean]]): Boolean = {
+    (row >= 0) && //Means the new neighbour row cannot be out of the Array
+      (row < totalRow) && //Means I'm not out of the row Array
+      (col >= 0) && //Means the new neighbour cell cannot be out of the Array
+      (col < totalCol) && //Means I'm not out of the cell Array
+      isAnIslandSpotNotVisited(graph, visited, row, col) //Check if that spot is an island and has not visited yet.
+  }
+
+  /**
+    * Check if the cell(row, col) is an island spot, and has not being visited yet.
+    */
+  private def isAnIslandSpotNotVisited(graph: Array[Array[Int]], visited: Array[Array[Boolean]], row: Int, col: Int) = {
+    graph(row)(col) == 1 && !visited(row)(col)
+  }
+
 }

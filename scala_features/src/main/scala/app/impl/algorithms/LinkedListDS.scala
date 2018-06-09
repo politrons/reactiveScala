@@ -108,6 +108,28 @@ class LinkedListDS {
     }
   }
 
+
+  @Test
+  def reverseKNodesPrint: Unit = {
+    val node = new SinglyLinkedListNode(6, null)
+    val node1 = new SinglyLinkedListNode(5, node)
+    val node2 = new SinglyLinkedListNode(4, node1)
+    val node3 = new SinglyLinkedListNode(3, node2)
+    val node4 = new SinglyLinkedListNode(2, node3)
+    val node5 = new SinglyLinkedListNode(1, node4)
+    reverseKNodesPrint(node5, 4)
+  }
+
+  def reverseKNodesPrint(llist: SinglyLinkedListNode, k: Int): Unit = {
+    if (llist != null && k > 0) {
+      var countX = k
+      countX -=1
+      reverseKNodesPrint(llist.next,countX)
+      println(llist.data)
+    }
+  }
+
+
   @Test
   def noReversePrint: Unit = {
     val node = new SinglyLinkedListNode(6, null)
@@ -223,7 +245,7 @@ class LinkedListDS {
       val tmp = head
       val node = head.next
       node.next = tmp
-      node.next  = swapNodes(tmp.next.next)
+      node.next = swapNodes(tmp.next.next)
     }
     head
   }

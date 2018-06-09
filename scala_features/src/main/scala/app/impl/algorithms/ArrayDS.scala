@@ -1,8 +1,9 @@
 package app.impl.algorithms
 
+import javafx.scene.chart.Chart
 import org.junit.Test
 
-class DataStructures {
+class ArrayDS {
 
 
   @Test
@@ -105,7 +106,7 @@ class DataStructures {
 
   @Test
   def matchingStrings: Unit = {
-   print(matchingStrings(Array("aba", "baba", "aba", "xzxb"), Array("aba", "xzxb", "ab")).mkString(" "))
+    print(matchingStrings(Array("aba", "baba", "aba", "xzxb"), Array("aba", "xzxb", "ab")).mkString(" "))
   }
 
   /**
@@ -125,4 +126,45 @@ class DataStructures {
     stringsFound
   }
 
+
+  @Test
+  def rotate90: Unit = {
+    val matrix: Array[Array[Int]] = new Array(3)
+    matrix.update(0, Array(1, 2, 3))
+    matrix.update(1, Array(4, 5, 6))
+    matrix.update(2, Array(7, 8, 9))
+    print(rotate90(matrix))
+  }
+
+  def rotate90(matrix: Array[Array[Int]]): Array[Array[Int]] = {
+    val rotated: Array[Array[Int]] = new Array(3)
+    var a = 0
+    var b = 0
+    matrix.indices foreach (i => {
+      matrix.indices foreach (j => {
+        rotated(a)(b) = matrix(i)(j)
+        b += 1
+      })
+      a += 1
+    })
+    rotated
+
+  }
+
+  var previous: List[Char] = List()
+  var unique: List[Char] = List()
+
+  @Test
+  def findFirstNonRepeated(): Unit = {
+    val word = "BARBARIAN"
+    word.toCharArray.foreach(c => {
+      if (!previous.contains(c)) {
+        unique = unique ++ List[Char](c)
+      } else {
+        unique = unique.filter(uChar => uChar != c)
+      }
+      previous = previous ++ List[Char](c)
+    })
+    print(unique.head)
+  }
 }
