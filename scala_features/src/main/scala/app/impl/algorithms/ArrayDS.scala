@@ -62,44 +62,6 @@ class ArrayDS {
     output.max
   }
 
-  @Test
-  def dynamicArray: Unit = {
-    val array: Array[Array[Int]] = new Array(5)
-    array.update(0, Array(1, 0, 5))
-    array.update(1, Array(1, 1, 7))
-    array.update(2, Array(1, 0, 3))
-    array.update(3, Array(2, 1, 0))
-    array.update(4, Array(2, 1, 1))
-    println(dynamicArray(2, array).mkString(" "))
-  }
-
-  def dynamicArray(n: Int, queries: Array[Array[Int]]): Array[Int] = {
-    val seqList: Array[Array[Int]] = new Array(n)
-    val N = n
-    var lastAnswer = 0
-    var output: Array[Int] = Array()
-    queries.foreach(queryType => {
-      val x: Int = queryType(1)
-      val y: Int = queryType(2)
-      val index = (x ^ lastAnswer) % N
-      var seq = seqList(index)
-      if (queryType.head == 1) {
-        if (seq == null) {
-          seqList(index) = Array(y)
-        } else {
-          seq = seq ++ Array(y)
-          seqList(index) = seq
-        }
-      } else {
-        val seqIndex = y % seq.length
-        lastAnswer = seq(seqIndex)
-        println(lastAnswer)
-        output = output ++ Array(lastAnswer)
-      }
-    })
-    output
-  }
-
   /**
     * With the equation (index + number_elements - movements) % number_elements we can find the exactly
     * index where we want to move the element.
@@ -145,22 +107,36 @@ class ArrayDS {
     matrix.update(0, Array(1, 2, 3))
     matrix.update(1, Array(4, 5, 6))
     matrix.update(2, Array(7, 8, 9))
-    print(rotate90(matrix))
+    displayMatrix(rotate90(matrix))
   }
 
   def rotate90(matrix: Array[Array[Int]]): Array[Array[Int]] = {
-    val rotated: Array[Array[Int]] = new Array(3)
-    var a = 0
-    var b = 0
+    val mLength = matrix.length
+    0 to mLength / 2 foreach (x => {
+      x until mLength - x foreach (y => {
+        //store current cell in temp variable
+        val tmp = matrix(x)(y)
+        // move values from right to top
+        matrix(x)(y) = matrix(y)(mLength - 1 - x)
+        // move values from bottom to right
+        matrix(y)(mLength - 1 - x) = matrix(mLength - 1 - x)(mLength - 1 - y)
+        //move values from left to bottom
+        matrix(mLength - 1 - x)(mLength - 1 - y) = matrix(mLength - 1 - y)(x)
+        // assign temp to left
+        matrix(mLength - 1 - y)(x) = tmp
+      })
+    })
+    matrix
+  }
+
+  def displayMatrix(matrix: Array[Array[Int]]): Unit = {
     matrix.indices foreach (i => {
       matrix.indices foreach (j => {
-        rotated(a)(b) = matrix(i)(j)
-        b += 1
+        print(s"${matrix(i)(j)} ")
       })
-      a += 1
+      println("")
     })
-    rotated
-
+    println("")
   }
 
   var previous: Array[Char] = Array()
@@ -185,4 +161,43 @@ class ArrayDS {
     })
     print(unique.head)
   }
+
+  @Test
+  def dynamicArray: Unit = {
+    val array: Array[Array[Int]] = new Array(5)
+    array.update(0, Array(1, 0, 5))
+    array.update(1, Array(1, 1, 7))
+    array.update(2, Array(1, 0, 3))
+    array.update(3, Array(2, 1, 0))
+    array.update(4, Array(2, 1, 1))
+    println(dynamicArray(2, array).mkString(" "))
+  }
+
+  def dynamicArray(n: Int, queries: Array[Array[Int]]): Array[Int] = {
+    val seqList: Array[Array[Int]] = new Array(n)
+    val N = n
+    var lastAnswer = 0
+    var output: Array[Int] = Array()
+    queries.foreach(queryType => {
+      val x: Int = queryType(1)
+      val y: Int = queryType(2)
+      val index = (x ^ lastAnswer) % N
+      var seq = seqList(index)
+      if (queryType.head == 1) {
+        if (seq == null) {
+          seqList(index) = Array(y)
+        } else {
+          seq = seq ++ Array(y)
+          seqList(index) = seq
+        }
+      } else {
+        val seqIndex = y % seq.length
+        lastAnswer = seq(seqIndex)
+        println(lastAnswer)
+        output = output ++ Array(lastAnswer)
+      }
+    })
+    output
+  }
+
 }

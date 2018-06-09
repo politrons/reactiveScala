@@ -176,9 +176,9 @@ class GraphsTheory {
     * A function to check if a given cell(row, col) can be used in the recursive call of DFS
     */
   def isValidCell(graph: Array[Array[Int]], row: Int, col: Int, visited: Array[Array[Boolean]]): Boolean = {
-    (row >= 0) && //Means the new neighbour row cannot be out of the Array
+    (row >= 0) && //Means the new neighbour row cannot be out of the Array as negative
       (row < totalRow) && //Means I'm not out of the row Array
-      (col >= 0) && //Means the new neighbour cell cannot be out of the Array
+      (col >= 0) && //Means the new neighbour cell cannot be out of the Array as negative
       (col < totalCol) && //Means I'm not out of the cell Array
       isAnIslandSpotNotVisited(graph, visited, row, col) //Check if that spot is an island and has not visited yet.
   }

@@ -117,4 +117,39 @@ class StringAlgorithm {
     strings.head == strings.last
   }
 
+  /**
+    * Palindrome algorithm is quite easy, we just need to get the word, create an array of chars and compare
+    * from the beginning to the last in the iteration where in every iteration we move to compare from the beginning and end
+    */
+  @Test
+  def palindromeString(): Unit = {
+    println(isPalindrome("AbsbA"))
+    println(isPalindrome("AbsbE"))
+  }
+
+  def isPalindrome(str: String): Boolean = {
+    var palindrome = true
+    val word = str.toCharArray
+    word.indices foreach (i => {
+      val lastIndex = word.length - 1 - i
+      if (word(i) != word(lastIndex)) {
+        palindrome = false
+      }
+    })
+    palindrome
+  }
+
+  //  public static boolean istPalindrom(char[] word){
+  //    int i1 = 0;
+  //    int i2 = word.length - 1;
+  //    while (i2 > i1) {
+  //      if (word[i1] != word[i2]) {
+  //        return false;
+  //      }
+  //      ++i1;
+  //      --i2;
+  //    }
+  //    return true;
+  //  }
+
 }
