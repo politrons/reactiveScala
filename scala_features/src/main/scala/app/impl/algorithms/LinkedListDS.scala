@@ -123,8 +123,8 @@ class LinkedListDS {
   def reverseKNodesPrint(llist: SinglyLinkedListNode, k: Int): Unit = {
     if (llist != null && k > 0) {
       var countX = k
-      countX -=1
-      reverseKNodesPrint(llist.next,countX)
+      countX -= 1
+      reverseKNodesPrint(llist.next, countX)
       println(llist.data)
     }
   }
@@ -175,15 +175,15 @@ class LinkedListDS {
     * to the previous steps we start incrementing a counter until is equals to positionFromTail.
     * Once we found the index we set the data into output.
     */
-  def getNode(llist: SinglyLinkedListNode, positionFromTail: Int): Int = {
-    if (llist.next != null) {
-      getNode(llist.next, positionFromTail)
+  def getNode(head: SinglyLinkedListNode, positionFromTail: Int): Int = {
+    if (head.next != null) {
+      getNode(head.next, positionFromTail)
       if (count == positionFromTail) {
-        output = llist.data
+        output = head.data
       }
     } else {
       if (positionFromTail == 0) {
-        output = llist.data
+        output = head.data
       }
     }
     count += 1
@@ -197,26 +197,35 @@ class LinkedListDS {
     val node3 = new SinglyLinkedListNode(1, node2)
     val node4 = new SinglyLinkedListNode(2, node3)
     val node5 = new SinglyLinkedListNode(3, node4)
-    val node6 = new SinglyLinkedListNode(3, node5)
+    val node6 = new SinglyLinkedListNode(2, node5)
     val node7 = new SinglyLinkedListNode(3, node6)
     println(removeDuplicates(node7))
   }
 
   import collection.immutable.List
 
-  var oldNode: List[Int] = List()
+  var processedNodes: List[Int] = List()
   var previous: SinglyLinkedListNode = _
 
+  /**
+    * Here we use a List collection and also a LinkedList to keep the previous element
+    * We use recursion to compare in every iteration the previous nodes and
+    * In the collection we safe all nodes that we process to be compared later.
+    * If we found one not yet processed we set as the previous and otherwise as part of the next
+    * element.
+    * In every recursion call we return the previous, which is the final element returned
+    * in the function.
+    */
   def removeDuplicates(head: SinglyLinkedListNode): SinglyLinkedListNode = {
     if (head.next != null) {
-      if (oldNode.contains(head.data)) {
+      if (processedNodes.contains(head.data)) {
         previous.next = head.next
       } else {
-        oldNode = oldNode ++ List(head.data)
+        processedNodes = processedNodes ++ List(head.data)
         previous = head
       }
       removeDuplicates(head.next)
-    } else if (oldNode.contains(head.data)) {
+    } else if (processedNodes.contains(head.data)) {
       previous.next = null
     }
     head
@@ -249,36 +258,6 @@ class LinkedListDS {
     }
     head
   }
-
-
-  //  @Test
-  //  def xxxx: Unit = {
-  //    val node = new SinglyLinkedListNode(111, null)
-  //    val node1 = new SinglyLinkedListNode(222, node)
-  //    val node2 = new SinglyLinkedListNode(2, node1)
-  //    val node3 = new SinglyLinkedListNode(666, node2)
-  //    val node4 = new SinglyLinkedListNode(1, node3)
-  //    val node5 = new SinglyLinkedListNode(2, node4)
-  //
-  //    aaaa(node5)
-  //  }
-  //
-  //  def aaaa(llist: SinglyLinkedListNode): Unit = {
-  //    ReversePrint(llist.next, llist.next.data)
-  //  }
-  //
-  //  def ReversePrint(llist: SinglyLinkedListNode, numbers: Int): Unit = {
-  //    if(llist.next == null){
-  //      return
-  //    }
-  //    if (numbers > 0) {
-  //      println(llist.next.data)
-  //      ReversePrint(llist.next, numbers - 1)
-  //    }
-  //    if (llist.next != null) {
-  //      ReversePrint(llist.next, llist.next.data)
-  //    }
-  //  }
 
 
 }
