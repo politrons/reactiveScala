@@ -1,6 +1,5 @@
 package app.impl.algorithms
 
-import javafx.scene.chart.Chart
 import org.junit.Test
 
 class ArrayDS {
@@ -11,12 +10,25 @@ class ArrayDS {
     print(reverseArray(Array(1, 4, 3, 2)).mkString(" "))
   }
 
+  /**
+    * We just create a new array where in each iteration we set the elements of original array
+    * but in reverse mode.
+    * We offer to flavour to this algorithm. One where we set the index as the last element of the original
+    * array and we go backwards.
+    * And another where iterate from max length to 0 and we use the index already calculated. But then we need to
+    * Calculate the index of the original array values.
+    *
+    */
   def reverseArray(a: Array[Int]): Array[Int] = {
     val reverse = new Array[Int](a.length)
     a.indices foreach (i => {
       val index = (a.length - 1) - i
       reverse(index) = a(i)
     })
+    //Another flavour
+    //    a.length - 1 to 0 by -1 foreach (i => {
+    //      reverse(i) = a((a.length - 1) - i)
+    //    })
     reverse
   }
 
@@ -151,19 +163,25 @@ class ArrayDS {
 
   }
 
-  var previous: List[Char] = List()
-  var unique: List[Char] = List()
+  var previous: Array[Char] = Array()
+  var unique: Array[Char] = Array()
 
+  /**
+    * For this algorithm we just two arrays, one to keep track of all processed Char
+    * and another where we set the unique chars of the String.
+    * If we detect a char already processed we remove from unique in case was already there.
+    * Otherwise we just add in unique array.
+    */
   @Test
   def findFirstNonRepeated(): Unit = {
     val word = "BARBARIAN"
     word.toCharArray.foreach(c => {
       if (!previous.contains(c)) {
-        unique = unique ++ List[Char](c)
+        unique = unique ++ Array[Char](c)
       } else {
         unique = unique.filter(uChar => uChar != c)
       }
-      previous = previous ++ List[Char](c)
+      previous = previous ++ Array[Char](c)
     })
     print(unique.head)
   }
