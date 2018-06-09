@@ -6,41 +6,6 @@ import org.junit.Test
 
 class GraphsTheory {
 
-
-  @Test
-  def roadsAndLibraries(): Unit = {
-
-    val graph: Array[Array[Int]] = new Array(2)
-    graph.update(0, Array(1, 2))
-    graph.update(1, Array(1, 3))
-    print(roadsAndLibraries(3, 2, 1, graph))
-  }
-
-  def roadsAndLibraries(n: Int, c_lib: Int, c_road: Int, cities: Array[Array[Int]]): Int = {
-
-    var total = 0
-    if (c_lib < c_road) {
-      total = c_lib * n
-    } else {
-      val visited: Array[Boolean] = new Array(n + 1)
-      cities.foreach(nextCities => {
-        nextCities.foreach(city => {
-          if (!visited(city)) {
-            val totalLibCost = nextCities.length * c_lib
-            val totalRoadCost = nextCities.length * c_road
-            if (totalLibCost < totalRoadCost) {
-              total += totalLibCost
-            } else {
-              total += c_lib + totalRoadCost
-            }
-          }
-        })
-      })
-    }
-    total
-  }
-
-
   @Test
   def breadthFirstSearch(): Unit = {
     val graph: Array[Array[Int]] = new Array(4)

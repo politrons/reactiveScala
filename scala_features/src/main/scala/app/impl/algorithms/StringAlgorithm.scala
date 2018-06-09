@@ -1,5 +1,6 @@
 package app.impl.algorithms
 
+import org.h2.bnf.Sentence
 import org.junit.Test
 
 class StringAlgorithm {
@@ -139,17 +140,26 @@ class StringAlgorithm {
     palindrome
   }
 
-  //  public static boolean istPalindrom(char[] word){
-  //    int i1 = 0;
-  //    int i2 = word.length - 1;
-  //    while (i2 > i1) {
-  //      if (word[i1] != word[i2]) {
-  //        return false;
-  //      }
-  //      ++i1;
-  //      --i2;
-  //    }
-  //    return true;
-  //  }
+  /**
+    * We apply the very same principle but with a sentnece. We split the array of Strings instead of Chars.
+    */
+  @Test
+  def palindromeSentence(): Unit = {
+    println(palindromeSentence("This is a palindrome a is This"))
+    println(palindromeSentence("This is not a palindrome a is This"))
+  }
+
+  def palindromeSentence( sentence: String): Boolean = {
+    var palindrome = true
+    val words = sentence.split(" ")
+    words.indices foreach (i => {
+      val lastIndex = words.length - 1 - i
+      if (words(i) != words(lastIndex)) {
+        palindrome = false
+      }
+    })
+    palindrome
+  }
+
 
 }
