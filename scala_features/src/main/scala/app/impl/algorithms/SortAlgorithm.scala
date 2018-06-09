@@ -121,7 +121,7 @@ class SortAlgorithm {
   /**
     * It's important to know that every iteration of the first array it means we move
     * the higher element to the right of the array. So there's no point to compare again and iterate
-    * again over  in the second array. That's the reason why we ise the variable sortedIndex
+    * again over  in the second array. That's the reason why we use the variable sortedIndex
     *
     * @param arr
     * @return
@@ -253,42 +253,6 @@ class SortAlgorithm {
   }
 
   @Test
-  def closestNumbers: Unit = {
-    println(closestNumbers(Array(-20, -3916237, -357920, -3620601, 7374819, -7330761, 30, 6246457, -6461594, 266854)).mkString(" "))
-    //    println(closestNumbers(Array(-20, -3916237, -357920, -3620601, 7374819, -7330761, 30, 6246457, -6461594, 266854, -520, -470)).mkString(" "))
-  }
-
-  def closestNumbers(arr: Array[Int]): Array[Int] = {
-
-    val totalMap: Map[(Int, Int), Int] =
-      arr.flatMap(valueA => {
-        arr.filter(valueB => (valueA - valueB) > 0)
-          .map(valueB => Map[(Int, Int), Int]((valueA, valueB) -> (valueA - valueB)))
-      }).reduce((m, m1) => m ++ m1)
-
-    val entriesArray = totalMap.iterator.toArray
-    totalMap foreach (_ => {
-      entriesArray.indices foreach (i => {
-        val rightIndex = if (i == entriesArray.length - 1) entriesArray.length - 1 else i + 1
-        if (entriesArray(i)._2 > entriesArray(rightIndex)._2) {
-          val tmp = entriesArray(rightIndex)
-          entriesArray(rightIndex) = entriesArray(i)
-          entriesArray(i) = tmp
-        }
-      })
-    })
-
-    var minDiffer = entriesArray.head._2
-    val output: Array[Int] =
-      entriesArray.filter(entry => entry._2 <= minDiffer)
-        .flatMap(entry => {
-          minDiffer = entry._2
-          Array(entry._1._2, entry._1._1)
-        })
-    output
-  }
-
-  @Test
   def findMedian: Unit = {
     print(findMedian(Array(0, 1, 2, 4, 6, 5, 3)))
   }
@@ -339,6 +303,10 @@ class SortAlgorithm {
     alarm
   }
 
+  /**
+    * In this example we use counter sorting technique.
+    * We sum all arrays and we use this efficient algorithm.
+    */
   @Test
   def sortMultipleArraysByCounter(): Unit = {
     val a1 = Array(1, 5, 8, 9, 11)
@@ -422,27 +390,6 @@ class SortAlgorithm {
   }
 
   @Test
-  def counterFast(): Unit = {
-    val array = Array(8, 5, 3, 7, 2, 4, 10, 1)
-    var counter: Array[Int] = Array()
-    0 to array.max foreach (i => {
-      counter = counter ++ Array(0)
-    })
-    array foreach (value => {
-      counter(value) = counter(value) + 1
-    })
-    var output: Array[Int] = Array()
-    counter.indices foreach (i => {
-      if (counter(i) > 0) {
-        0 until counter(i) foreach (_ => {
-          output = output ++ Array(i)
-        })
-      }
-    })
-    print(output.mkString(" "))
-  }
-
-  @Test
   def quickSortFast2(): Unit = {
     val array = Array(8, 5, 3, 7, 2, 4, 10, 1)
     print(quickSortFast2(array).mkString(" "))
@@ -480,6 +427,42 @@ class SortAlgorithm {
     } else {
       println(s"Founded $middle")
     }
+  }
+
+  @Test
+  def closestNumbers: Unit = {
+    println(closestNumbers(Array(-20, -3916237, -357920, -3620601, 7374819, -7330761, 30, 6246457, -6461594, 266854)).mkString(" "))
+    //    println(closestNumbers(Array(-20, -3916237, -357920, -3620601, 7374819, -7330761, 30, 6246457, -6461594, 266854, -520, -470)).mkString(" "))
+  }
+
+  def closestNumbers(arr: Array[Int]): Array[Int] = {
+
+    val totalMap: Map[(Int, Int), Int] =
+      arr.flatMap(valueA => {
+        arr.filter(valueB => (valueA - valueB) > 0)
+          .map(valueB => Map[(Int, Int), Int]((valueA, valueB) -> (valueA - valueB)))
+      }).reduce((m, m1) => m ++ m1)
+
+    val entriesArray = totalMap.iterator.toArray
+    totalMap foreach (_ => {
+      entriesArray.indices foreach (i => {
+        val rightIndex = if (i == entriesArray.length - 1) entriesArray.length - 1 else i + 1
+        if (entriesArray(i)._2 > entriesArray(rightIndex)._2) {
+          val tmp = entriesArray(rightIndex)
+          entriesArray(rightIndex) = entriesArray(i)
+          entriesArray(i) = tmp
+        }
+      })
+    })
+
+    var minDiffer = entriesArray.head._2
+    val output: Array[Int] =
+      entriesArray.filter(entry => entry._2 <= minDiffer)
+        .flatMap(entry => {
+          minDiffer = entry._2
+          Array(entry._1._2, entry._1._1)
+        })
+    output
   }
 
 }
