@@ -561,27 +561,28 @@ class LogicAlgorithm {
     print(founded)
   }
 
+  /**
+    * The description is more tricky than the algorithm itself, we just need to focus in keep
+    * the max value in the array and once start decreasing it's fine, we already have the max
+    */
   @Test
   def increaseAndDecrease(): Unit = {
-    increaseAndDecrease(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7))
+    print(increaseAndDecrease(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7)))
   }
 
-  def increaseAndDecrease(array: Array[Int]): Unit = {
-    val middle = array.length - 1 / 2
-    if (array.length >= 3) {
-      val left = array(middle - 1)
-      val right = array(middle + 1)
-      val center = array(middle)
-      if (center > left && center < right) {
-        println(center)
-      } else {
-        increaseAndDecrease()
+  def increaseAndDecrease(array: Array[Int]): Int = {
+    var max = array.head
+    array.indices foreach (i => {
+      if (array(i) > max) {
+        max = array(i)
       }
-
-    }
-
+    })
+    max
   }
 
+  /**
+    * Find the second larger number
+    */
   @Test
   def secondLarger(): Unit = {
     secondLarger(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7))
@@ -601,24 +602,24 @@ class LogicAlgorithm {
   }
 
   @Test
-  def binarySearchFirstOcurence(): Unit = {
-    print(binarySearchFirstOrLastOcurence(Array(1, 2, 3, 3, 4, 5, 6, 6, 7, 8), 6))
+  def binarySearchFirstOccurrence(): Unit = {
+    print(binarySearchFirstOrLastOccurrence(Array(1, 2, 3, 3, 4, 5, 6, 6, 7, 8), 6))
   }
 
   var result: Integer = -1
 
-  def binarySearchFirstOrLastOcurence(array: Array[Int], node: Int): Integer = {
+  def binarySearchFirstOrLastOccurrence(array: Array[Int], node: Int): Integer = {
     if (array.length > 1) {
       val middle = array.length / 2
       val center = array(middle)
       val (left, right) = array.splitAt(middle)
       if (node == center) {
         result = middle
-        binarySearchFirstOrLastOcurence(left, node)//If we want last ocurrence just modify left by right
+        binarySearchFirstOrLastOccurrence(left, node) //If we want last ocurrence just modify left by right
       } else if (node < center) {
-        binarySearchFirstOrLastOcurence(left, node)
+        binarySearchFirstOrLastOccurrence(left, node)
       } else {
-        binarySearchFirstOrLastOcurence(right, node)
+        binarySearchFirstOrLastOccurrence(right, node)
       }
     }
     result
