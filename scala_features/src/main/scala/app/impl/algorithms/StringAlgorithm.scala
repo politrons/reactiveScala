@@ -149,7 +149,7 @@ class StringAlgorithm {
     println(palindromeSentence("This is not a palindrome a is This"))
   }
 
-  def palindromeSentence( sentence: String): Boolean = {
+  def palindromeSentence(sentence: String): Boolean = {
     var palindrome = true
     val words = sentence.split(" ")
     words.indices foreach (i => {
@@ -161,5 +161,29 @@ class StringAlgorithm {
     palindrome
   }
 
+  @Test
+  def palindromeWithRecursion(): Unit = {
+    isPalindrome = true
+    println(palindromeWithRecursion("basab"))
+    isPalindrome = true
+    println(palindromeWithRecursion("basax"))
+    isPalindrome = true
+    println(palindromeWithRecursion("abcba"))
+  }
 
+  var isPalindrome = true
+
+  def palindromeWithRecursion(str: String): Boolean = {
+    val array:Array[Char] = str.toCharArray
+    if (str.length - 1 > 1) {
+      array.indices foreach (i => {
+        if (array(i) != array(array.length - 1 - i)) {
+          isPalindrome = false
+        } else {
+          palindromeWithRecursion(str.substring(1, str.length - 1))
+        }
+      })
+    }
+    isPalindrome
+  }
 }

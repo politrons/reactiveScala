@@ -7,6 +7,142 @@ import scala.collection.immutable.{List, Map}
 class LogicAlgorithm {
 
   @Test
+  def notRepeatedWords: Unit = {
+    val sentence = "This is a for is repeated many many times this it should be repeated removed duplicity"
+
+    var output: List[String] = List()
+    sentence.split(" ").foreach(word => {
+      if (!output.contains(word)) {
+        output = output ++ Array(word)
+      }
+    })
+
+    print(output.mkString(" "))
+  }
+
+  @Test
+  def findElementInMatrix(): Unit = {
+    val element = 16
+    val matrix: Array[Array[Int]] = new Array(4)
+    matrix.update(0, Array(1, 5, 13, 29))
+    matrix.update(1, Array(11, 16, 25, 38))
+    matrix.update(2, Array(45, 49, 52, 57))
+    matrix.update(3, Array(51, 54, 59, 66))
+
+    var founded = false
+    0 until matrix.length - 1 foreach (i => {
+      0 until matrix.length - 1 foreach (j => {
+        if (matrix(i)(j) == element) {
+          founded = true
+        }
+      })
+    })
+    print(founded)
+  }
+
+  /**
+    * The description is more tricky than the algorithm itself, we just need to focus in keep
+    * the max value in the array and once start decreasing it's fine, we already have the max
+    */
+  @Test
+  def increaseAndDecrease(): Unit = {
+    print(increaseAndDecrease(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7)))
+  }
+
+  def increaseAndDecrease(array: Array[Int]): Int = {
+    var max = array.head
+    array.indices foreach (i => {
+      if (array(i) > max) {
+        max = array(i)
+      }
+    })
+    max
+  }
+
+  @Test
+  def increaseAndDecreaseBinaryTree(): Unit = {
+    print(increaseAndDecreaseBinaryTree(Array(6, 7, 8, 9, 10, 11, 5, 4, 3, 2, 1), 4))
+  }
+
+  /**
+    * Binary tree is used to determine if we want to continue watching for a number in the left or right half of the array
+    * and so on in every iteration.
+    * Here since we looking for a increment number than then decrement we check if we are in a position where is incremental
+    * the second thing we check is if the target is in the left or right side of the array. Then we focus for the next iteration
+    * in that area.
+    * In case is decremental, is exactly the same but everything in the other way around.
+    */
+  def increaseAndDecreaseBinaryTree(array: Array[Int], target: Int): Int = {
+    var low = 0
+    var high = array.length - 1
+    while (low <= high) {
+      val middle = low + (high - low) / 2
+      if (array(middle) == target) {
+        return middle
+      }
+      if (array(low) <= array(middle)) { //Increasing
+        if (target < array(low) || target > array(middle)) {
+          low = middle + 1 //From the beginning of the array to middle
+        } else {
+          high = middle - 1 //From middle to the end of the array.
+        }
+      } else { //Decreasing
+        if (target < array(high) || target > array(middle)) {
+          high = middle - 1
+        } else {
+          low = middle + 1
+        }
+      }
+    }
+    -1
+  }
+
+  /**
+    * Find the second larger number
+    */
+  @Test
+  def secondLarger(): Unit = {
+    secondLarger(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7))
+  }
+
+  var first = 0
+  var second = 0
+
+  def secondLarger(array: Array[Int]): Unit = {
+    array.foreach(_ => {
+      array.foreach(value => {
+        if (value > first) first = value
+        if (value > second && value < first) second = value
+      })
+    })
+    print(second)
+  }
+
+  @Test
+  def binarySearchFirstOccurrence(): Unit = {
+    print(binarySearchFirstOrLastOccurrence(Array(1, 2, 3, 3, 4, 5, 6, 6, 7, 8), 6))
+  }
+
+  var result: Integer = -1
+
+  def binarySearchFirstOrLastOccurrence(array: Array[Int], node: Int): Integer = {
+    if (array.length > 1) {
+      val middle = array.length / 2
+      val center = array(middle)
+      val (left, right) = array.splitAt(middle)
+      if (node == center) {
+        result = middle
+        binarySearchFirstOrLastOccurrence(left, node) //If we want last ocurrence just modify left by right
+      } else if (node < center) {
+        binarySearchFirstOrLastOccurrence(left, node)
+      } else {
+        binarySearchFirstOrLastOccurrence(right, node)
+      }
+    }
+    result
+  }
+
+  @Test
   def simpleArraySum: Unit = {
     val sum = simpleArraySum(Array(1, 2, 3, 4, 10, 11))
     println(sum)
@@ -527,102 +663,5 @@ class LogicAlgorithm {
     birdType
   }
 
-  @Test
-  def notRepeatedWords: Unit = {
-    val sentence = "This is a for is repeated many many times this it should be repeated removed duplicity"
-
-    var output: List[String] = List()
-    sentence.split(" ").foreach(word => {
-      if (!output.contains(word)) {
-        output = output ++ Array(word)
-      }
-    })
-
-    print(output.mkString(" "))
-  }
-
-  @Test
-  def findElementInMatrix(): Unit = {
-    val element = 16
-    val matrix: Array[Array[Int]] = new Array(4)
-    matrix.update(0, Array(1, 5, 13, 29))
-    matrix.update(1, Array(11, 16, 25, 38))
-    matrix.update(2, Array(45, 49, 52, 57))
-    matrix.update(3, Array(51, 54, 59, 66))
-
-    var founded = false
-    0 until matrix.length - 1 foreach (i => {
-      0 until matrix.length - 1 foreach (j => {
-        if (matrix(i)(j) == element) {
-          founded = true
-        }
-      })
-    })
-    print(founded)
-  }
-
-  /**
-    * The description is more tricky than the algorithm itself, we just need to focus in keep
-    * the max value in the array and once start decreasing it's fine, we already have the max
-    */
-  @Test
-  def increaseAndDecrease(): Unit = {
-    print(increaseAndDecrease(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7)))
-  }
-
-  def increaseAndDecrease(array: Array[Int]): Int = {
-    var max = array.head
-    array.indices foreach (i => {
-      if (array(i) > max) {
-        max = array(i)
-      }
-    })
-    max
-  }
-
-  /**
-    * Find the second larger number
-    */
-  @Test
-  def secondLarger(): Unit = {
-    secondLarger(Array(6, 5, 4, 3, 2, 8, 9, 10, 11, 1, 7))
-  }
-
-  var first = 0
-  var second = 0
-
-  def secondLarger(array: Array[Int]): Unit = {
-    array.foreach(_ => {
-      array.foreach(value => {
-        if (value > first) first = value
-        if (value > second && value < first) second = value
-      })
-    })
-    print(second)
-  }
-
-  @Test
-  def binarySearchFirstOccurrence(): Unit = {
-    print(binarySearchFirstOrLastOccurrence(Array(1, 2, 3, 3, 4, 5, 6, 6, 7, 8), 6))
-  }
-
-  var result: Integer = -1
-
-  def binarySearchFirstOrLastOccurrence(array: Array[Int], node: Int): Integer = {
-    if (array.length > 1) {
-      val middle = array.length / 2
-      val center = array(middle)
-      val (left, right) = array.splitAt(middle)
-      if (node == center) {
-        result = middle
-        binarySearchFirstOrLastOccurrence(left, node) //If we want last ocurrence just modify left by right
-      } else if (node < center) {
-        binarySearchFirstOrLastOccurrence(left, node)
-      } else {
-        binarySearchFirstOrLastOccurrence(right, node)
-      }
-    }
-    result
-  }
 }
 

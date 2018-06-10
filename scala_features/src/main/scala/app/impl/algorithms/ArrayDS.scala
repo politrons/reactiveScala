@@ -200,4 +200,77 @@ class ArrayDS {
     output
   }
 
+  @Test
+  def binarySearchForRepeatedNumbers(): Unit = {
+    println(binarySearchForRepeatedNumbers(Array(2, 3, 4, 5, 5, 5, 6, 7, 8, 8, 9, 10), 5))
+  }
+
+  var elements: Array[Int] = Array()
+  var count = 0
+
+  def binarySearchForRepeatedNumbers(array: Array[Int], target: Int): Int = {
+    if (array.length > 1) {
+      val middle = array.length / 2
+      if (array(middle) == target) {
+        count += 1
+      } else {
+        val (left, right) = array.splitAt(middle)
+        if (target < array(middle)) {
+          binarySearchForRepeatedNumbers(left, target)
+          if (count > 0) {
+            0 to middle foreach (i => {
+              if (array(i) == target && !elements.contains(i)) {
+                elements = elements ++ Array(i)
+                count += 1
+              }
+            })
+          }
+        } else {
+          binarySearchForRepeatedNumbers(right, target)
+          if (count > 0) {
+            middle until array.length foreach (i => {
+              if (array(i) == target && !elements.contains(i)) {
+                elements = elements ++ Array(i)
+                count += 1
+              }
+            })
+          }
+        }
+      }
+    }
+    count
+  }
+
+
+  @Test
+  def binarySearchNoRecursion(): Unit = {
+    println(binarySearchNoRecursion(Array(2, 3, 4, 5, 5, 5, 6, 7, 8, 8, 9, 10), 5))
+  }
+
+  /**
+    * This implementation it will only work with a sorted array.
+    * Using binary search without recursion is quite simple, we use a while loop until left is no longer lower than right
+    * We calc per iteration loop the middle and we compare if the middle index in the array is equal to target,
+    * otherwise we check if the element is lower than target, and if that the situation we need to move the index
+    * from the left position to the middle +1 so we process the half right of the array, and if it's not we do
+    * in the other way around and we move the right index to the middle to focus in the left side of the array.
+    */
+  def binarySearchNoRecursion(array: Array[Int], target: Int): Int = {
+    var left = 0
+    var right = array.length - 1
+    var indexFound = -1
+    while (left < right) {
+      val middle = left + (right - left) / 2
+      if (array(middle) == target) {
+        indexFound = middle
+        right = middle
+      } else if (array(middle) > target) {
+        right = middle
+      } else {
+        left = middle + 1
+      }
+    }
+    indexFound
+  }
+
 }
