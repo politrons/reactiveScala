@@ -104,7 +104,7 @@ class TreeDS {
     *  - We call by recursion into left and right tree level increasing the height by 1 per level we go depper.
     *  - We check per level if left or right are  -1 telling us that this node were we went was unbalance so we return -1
     *  - We calc the distance branch level between left and right branch, and if the difference is bigger than 1 it means
-    *    is unbalanace and we return -1
+    * is unbalanace and we return -1
     *  - We compare which branch is longer and we return left or right
     */
   def nodeHeight(node: Node): Int = {
@@ -116,4 +116,87 @@ class TreeDS {
     if (Math.abs(leftHeight - rightHeight) > 1) return -1
     if (leftHeight > rightHeight) leftHeight else rightHeight
   }
+
+  //Given a binary tree and a number, return true if the tree has a root-to-leaf path.
+  //      1
+  //   2      3
+  // 4   7  5    6
+  //                8
+  @Test
+  def binaryTreeFindSumOfTargetInPath(): Unit = {
+    val node8 = new Node(8, null, null)
+    val node7 = new Node(7, null, null)
+    val node6 = new Node(6, null, node8)
+    val node5 = new Node(5, null, null)
+    val node4 = new Node(4, null, null)
+    val node3 = new Node(3, node5, node6)
+    val node2 = new Node(2, node4, node7)
+    val node1 = new Node(1, node2, node3)
+    print(binaryTreeFindSumOfTargetInPath(node1, 9))
+  }
+
+  var foundBranch: Boolean = false
+
+  /**
+    * The easiest idea is subtract the taret by the node.data in every level.
+    * Then once we reach the last leaf of node, we compare if the target value is 0,
+    * that would means the path has the same target number.
+    */
+  def binaryTreeFindSumOfTargetInPath(node: Node, target: Int): Boolean = {
+    if (node == null) {
+      target == 0
+    } else {
+      val subSum = target - node.data
+      if (subSum == 0 && node.left == null && node.right == null) { //If we are at the end of a leaf and the target is 0 means is the path == target
+        foundBranch = true
+      }
+      if (node.left != null) {
+        binaryTreeFindSumOfTargetInPath(node.left, subSum) //In every new deep level we send the target number reduce it
+      }
+      if (node.right != null) {
+        binaryTreeFindSumOfTargetInPath(node.right, subSum) //In every new deep level we send the target number reduce it
+      }
+      foundBranch
+    }
+  }
+
+  //Given a binary tree and an integer S, print all distinct paths from root to leaves which sum to S.
+  //      1
+  //   2      3
+  // 4   7  5    6
+  //                8
+  @Test
+  def binaryTreePrintIfTargetIsInPath(): Unit = {
+    val node8 = new Node(8, null, null)
+    val node7 = new Node(7, null, null)
+    val node6 = new Node(6, null, node8)
+    val node5 = new Node(5, null, null)
+    val node4 = new Node(4, null, null)
+    val node3 = new Node(3, node5, node6)
+    val node2 = new Node(2, node4, node7)
+    val node1 = new Node(1, node2, node3)
+    binaryTreePrintIfTargetIsInPath(node1, 9)
+  }
+
+  def binaryTreePrintIfTargetIsInPath(node: Node, target: Int): Boolean = {
+    if (node == null) {
+      target == 0
+    } else {
+      val subSum = target - node.data
+      if (subSum == 0 && node.left == null && node.right == null) {
+        foundBranch = true
+      }
+      if (node.left != null) {
+        val foundBranch = binaryTreePrintIfTargetIsInPath(node.left, subSum)
+        if (foundBranch) print(s"${node.data} ")
+      }
+      if (node.right != null) {
+        val foundBranch = binaryTreePrintIfTargetIsInPath(node.right, subSum)
+        if (foundBranch) print(s"${node.data} ")
+
+      }
+      foundBranch
+    }
+  }
+
 }
