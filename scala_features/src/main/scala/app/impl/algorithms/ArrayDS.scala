@@ -163,6 +163,38 @@ class ArrayDS {
   }
 
   @Test
+  def binarySearchNoRecursion(): Unit = {
+    println(binarySearchNoRecursion(Array(2, 3, 4, 5, 5, 5, 6, 7, 8, 8, 9, 10), 5))
+  }
+
+  /**
+    * This implementation it will only work with a sorted array.
+    * Using binary search without recursion is quite simple, we use a while loop until left is no longer lower than right
+    * We calc per iteration loop the middle and we compare if the middle index in the array is equal to target,
+    * otherwise we check if the element is lower than target, and if that the situation we need to move the index
+    * from the left position to the middle +1 so we process the half right of the array, and if it's not we do
+    * in the other way around and we move the right index to the middle to focus in the left side of the array.
+    */
+  def binarySearchNoRecursion(array: Array[Int], target: Int): Int = {
+    var left = 0
+    var right = array.length - 1
+    var indexFound = -1
+    while (left < right) {
+      val middle = left + (right - left) / 2
+      if (array(middle) == target) {
+        indexFound = middle
+        right = middle //To continue looking in the left for the first occurrence.
+        //left = middle +1 //To continue looking in the right for the last occurrence.
+      } else if (array(middle) > target) {
+        right = middle
+      } else {
+        left = middle + 1
+      }
+    }
+    indexFound
+  }
+
+  @Test
   def dynamicArray: Unit = {
     val array: Array[Array[Int]] = new Array(5)
     array.update(0, Array(1, 0, 5))
@@ -241,36 +273,5 @@ class ArrayDS {
     count
   }
 
-
-  @Test
-  def binarySearchNoRecursion(): Unit = {
-    println(binarySearchNoRecursion(Array(2, 3, 4, 5, 5, 5, 6, 7, 8, 8, 9, 10), 5))
-  }
-
-  /**
-    * This implementation it will only work with a sorted array.
-    * Using binary search without recursion is quite simple, we use a while loop until left is no longer lower than right
-    * We calc per iteration loop the middle and we compare if the middle index in the array is equal to target,
-    * otherwise we check if the element is lower than target, and if that the situation we need to move the index
-    * from the left position to the middle +1 so we process the half right of the array, and if it's not we do
-    * in the other way around and we move the right index to the middle to focus in the left side of the array.
-    */
-  def binarySearchNoRecursion(array: Array[Int], target: Int): Int = {
-    var left = 0
-    var right = array.length - 1
-    var indexFound = -1
-    while (left < right) {
-      val middle = left + (right - left) / 2
-      if (array(middle) == target) {
-        indexFound = middle
-        right = middle
-      } else if (array(middle) > target) {
-        right = middle
-      } else {
-        left = middle + 1
-      }
-    }
-    indexFound
-  }
 
 }

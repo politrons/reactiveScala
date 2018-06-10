@@ -120,27 +120,57 @@ class LogicAlgorithm {
 
   @Test
   def binarySearchFirstOccurrence(): Unit = {
-    print(binarySearchFirstOrLastOccurrence(Array(1, 2, 3, 3, 4, 5, 6, 6, 7, 8), 6))
+    print(binarySearchFirstOrLastOccurrence(Array(1, 2, 3, 3, 4, 5, 6, 6, 7, 8), 3))
   }
 
-  var result: Integer = -1
 
-  def binarySearchFirstOrLastOccurrence(array: Array[Int], node: Int): Integer = {
-    if (array.length > 1) {
-      val middle = array.length / 2
-      val center = array(middle)
-      val (left, right) = array.splitAt(middle)
-      if (node == center) {
+  /**
+    * Get first occurrence using binary tree
+    */
+  def binarySearchFirstOrLastOccurrence(array: Array[Int], target: Int): Integer = {
+    var result: Integer = -1
+    var left = 0
+    var right = array.length - 1
+    while (left < right) {
+      val middle = left + (right - left) / 2
+      if (array(middle) == target) {
         result = middle
-        binarySearchFirstOrLastOccurrence(left, node) //If we want last ocurrence just modify left by right
-      } else if (node < center) {
-        binarySearchFirstOrLastOccurrence(left, node)
+        right = middle //To continue looking in the left for the first occurrence.
+        //left = middle +1 //To continue looking in the right for the last occurrence.
+      } else if (array(middle) > target) {
+        right = middle
       } else {
-        binarySearchFirstOrLastOccurrence(right, node)
+        left = middle + 1
       }
     }
     result
   }
+
+  /**
+    * Given a list of integers, find the highest product you can get from three of the integers.
+    */
+  @Test
+  def findMaxProductOfThreeValues(): Unit = {
+    print(findMaxProductOfThreeValues(Array(1, 4, 3, 2, 5)))
+  }
+
+  def findMaxProductOfThreeValues(array: Array[Int]): Int = {
+  var maxProduct = 0
+    array.foreach(number1 => {
+      array.foreach(number2 => {
+        array.foreach(number3 => {
+          if((number1 != number2) && (number1 != number3) && (number2 != number3)) {
+            val product = number1 * number2 * number3
+            if (product > maxProduct) {
+              maxProduct = product
+            }
+          }
+        })
+      })
+    })
+    maxProduct
+  }
+
 
   @Test
   def simpleArraySum: Unit = {
