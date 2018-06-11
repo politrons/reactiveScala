@@ -142,10 +142,10 @@ class LinkedListDS {
   /**
     * No reverse print is even easier. We just need to print the data before the recursion.
     */
-  def noReversePrint(llist: SinglyLinkedListNode): Unit = {
-    if (llist.next != null) {
-      println(llist.data)
-      noReversePrint(llist.next)
+  def noReversePrint(head: SinglyLinkedListNode): Unit = {
+    if (head.next != null) {
+      println(head.data)
+      noReversePrint(head.next)
     }
   }
 
@@ -156,7 +156,7 @@ class LinkedListDS {
     * @return
     */
   @Test
-  def getNode: Unit = {
+  def getNodeFromBackwards: Unit = {
     val nodeIndex1 = new SinglyLinkedListNode(1, null)
     val node = new SinglyLinkedListNode(2, nodeIndex1)
     val node1 = new SinglyLinkedListNode(3, node)
@@ -230,9 +230,8 @@ class LinkedListDS {
   }
 
 
-  //  5 13 15 18 20 11 6 7
-  //  13 5 18 15 11 20 7 6
-
+  //  [1,2] [3,4][5,6][7,8]
+  //  [2,1] [4,5][6,5][8,9]
   @Test
   def swapNodes: Unit = {
     val node0 = new SinglyLinkedListNode(8, null)
@@ -248,21 +247,22 @@ class LinkedListDS {
 
   var end = false
 
-  //  [1,2] [3,4][5,6][7,8]
-
+  /**
+    * To illustrate this example I will explain how it works for the first pair.
+    */
   def swapNodes(head: SinglyLinkedListNode): SinglyLinkedListNode = {
-    var pointer = head
-    val newPointer = pointer.next
+    var pointer = head // First pair element 1
+    val newPointer = pointer.next // Second pair element 2
     while (!end) {
-      val q = head.next
-      val tmp = q.next
-      q.next = pointer
+      val rightNode = pointer.next // Second pair element 2
+      val tmp = rightNode.next // First element of the next pair 3
+      rightNode.next = pointer // We set the next element of 2 to 1
       if (tmp == null || tmp.next == null) {
         pointer.next = null
         end=true
       } else {
-        pointer.next = tmp.next
-        pointer = tmp
+        pointer.next = tmp.next // We set the next element of 1 to the second element of the next pair 4
+        pointer = tmp // We set the pointer to the first element of next pair 3
       }
     }
     newPointer
