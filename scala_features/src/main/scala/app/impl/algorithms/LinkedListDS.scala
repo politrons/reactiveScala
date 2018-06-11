@@ -235,26 +235,37 @@ class LinkedListDS {
 
   @Test
   def swapNodes: Unit = {
-    val node0 = new SinglyLinkedListNode(7, null)
-    val node1 = new SinglyLinkedListNode(6
-      , node0)
-    val node2 = new SinglyLinkedListNode(11, node1)
-    val node3 = new SinglyLinkedListNode(20, node2)
-    val node4 = new SinglyLinkedListNode(18, node3)
-    val node5 = new SinglyLinkedListNode(15, node4)
-    val node6 = new SinglyLinkedListNode(13, node5)
-    val node7 = new SinglyLinkedListNode(5, node6)
+    val node0 = new SinglyLinkedListNode(8, null)
+    val node1 = new SinglyLinkedListNode(7, node0)
+    val node2 = new SinglyLinkedListNode(6, node1)
+    val node3 = new SinglyLinkedListNode(5, node2)
+    val node4 = new SinglyLinkedListNode(4, node3)
+    val node5 = new SinglyLinkedListNode(3, node4)
+    val node6 = new SinglyLinkedListNode(2, node5)
+    val node7 = new SinglyLinkedListNode(1, node6)
     println(swapNodes(node7).toString)
   }
 
+  var end = false
+
+  //  [1,2] [3,4][5,6][7,8]
+
   def swapNodes(head: SinglyLinkedListNode): SinglyLinkedListNode = {
-    if (head != null) {
-      val tmp = head
-      val node = head.next
-      node.next = tmp
-      node.next = swapNodes(tmp.next.next)
+    var pointer = head
+    val newPointer = pointer.next
+    while (!end) {
+      val q = head.next
+      val tmp = q.next
+      q.next = pointer
+      if (tmp == null || tmp.next == null) {
+        pointer.next = null
+        end=true
+      } else {
+        pointer.next = tmp.next
+        pointer = tmp
+      }
     }
-    head
+    newPointer
   }
 
 
