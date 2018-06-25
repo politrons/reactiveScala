@@ -29,7 +29,6 @@ class ReflectionFeature {
     println(decls)
   }
 
-
   //  INSTANTIATING A TYPE AT RUNTIME
   @Test
   def instantiating(): Unit = {
