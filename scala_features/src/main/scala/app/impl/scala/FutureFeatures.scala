@@ -3,7 +3,8 @@ package app.impl.scala
 import org.junit.Test
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
 
 /**
   * Future of Scala it´s far more advance that Java 7 Future class, it´s a monad so you can mutate or compose futures
@@ -14,7 +15,6 @@ import scala.concurrent.Future
   * Sorry to do not use Await but in some examples I have several futures and.... well I´m lazy
   */
 class FutureFeatures {
-
 
   @Test def testFuture(): Unit = {
     future.onComplete(x => println(s"Value emitted:${x.get}"))
@@ -210,11 +210,12 @@ class FutureFeatures {
     Thread.sleep(1000)
   }
 
-  private val isStringPF = new PartialFunction[Any /*Entry type*/ , Unit] {
-    def apply(d: Any) = println(d)
+  private val isStringPF =
+    new PartialFunction[Any /*Entry type*/ , Unit] {
+      def apply(d: Any) = println(d)
 
-    def isDefinedAt(d: Any) = d.isInstanceOf[String]
-  }
+      def isDefinedAt(d: Any) = d.isInstanceOf[String]
+    }
 
   /**
     * Reduce operator, just works like in any other monad, we pass an initial TraversableOnce and per iteration
@@ -277,7 +278,9 @@ class FutureFeatures {
 
   }
 
-  private def toUpperCaseString(x: Any) = {
+  private def toUpperCaseString(x: Any)
+
+  = {
     x match {
       case str: String => str.toUpperCase
       case _ => "EJEM"
@@ -318,13 +321,17 @@ class FutureFeatures {
     println(response)
   }
 
-  private def outPutSuccess(value: Any) = new PartialFunction[Any /*Entry type*/ , Any] {
+  private def outPutSuccess(value: Any)
+
+  = new PartialFunction[Any /*Entry type*/ , Any] {
     def apply(d: Any) = response = value
 
     def isDefinedAt(d: Any) = d.isInstanceOf[String]
   }
 
-  private def outPutError(value: Any) = new PartialFunction[Any /*Entry type*/ , Any] {
+  private def outPutError(value: Any)
+
+  = new PartialFunction[Any /*Entry type*/ , Any] {
     def apply(d: Any) = response = value
 
     def isDefinedAt(d: Any) = d.isInstanceOf[NullPointerException]

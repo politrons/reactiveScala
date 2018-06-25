@@ -25,6 +25,7 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Fold](scala_features/src/main/scala/app/impl/scala/FoldFunction.scala)**
 * **[Currying](scala_features/src/main/scala/app/impl/scala/Currying.scala)**
 * **[Utils](scala_features/src/main/scala/app/impl/scala/Utils.scala)**
+* **[Reflection](scala_features/src/main/scala/app/impl/scala/ReflectionFeature.scala)**
 
 
 # ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)

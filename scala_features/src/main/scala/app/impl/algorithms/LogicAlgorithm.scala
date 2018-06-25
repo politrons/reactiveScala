@@ -155,11 +155,11 @@ class LogicAlgorithm {
   }
 
   def findMaxProductOfThreeValues(array: Array[Int]): Int = {
-  var maxProduct = 0
+    var maxProduct = 0
     array.foreach(number1 => {
       array.foreach(number2 => {
         array.foreach(number3 => {
-          if((number1 != number2) && (number1 != number3) && (number2 != number3)) {
+          if ((number1 != number2) && (number1 != number3) && (number2 != number3)) {
             val product = number1 * number2 * number3
             if (product > maxProduct) {
               maxProduct = product
@@ -691,6 +691,19 @@ class LogicAlgorithm {
       }
     })
     birdType
+  }
+
+  @Test
+  def recursiveExample(): Unit = {
+    recursiveExample(1)
+  }
+
+  def recursiveExample(number: Int): Int = {
+    if (number < 10) {
+      recursiveExample(number + 1)
+      println(number)
+    }
+    number
   }
 
 }

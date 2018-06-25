@@ -49,6 +49,54 @@ class TreeDS {
   //   2      3
   // 4   7  5    6
   //                8
+  @Test
+  def pre_Post_In_Order() {
+    val node8 = new Node(8, null, null)
+    val node7 = new Node(7, null, null)
+    val node6 = new Node(6, null, node8)
+    val node5 = new Node(5, null, null)
+    val node4 = new Node(4, null, null)
+    val node3 = new Node(3, node5, node6)
+    val node2 = new Node(2, node4, node7)
+    val node1 = new Node(1, node2, node3)
+    println("Pre order:")
+    preOrder(node1)
+    println("")
+    println("Post order:")
+    postOrder(node1)
+    println("")
+    println("In order:")
+    inOrder(node1)
+  }
+
+  def preOrder(node: Node): Unit = {
+    if (node != null) {
+      print(s"${node.data} ")
+      preOrder(node.left)
+      preOrder(node.right)
+    }
+  }
+
+  def postOrder(node: Node): Unit = {
+    if (node != null) {
+      postOrder(node.left)
+      postOrder(node.right)
+      print(s"${node.data} ")
+    }
+  }
+
+  def inOrder(node: Node): Unit = {
+    if (node != null) {
+      inOrder(node.left)
+      print(s"${node.data} ")
+      inOrder(node.right)
+    }
+  }
+
+  //      1
+  //   2      3
+  // 4   7  5    6
+  //                8
   /**
     * Is binary tree super balance
     * A Tree is balance always than the branch level never exceed more than one between nodes.
@@ -94,7 +142,7 @@ class TreeDS {
     * we return true/false depending if is balance >=0 or unbalance -1
     */
   def binaryTreeBalance(node: Node): Boolean = {
-    if (nodeHeight(node) > -1) true else false
+    if (getNodeHeight(node) > -1) true else false
   }
 
   /**
@@ -107,15 +155,47 @@ class TreeDS {
     * is unbalanace and we return -1
     *  - We compare which branch is longer and we return left or right
     */
-  def nodeHeight(node: Node): Int = {
+  def getNodeHeight(node: Node): Int = {
     if (node == null) return 0
-    val leftHeight = 1 + nodeHeight(node.left)
-    val rightHeight = 1 + nodeHeight(node.right)
+    val leftHeight = 1 + getNodeHeight(node.left)
+    val rightHeight = 1 + getNodeHeight(node.right)
     if (leftHeight == -1 || rightHeight == -1) return -1
     //Compare if the difference between left and right is bigger than 1, then we return -1
     if (Math.abs(leftHeight - rightHeight) > 1) return -1
     if (leftHeight > rightHeight) leftHeight else rightHeight
   }
+
+  //      1
+  //   2      3
+  // 4   7  5    6
+  //                8
+  @Test
+  def calcMaxHeight(): Unit = {
+    val node8 = new Node(8, null, null)
+    val node7 = new Node(7, null, null)
+    val node6 = new Node(6, null, node8)
+    val node5 = new Node(5, null, null)
+    val node4 = new Node(4, null, null)
+    val node3 = new Node(3, node5, node6)
+    val node2 = new Node(2, node4, node7)
+    val node1 = new Node(1, node2, node3)
+    print(calcMaxHeight(node1))
+  }
+
+  /**
+    * Since every node which we go deeper we sum 1 once we return in the recursion the compare of
+    * left - rifght it will propagate to the top the one with more values added.
+    */
+  def calcMaxHeight(node: Node): Int = {
+    if (node == null) {
+      0
+    } else {
+      val left = 1 + calcMaxHeight(node.left)
+      val right = 1 + calcMaxHeight(node.right)
+      if (left > right) left else right
+    }
+  }
+
 
   //Given a binary tree and a number, return true if the tree has a root-to-leaf path.
   //      1
@@ -147,7 +227,8 @@ class TreeDS {
       target == 0
     } else {
       val subSum = target - node.data
-      if (subSum == 0 && node.left == null && node.right == null) { //If we are at the end of a leaf and the target is 0 means is the path == target
+      if (subSum == 0 && node.left == null && node.right == null) {
+        //If we are at the end of a leaf and the target is 0 means is the path == target
         foundBranch = true
       }
       if (node.left != null) {
@@ -188,11 +269,15 @@ class TreeDS {
       }
       if (node.left != null) {
         val foundBranch = binaryTreePrintIfTargetIsInPath(node.left, subSum)
-        if (foundBranch) print(s"${node.data} ")
+        if (foundBranch) print(s"${
+          node.data
+        } ")
       }
       if (node.right != null) {
         val foundBranch = binaryTreePrintIfTargetIsInPath(node.right, subSum)
-        if (foundBranch) print(s"${node.data} ")
+        if (foundBranch) print(s"${
+          node.data
+        } ")
 
       }
       foundBranch
