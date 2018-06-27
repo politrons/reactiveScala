@@ -19,6 +19,10 @@ class Currying extends Generic {
 
     println(addFunction)
     println(addFunction(3))
+    //Without sugar
+    //println(addFunction.apply(3))
+
+    def multiString(x: String)(y: String)(z: String) = x.concat("_") + y.concat("_") + z
 
     def stringFunction: String => String = multiString("hello")("scala")
 
@@ -32,8 +36,6 @@ class Currying extends Generic {
   }
 
   def add(x: Int)(y: Int) = x + y
-
-  def multiString(x: String)(y: String)(z: String) = x.concat("_") + y.concat("_") + z
 
   def mergeAction(value: String) = (value2: String) => {
     value.concat(value2)
