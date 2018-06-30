@@ -6,10 +6,10 @@ import org.junit.Test
 /**
   * Phantom type pattern it can be very handy if we want to implement a State machine.
   * We can implement one if we create this case class [CircuitBreaker[State] with a State type
-  * declared that it seems not being used for nothing.
+  * declared that it seems not being used.
   * But then we create the state classes which extends State class.
   * After that we create extensions methods using implicits for every specific type of the State.
-  * And not voila, our CircuitBreaker class with a specific type only can access to the extended methods
+  * And now voila, our CircuitBreaker class with a specific type only can access to the extended methods
   * defined in the implicit class
   */
 object PhantomTypes {
