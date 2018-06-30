@@ -13,6 +13,39 @@ import scala.util.Try
 class PartialFunctions {
 
   @Test
+  def partialFunctionCompose() {
+    val pfFunction1 = pf1.orElse(pf2).orElse(pfDefault)
+    println(pfFunction1("3"))
+    println(pfFunction1("4"))
+    println(pfFunction1("foo"))
+  }
+
+  val pf1: PartialFunction[String /*Entry type*/ , String /*Output type*/ ] = {
+    case "3" => "Got 3"
+  }
+
+  val pf2: PartialFunction[String /*Entry type*/ , String /*Output type*/ ] = {
+    case "4" => "Got 4"
+  }
+
+  val pfDefault: PartialFunction[String /*Entry type*/ , String /*Output type*/ ] = {
+    case _ =>"Nothing founded"
+  }
+
+  /**
+    * Also with partial function you can use pattern matching to execute one function or another
+    * depending the input
+    */
+  @Test def partialFunctionString(): Unit = {
+    val pf: PartialFunction[Int /*Entry type*/ , String /*Output type*/ ] = {
+      case input if input > 100 => "higher"
+    }
+    val myPartialFunction: (Int => String) = pf orElse { case _ => "lower" }
+    println(myPartialFunction(101))
+    println(myPartialFunction(99) )
+  }
+
+  @Test
   def partialFunction() {
     assert(Try(fraction(1)).isSuccess)
     assert(Try(fraction(0)).isFailure)
@@ -44,19 +77,5 @@ class PartialFunctions {
     case input if input == "2" => "two"
     case input if input == "3" => "three"
   }
-
-  /**
-    * Also with partial function you can use pattern matching to execute one function or another
-    * depending the input
-    */
-  @Test def partialFunctionString(): Unit = {
-    val pf: PartialFunction[Int /*Entry type*/ , String /*Output type*/ ] = {
-      case input if input > 100 => "higher"
-    }
-    val orElseFunction: (Int => String) = pf orElse { case _ => "lower" }
-    println(orElseFunction(101))
-    println(orElseFunction(99))
-  }
-
 
 }

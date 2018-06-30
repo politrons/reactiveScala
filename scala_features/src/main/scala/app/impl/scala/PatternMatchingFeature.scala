@@ -42,6 +42,18 @@ class PatternMatchingFeature {
     }
   }
 
+  /**
+    * Get a value from a case we use variable name before @
+    */
+  @Test
+  def getValueFromCase(): Unit ={
+    val person = Person("Pablo",37)
+    val output = person match {
+      case p@Person(_, _) => s"I have $p"
+    }
+    println(output)
+  }
+
   def matchTest(x: Any): Any = x match {
     case 1 =>
       "one".toUpperCase
@@ -69,10 +81,23 @@ class PatternMatchingFeature {
     }
   }
 
+  /**
+    * Thanks to pattern match we can define multiple variables.
+    */
+  @Test
+  def defineMultipleValues(): Unit ={
+    val Person(myName, myAge) = Person("Pablo",37)
+    println(myName)
+    println(myAge)
+  }
+
+
+
   def test(implicit sentence: String): Unit = {
     println(sentence)
   }
 
+  case class Person(name:String, age:Int)
 }
 
 

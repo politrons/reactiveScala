@@ -27,15 +27,19 @@ class TypeClasses {
     def className(clazz: T): String
   }
 
-  object TypeClass {
-    def apply[T](func: T => String) = new TypeClass[T] {
-      def className(value: T): String = func(value)
-    }
+//  object TypeClass {
+//    def apply[T](func: T => String) = new TypeClass[T] {
+//      def className(value: T): String = func(value)
+//    }
+//  }
+
+  implicit val intName: TypeClass[Int] = new TypeClass[Int](){
+    override def className(clazz: Int): String = clazz.getClass.getName
   }
 
-  implicit val intName: TypeClass[Int] = TypeClass(clazz => clazz.getClass.getName)
-
-  implicit val stringName: TypeClass[String] = TypeClass(clazz => clazz.getClass.getName)
+  implicit val stringName: TypeClass[String] = new TypeClass[String](){
+    override def className(clazz: String): String = clazz.getClass.getName
+  }
 
 //  implicit val longName: TypeClass[Long] = TypeClass(clazz => clazz.getClass.getName)
 
