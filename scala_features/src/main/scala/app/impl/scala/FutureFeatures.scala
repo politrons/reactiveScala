@@ -337,4 +337,34 @@ class FutureFeatures {
     def isDefinedAt(d: Any) = d.isInstanceOf[NullPointerException]
   }
 
+
+  @Test def sequentialFuture(): Unit = {
+    val time = System.currentTimeMillis()
+    Future("hello world").flatMap(_ => {
+      Thread.sleep(2000)
+      println(Thread.currentThread().getName)
+      Future("Here").map(_ => {
+        Thread.sleep(2000)
+        println(Thread.currentThread().getName)
+      })
+    }).onComplete(f => println(s"Total time:${System.currentTimeMillis() - time}"))
+
+    Thread.sleep(5000)
+  }
+
+  @Test def parallelFuture(): Unit = {
+    val time = System.currentTimeMillis()
+    val future1 = Future("Here").map(_ => {
+      Thread.sleep(2000)
+      println(Thread.currentThread().getName)
+    })
+    Future("hello world").flatMap(_ => {
+      Thread.sleep(2000)
+      println(Thread.currentThread().getName)
+      future1
+    }).onComplete(_ => println(s"Total time:${System.currentTimeMillis() - time}"))
+
+    Thread.sleep(5000)
+  }
+
 }
