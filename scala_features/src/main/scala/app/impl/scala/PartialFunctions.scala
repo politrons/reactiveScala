@@ -6,7 +6,9 @@ import org.junit.Test
 import scala.util.Try
 
 /**
-  * Partial function define tow arguments type, the input and output
+  * Partial function is a currying, basically return a function, and then with the result of that
+  * function we pass to another function as composition.
+  * Partial function define two arguments type, the input and output
   * By default you can implement apply function and isDefinedAt, and once you invoke this function
   * both function will be executed
   */
@@ -15,9 +17,9 @@ class PartialFunctions {
   @Test
   def partialFunctionCompose() {
     val pfFunction1 = pf1.orElse(pf2).orElse(pfDefault)
-    println(pfFunction1("3"))
-    println(pfFunction1("4"))
-    println(pfFunction1("foo"))
+    println(pfFunction1("3"))//Only execute the function pf1
+    println(pfFunction1("4"))//Execute function pf1 and pf2
+    println(pfFunction1("foo"))//Execute function pf1,pf2 and pf3
   }
 
   val pf1: PartialFunction[String /*Entry type*/ , String /*Output type*/ ] = {

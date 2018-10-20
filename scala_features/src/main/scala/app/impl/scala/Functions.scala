@@ -108,8 +108,8 @@ class Functions {
     (i, i1) => (i.toInt, i1.toInt)
   }
 
-  def multiLevelFunction: (String) => (Int) => (Long) => (Double) = {
-    (s) => (i) => (l) => s.toDouble + i.toDouble + l.toDouble
+  def multiLevelFunction: String => Int => Long => Double = {
+    s => i => l => s.toDouble + i.toDouble + l.toDouble
   }
 
 
