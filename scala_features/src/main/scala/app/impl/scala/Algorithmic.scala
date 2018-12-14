@@ -4,10 +4,10 @@ import app.impl.Generic
 import org.junit.Test
 
 import scala.concurrent.{Await, Future}
+import scala.util.Random
 
 
 class Algorithmic extends Generic[String, Long] {
-
 
   /**
     * Algorithm to find all duplicate numbers
@@ -22,7 +22,7 @@ class Algorithmic extends Generic[String, Long] {
 
   /**
     * Algorithm to find the numbers in the string
-    */
+    */o
   @Test def findNumbers(): Unit = {
     val text = "ab1cx2d3b"
     val numbers = text.toCharArray.toStream

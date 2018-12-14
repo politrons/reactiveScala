@@ -78,20 +78,19 @@ class FutureFeatures {
   @Test def mapFutures(): Unit = {
     Future("hello|future|world")
       .map(s => s.replace("|", " "))
-      .map(s => s.toUpperCase)
+      .map(s => Right(s.toUpperCase))
       .onComplete(sentence => println(sentence))
     Thread.sleep(1000)
   }
 
   /**
-    * Just like all monads you can use flatMap operator to add a new monad embedded in the other one.
+    * Also flatMap is used to transform from type A to type B
     */
-  @Test def flatFutures(): Unit = {
-    Future("Hello")
-      .flatMap(s => Future(s + " Future")
-        .flatMap(s1 => Future(s1 + " World")))
-      .onComplete(sentence => println(sentence))
-    Thread.sleep(1000)
+  @Test def flatMap(): Unit = {
+    val future = Future("hello")
+      .flatMap(word => Future(Right(word + " world")))
+    val value = Await.result(future, 10 seconds)
+    println(value)
   }
 
   /**
@@ -115,6 +114,7 @@ class FutureFeatures {
       .onComplete(sentence => println(sentence))
     Thread.sleep(1000)
   }
+
 
   /**
     * You can combine so many futures as you want using flatMapN.

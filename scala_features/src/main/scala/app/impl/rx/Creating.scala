@@ -13,6 +13,13 @@ import rx.observers.TestSubscriber
   */
 class Creating extends Generic[String, Long] {
 
+  @Test def pipeline(): Unit = {
+
+    Observable.from(List("Hello","Reactive", "Stream", "world"))
+      .subscribe(n => println(n))
+  }
+
+
   /**
     * empty operator create an observable with Nothing class
     */

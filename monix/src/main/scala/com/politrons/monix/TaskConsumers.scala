@@ -1,12 +1,13 @@
 package com.politrons.monix
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream}
 import java.util.concurrent.TimeUnit
 
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 import org.junit.Test
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.util.{Failure, Success}
 import scala.concurrent.duration._
 
@@ -132,6 +133,29 @@ class TaskConsumers {
     } else {
       "Plain sync process"
     }
+  }
+
+  import java.io.ObjectOutputStream
+
+  @Test
+  def serializeTask(): Unit = {
+    val eventualString = Future {
+      Thread.sleep(1000)
+      "A future is serializable as a task"
+    }
+    val task = Task.fromFuture(eventualString)
+    val bos = new ByteArrayOutputStream()
+    val out = new ObjectOutputStream(bos)
+    out.writeObject(task)
+    val yourBytes = bos.toByteArray
+
+    val bis = new ByteArrayInputStream(yourBytes)
+    val in = new ObjectInputStream(bis)
+    val o = in.readObject()
+    val taskLater = o.asInstanceOf[Task[String]]
+    val cancelableFuture = taskLater.runAsync
+    val result = Await.result(cancelableFuture, 10 seconds)
+    println(s"Result:$result")
   }
 
 }
