@@ -8,6 +8,8 @@ import org.junit.Test
   * The Stream provide some capabilities such as:
   * * The ability to build arbitrarily complex streams, possibly with embedded effects.
   * * The ability to transform one or more streams using a small but powerful set of operations
+  *
+  * If you want reference the official documentation visit here https://fs2.io/guide.html#talking-to-the-external-world
   */
 class StreamFeature {
 
