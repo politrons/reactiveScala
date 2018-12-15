@@ -102,7 +102,7 @@ The original project [here](https://monix.io/)
 * **[Monoidal](category_theory/src/main/scala/types/MonoidalFeature.scala)**
 * **[Monad](category_theory/src/main/scala/types/MonadFeature.scala)**
 
-![My image](category_theory/src/main/resources/fs2.png)
+![My image](scala_features/src/main/resources/img/fs2.png)
 # Fs2
 
 * **[Stream feature](src/main/scala/StreamFeature.scala)**
