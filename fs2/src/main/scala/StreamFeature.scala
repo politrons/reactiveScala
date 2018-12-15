@@ -1,7 +1,6 @@
-import cats.effect.IO
+import cats.effect.{Async, ContextShift, IO}
 import fs2.Stream
 import org.junit.Test
-import cats.effect.ContextShift
 
 /**
   * F2s Stream it was an initiative of ScalaZ community to create a reactive Stream for scala.
