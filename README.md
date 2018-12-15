@@ -105,7 +105,7 @@ The original project [here](https://monix.io/)
 ![My image](scala_features/src/main/resources/img/fs2.png)
 # Fs2
 
-* **[Stream feature](src/main/scala/StreamFeature.scala)**
+* **[Stream feature](fs2/src/main/scala/StreamFeature.scala)**
 
 
 ![My image](scala_features/src/main/resources/img/finagle.png)
