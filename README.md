@@ -150,3 +150,7 @@ Examples of use Tagless Final encode to enjoy the potential of free structures.
 * **[Tree](scala_features/src/main/scala/app/impl/algorithms/TreeDS.scala)**
 * **[Graph](scala_features/src/main/scala/app/impl/algorithms/GraphsTheory.scala)**
 * **[Stack](scala_features/src/main/scala/app/impl/algorithms/StackDS.scala)**
+
+# Dotty
+
+* **[Implicit function types](scala_features/src/main/scala/app/impl/scala3/ImplicitFunctionTypes.scala)**
