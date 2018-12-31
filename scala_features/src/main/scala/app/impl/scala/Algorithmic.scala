@@ -4,7 +4,6 @@ import app.impl.Generic
 import org.junit.Test
 
 import scala.concurrent.{Await, Future}
-import scala.util.Random
 
 
 class Algorithmic extends Generic[String, Long] {
@@ -22,7 +21,7 @@ class Algorithmic extends Generic[String, Long] {
 
   /**
     * Algorithm to find the numbers in the string
-    */o
+    */
   @Test def findNumbers(): Unit = {
     val text = "ab1cx2d3b"
     val numbers = text.toCharArray.toStream
@@ -87,9 +86,7 @@ class Algorithmic extends Generic[String, Long] {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  global.execute(new Runnable
-
-  {
+  global.execute(new Runnable {
 
     override def run() = Future {
       Thread.sleep(5000)
