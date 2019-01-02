@@ -63,6 +63,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Tagging](scala_features/src/main/scala/app/impl/scalaz/Tagging.scala)**
 * **[Test DSL](scala_features/src/main/scala/app/impl/scalaz/TestDSL.scala)**
 * **[Lens](scala_features/src/main/scala/app/impl/scalaz/LensFeature.scala)**
+* **[Category theory](scala_features/src/main/scala/app/impl/scalaz/CategoryTheory.scala)**
 
 ![My image](scala_features/src/main/resources/img/shapeless.png)
 # Shapeless
