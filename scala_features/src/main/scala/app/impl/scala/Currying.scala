@@ -14,6 +14,20 @@ import org.junit.Test
 class Currying extends Generic {
 
 
+  @Test
+  def curryFunction(): Unit = {
+    val curryA = funcA _ compose funcB apply funcA
+    println(curryA)
+
+    val curryB = funcB _ andThen  funcA apply funcA
+    println(curryB)
+  }
+
+  def funcA(value: String):String = value.toUpperCase
+
+  def funcB(func: String => String):String = func.apply("hello") + "-" + func.apply("world")
+
+
   @Test def main(): Unit = {
     def addFunction = add(2) _ //In case you dont define your def as function return type, you need to pass a _ as the missing parameter
 

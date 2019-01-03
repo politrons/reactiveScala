@@ -16,7 +16,7 @@ import scala.util.Try
   */
 class Functions {
 
-  case class First(value:String)
+  case class First(value: String)
 
   case class Foo(value: String)
 
