@@ -16,6 +16,27 @@ import scala.util.Try
   */
 class Functions {
 
+  case class First(value:String)
+
+  case class Foo(value: String)
+
+  case class Last(value: String)
+
+  /**
+    * Since we compose three functions and in [Referential Transparency] we start from [First] in thr
+    * first function, and we end with [Bla] in the last function so the [composedFunc] has the type
+    * First => Bla
+    */
+  @Test
+  def compositionFunc(): Unit = {
+    val func1: First => String = first => first.value.toUpperCase
+    val func2: String => Foo = a => Foo(a)
+    val func3: Foo => Last = foo => Last(foo.value)
+
+    val composedFunc = func1 andThen func2 andThen func3
+    println(composedFunc(First("Hello composition function world")))
+  }
+
   @Test def passFunctionAsArgument(): Unit = {
     println(s"Casting number to String ${printString(toStringFunction, 100)}")
   }
@@ -139,5 +160,6 @@ class Functions {
     val tuple = crazyFunction1.apply("1", "2")()()
     println(tuple)
   }
+
 
 }
