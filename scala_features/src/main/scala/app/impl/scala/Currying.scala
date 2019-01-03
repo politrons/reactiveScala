@@ -13,7 +13,6 @@ import org.junit.Test
   */
 class Currying extends Generic {
 
-
   @Test
   def curryFunction(): Unit = {
     val curryA = funcA _ compose funcB apply funcA
