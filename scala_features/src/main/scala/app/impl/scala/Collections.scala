@@ -273,6 +273,14 @@ class Collections extends Generic with NumberInterface {
     })
   }
 
+  @Test def findListInList(): Unit = {
+    val x = List("a","b","c","d","f","g","v")
+    val y = List("k", "p", "h", "z", "x", "t", "b", "u","a")
+
+    val strings = x.flatMap(a => y.filter(b => a == b))
+    println(strings)
+  }
+
 }
 
 

@@ -95,7 +95,39 @@ class Utils extends Generic {
   def multiString(x: String)(y: String)(z: String) = x.concat("_") + y.concat("_") + z
 
 
+  @Test def nullOption(): Unit = {
+    Option(returnNull) match {
+      case Some(value) => println(value)
+      case None => println("None")
+    }
 
+    val nullValue: Any = null
+
+    nullValue match {
+      case Foo() => println("is a string")
+      case _ => println("Is null")
+    }
+
+  }
+
+  def returnNull: Any = {
+    null
+  }
+
+  @Test def referenceByNameTest(): Unit = {
+    referenceByName(getHello())
+  }
+  
+  def referenceByName[T](func: => T): Unit = {
+    println("Before")
+    func
+  }
+
+  def getHello(): Unit = {
+    println("Hello world")
+  }
+
+  case class Foo()
 
 }
 

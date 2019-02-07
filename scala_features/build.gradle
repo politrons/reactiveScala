@@ -22,7 +22,7 @@ dependencies {
     compile 'com.chuusai:shapeless_2.12:2.3.3'
     compile group: 'org.scalameta', name: 'scalameta_2.11', version: '1.7.0'
     compile group: 'org.glassfish.grizzly', name: 'grizzly-http-server', version: '2.4.0'
-    compile 'org.scala-lang:scala-library:2.12.4'
+    compile 'org.scala-lang:scala-library:2.12.8'
 
     compile project(':macros')
     compile project(':h2')
