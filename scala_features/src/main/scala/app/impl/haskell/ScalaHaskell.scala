@@ -2,7 +2,7 @@ package app.impl.haskell
 
 import java.util.Calendar._
 
-import app.impl.haskell.ScalaHaskell.{Time, Word}
+import app.impl.haskell.ScalaHaskell.{Name, Time, Word}
 import org.junit.Test
 import scalaz.ioeffect.{IO, RTS}
 
@@ -75,6 +75,39 @@ class ScalaHaskell extends RTS {
       Time(s"${time.value} : ${now.get(MINUTE)} - ${now.get(SECOND)}")
     }
 
+  /**
+    * Scala provide in all their Monads very good operators to transform(map), compose(flatMap, zip) and filter
+    * So for this particular example we could use [filter] of List to find the name in the list, but what
+    * we want to show here is how just like Haskell Scala use [tail recursion] a very efficient way
+    * to do recursion without create a stack per recursion which it can end up in a StackOverFlow
+    * The patter matching of Scala is an implementation of how Haskell function can define internally this
+    * match so in here we can reduce the list giving us one value and the rest of the list like in Haskell we do with
+    *
+    * sumAllPrices :: Double -> [Item] -> Double
+    * sumAllPrices totalPrice (item:items) = sumAllPrices (totalPrice + (price item)) items
+    * sumAllPrices totalPrice [] = totalPrice -- Last condition. When the list is empty we break the recursion
+    */
+  @Test
+  def recursion(): Unit = {
+    val io = for {
+      name <- searchName(Name("Politrons"))(List(Name("Paul"), Name("Lee"), Name("Politrons"), Name("Esther")))
+      name <- nameToUpperCase(name)
+    } yield name
+    println(unsafePerformIO(io))
+  }
+
+  def searchName: Name => List[Name] => IO[Throwable, Name] =
+    name => {
+      case listName :: otherNames => name.value == listName.value match {
+        case true => IO.point(listName)
+        case false => searchName(name)(otherNames)
+      }
+      case List() => IO.point(Name("Name not found"))
+    }
+
+  def nameToUpperCase: Name => IO[Throwable, Name] =
+    name => IO.point(name.copy(value = name.value.toUpperCase))
+
 }
 
 object ScalaHaskell {
@@ -82,5 +115,7 @@ object ScalaHaskell {
   case class Word(value: String) extends AnyVal
 
   case class Time(value: String) extends AnyVal
+
+  case class Name(value: String) extends AnyVal
 
 }
