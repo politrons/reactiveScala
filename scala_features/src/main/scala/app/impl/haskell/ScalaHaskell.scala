@@ -20,6 +20,17 @@ class ScalaHaskell extends RTS {
   /**
     * One of the best ways to emulate Haskell from Scala is using for comprehension which is
     * just like [do block] a sugar syntax to make sequential composition of functions.
+    *
+    * Haskell Example do block:
+    *
+    * fooFunc :: Socket -> Chan Message -> MsgId -> IO ()
+    * fooFunc sock channel msgId =  do
+    *                               let broadcast msg = writeChan channel $ Message msgId msg
+    *                               handle <- createHandle sock ReadWriteMode
+    *                               name <- logInClient handle broadcast
+    *                               newChannel <- duplicateChannel channel
+    *                               readerThreadId <- readMessage handle newChannel msgId
+    *                               writeMessage broadcast handle name readerThreadId
     */
   @Test
   def doBlockWithIO(): Unit = {
