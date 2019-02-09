@@ -108,6 +108,32 @@ class ScalaHaskell extends RTS {
   def nameToUpperCase: Name => IO[Throwable, Name] =
     name => IO.point(name.copy(value = name.value.toUpperCase))
 
+
+  @Test
+  def typeClasses(): Unit = {
+    println(processValue("hello world"))
+    println(processValue(1981))
+
+  }
+
+  def processValue[T](value: T)(implicit myClass: MyClass[T]): T = {
+    myClass.process(value)
+  }
+
+
+  trait MyClass[T] {
+    def process(value: T): T
+  }
+
+  implicit val stringValue: MyClass[String] = new MyClass[String] {
+    override def process(value: String): String = value.toUpperCase + "!!!"
+  }
+
+  implicit val intValue: MyClass[Int] = new MyClass[Int] {
+
+    override def process(value: Int): Int = value * 1000
+  }
+
 }
 
 object ScalaHaskell {
@@ -117,5 +143,10 @@ object ScalaHaskell {
   case class Time(value: String) extends AnyVal
 
   case class Name(value: String) extends AnyVal
+
+
+  //  case class StringClass(value: String) extends MyClass[String]
+  //
+  //  case class IntClass(value: Int) extends MyClass[Int]
 
 }
