@@ -108,7 +108,12 @@ class ScalaHaskell extends RTS {
   def nameToUpperCase: Name => IO[Throwable, Name] =
     name => IO.point(name.copy(value = name.value.toUpperCase))
 
-
+  /**
+    * Thanks to [implicit] we can make the compiler once he infer a type go to
+    * one implicit implementation for that class that implement a trait or another,
+    * just like Haskell does. Here unfortunately it's quite more verbose than in
+    * Haskell but still is doable use this amazing feature.
+    */
   @Test
   def typeClasses(): Unit = {
     println(processValue("hello world"))
@@ -120,18 +125,37 @@ class ScalaHaskell extends RTS {
     myClass.process(value)
   }
 
-
+  /**
+    * Like in Haskell we define the class, here [trait] with generic type and the
+    * function process which receive a T and return a T
+    * Then we define the instances, here implicit anonymous implementations of MyClass[T]
+    * and in that implementation just like in Haskell we specify the type for that class.
+    *
+    * Haskell type class example:
+    * -- | Here we just define the class with the structure as a contract.
+    * class ArithmeticTypeClass _type where
+    * customSum :: _type -> _type -> _type
+    *
+    * -- |Here we define the implementation for type Integer.
+    * instance ArithmeticTypeClass Integer where
+    * customSum i1 i2 = i1  + i2
+    */
   trait MyClass[T] {
-    def process(value: T): T
+    def process: T => T
   }
 
+  /**
+    * Implementation for String type of type class [MyClass]
+    */
   implicit val stringValue: MyClass[String] = new MyClass[String] {
-    override def process(value: String): String = value.toUpperCase + "!!!"
+    override def process: String => String = value => value.toUpperCase + "!!!"
   }
 
+  /**
+    * Implementation for Int type of type class [MyClass]
+    */
   implicit val intValue: MyClass[Int] = new MyClass[Int] {
-
-    override def process(value: Int): Int = value * 1000
+    override def process: Int => Int = value => value * 1000
   }
 
 }
@@ -144,9 +168,5 @@ object ScalaHaskell {
 
   case class Name(value: String) extends AnyVal
 
-
-  //  case class StringClass(value: String) extends MyClass[String]
-  //
-  //  case class IntClass(value: Int) extends MyClass[Int]
 
 }
