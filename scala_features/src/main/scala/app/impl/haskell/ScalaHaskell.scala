@@ -174,6 +174,16 @@ class ScalaHaskell extends RTS {
 
 }
 
+/**
+  * Using case class is the most close to data types that you can find in Haskell, bot are final immutable types
+  * and both provide get access to the elements of the class.
+  *
+  * Haskell example of Data types:
+  *
+  * data Products = Products { results :: [Product]}
+  *
+  * data Product = Product { artistName:: [Char], trackName:: [Char], collectionName:: [Char] }
+  */
 object ScalaHaskell {
 
   case class Word(value: String) extends AnyVal
