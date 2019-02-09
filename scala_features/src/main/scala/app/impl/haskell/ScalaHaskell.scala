@@ -130,7 +130,8 @@ class ScalaHaskell extends RTS {
     val io = for {
       number <- processValue(1981)
       sentence <- processValue("hello world")
-    } yield s"$number - $sentence"
+      result <- IO.point(s"$number - $sentence")
+    } yield result
     println(unsafePerformIO(io))
   }
 
