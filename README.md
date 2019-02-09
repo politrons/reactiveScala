@@ -127,11 +127,19 @@ The original project [here](https://monix.io/)
 * **[Cake pattern](scala_features/src/main/scala/app/impl/patterns/di/CakePattern.scala)**
 * **[DI Implicit](scala_features/src/main/scala/app/impl/patterns/di/Main.scala)**
 
+![My image](scala_features/src/main/resources/img/haskell-logo.jpeg)
+# Haskell style
+
+Examples of how Scala and Haskell can look alike.
+
+* **[ScalaHaskell](scala_features/src/main/scala/app/impl/haskell/ScalaHaskell.scala)**
+
 # Tagless Final
 
 Examples of use Tagless Final encode to enjoy the potential of free structures.
 
 * **[Tagless](scala_features/src/main/scala/app/impl/tagless/TagLessFeature.scala)**
+
 
 # Macros
 
