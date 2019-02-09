@@ -25,12 +25,12 @@ class ScalaHaskell extends RTS {
     *
     * fooFunc :: Socket -> Chan Message -> MsgId -> IO ()
     * fooFunc sock channel msgId =  do
-    * let broadcast msg = writeChan channel $ Message msgId msg
-    * handle <- createHandle sock ReadWriteMode
-    * name <- logInClient handle broadcast
-    * newChannel <- duplicateChannel channel
-    * readerThreadId <- readMessage handle newChannel msgId
-    * writeMessage broadcast handle name readerThreadId
+    *                               let broadcast msg = writeChan channel $ Message msgId msg
+    *                               handle <- createHandle sock ReadWriteMode
+    *                               name <- logInClient handle broadcast
+    *                               newChannel <- duplicateChannel channel
+    *                               readerThreadId <- readMessage handle newChannel msgId
+    *                               writeMessage broadcast handle name readerThreadId
     */
   @Test
   def doBlockWithIO(): Unit = {
@@ -135,7 +135,7 @@ class ScalaHaskell extends RTS {
     println(unsafePerformIO(io))
   }
 
-  def processValue[T](value: T)(implicit myClass: MyClass[T]): IO[Throwable,T] = {
+  def processValue[T](value: T)(implicit myClass: MyClass[T]): IO[Throwable, T] = {
     IO.point(myClass.process(value))
   }
 
