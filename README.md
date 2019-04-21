@@ -1,5 +1,7 @@
 Author Pablo Perez Garcia
 
+Is this repo useful? Please ⭑Star this repository and share the love.
+
 # ![My image](scala_features/src/main/resources/img/rsz_scala.gif)
 
 Here we cover with some practical examples, the most common use of Scala API.
