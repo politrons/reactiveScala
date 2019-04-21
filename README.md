@@ -65,6 +65,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Test DSL](scala_features/src/main/scala/app/impl/scalaz/TestDSL.scala)**
 * **[Lens](scala_features/src/main/scala/app/impl/scalaz/LensFeature.scala)**
 * **[Category theory](scala_features/src/main/scala/app/impl/scalaz/CategoryTheory.scala)**
+* **[ZIO monad](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOMonad.scala)**
 
 ![My image](scala_features/src/main/resources/img/shapeless.png)
 # Shapeless

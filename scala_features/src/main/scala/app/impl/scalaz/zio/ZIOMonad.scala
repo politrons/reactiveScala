@@ -3,17 +3,17 @@ package app.impl.scalaz.zio
 import org.junit.Test
 import scalaz.zio.{DefaultRuntime, IO, Task, ZIO}
 
+import scala.concurrent.Future
+import scala.util.Try
+
 class ZIOMonad {
 
-  val runtime: DefaultRuntime = new DefaultRuntime {}
+  val main: DefaultRuntime = new DefaultRuntime {}
 
   //##########################//
-  //         EFFECTS          //
+  //         CREATION         //
   //##########################//
 
-  //##################//
-  //    CREATION       //
-  //##################//
   /**
     * Using ZIO we can define like the monad IO from Haskell, the monad by definition it's lazy,
     * which means it respect the monad laws and it's referential transparency. Only when it's evaluated
@@ -31,11 +31,11 @@ class ZIOMonad {
   def fromZIOSucceed(): Unit = {
     val sentenceMonad: ZIO[Any, Throwable, String] =
       ZIO
-        .succeed("Hello pure functional wold" )
+        .succeed("Hello pure functional wold")
         .map(value => value.toUpperCase())
         .flatMap(word => ZIO.succeed(word + "!!!"))
 
-    val succeedSentence = runtime.unsafeRun(sentenceMonad)
+    val succeedSentence = main.unsafeRun(sentenceMonad)
     println(succeedSentence)
   }
 
@@ -50,7 +50,7 @@ class ZIOMonad {
         .flatMap(sentence => Task.succeed(sentence + " world"))
         .map(sentence => sentence.toUpperCase())
 
-    val taskSentence = runtime.unsafeRun(task)
+    val taskSentence = main.unsafeRun(task)
     println(taskSentence)
   }
 
@@ -65,8 +65,8 @@ class ZIOMonad {
     val lazyIputMonad = ZIO.succeedLazy(s"Monad___ ${System.currentTimeMillis()}")
     Thread.sleep(1000)
     println("No Monad " + System.currentTimeMillis())
-    val laztSentence = runtime.unsafeRun(lazyIputMonad)
-    println(laztSentence)
+    val lazySentence = main.unsafeRun(lazyIputMonad)
+    println(lazySentence)
   }
 
   /**
@@ -77,7 +77,7 @@ class ZIOMonad {
   def fromZIOFailure(): Unit = {
     val errorMonad: IO[String, Throwable] =
       ZIO.fail("Hello pure functional wold")
-    runtime.unsafeRun(errorMonad)
+    main.unsafeRun(errorMonad)
   }
 
   /**
@@ -89,16 +89,149 @@ class ZIOMonad {
     val errorMonad1: IO[Exception, Nothing] =
       ZIO.fail(new IllegalArgumentException("Hello pure functional wold"))
 
-    runtime.unsafeRun(errorMonad1)
+    main.unsafeRun(errorMonad1)
   }
 
-  //##################//
-  //    CREATION       //
-  //##################//
+  //##########################//
+  //         EFFECTS          //
+  //##########################//
 
+  /**
+    * In case we want to create a IO from an option effect, we use [fromOption] operator.
+    * In order to get the effect to None we use the operator [catchAll] which in case
+    * of None it will invoke the function with unit type.
+    */
   @Test
-  def main(): Unit = {
+  def optionZIO(): Unit = {
+    val monadSome: ZIO[Any, Unit, String] =
+      ZIO.fromOption(Some("Hello"))
+        .catchAll(unit => ZIO.succeed(s"No data in Option"))
+        .flatMap(word => ZIO.succeed(word + " maybe"))
+        .map(sentence => sentence.toUpperCase)
+    val value = main.unsafeRun(monadSome)
+    println(value)
 
+    val monadNone =
+      ZIO.fromOption(maybe())
+        .catchAll(unit => ZIO.succeed(s"No data in Option"))
+        .map(sentence => sentence.toUpperCase)
+
+    val none = main.unsafeRun(monadNone)
+    println(none)
   }
+
+  /**
+    * In case we want to create a IO from an Try effect, we use [fromTry] operator.
+    * In order to get the effect to Value or Throwable we use the operator [catchAll] which in case
+    * of Try Failure it will invoke the function with the Throwable type.
+    */
+  @Test
+  def tryZIO(): Unit = {
+    val trySuccess =
+      ZIO.fromTry(Try(1981))
+        .map(number => number + 100)
+        .catchAll(t => ZIO.succeed(s"I catch an error from Try $t"))
+    val goodValue = main.unsafeRun(trySuccess)
+    println(goodValue)
+
+    val tryError =
+      ZIO.fromTry(Try(42 / 0))
+        .map(number => number + 100)
+        .catchAll(t => ZIO.succeed(s"I catch an error from Try $t"))
+    val value = main.unsafeRun(tryError)
+    println(value)
+  }
+
+  /**
+    * In case we want to create a IO from an Either effect, we use [fromEither] operator.
+    * In order to get the effect of Left or Right type, we use the operator [catchAll] which in case
+    * of Either Left it will invoke the function with the Left type defined in Either.
+    */
+  @Test
+  def eitherZIO(): Unit = {
+    val rightMonad: ZIO[Any, Int, String] =
+      ZIO.fromEither(rightValue())
+        .map(sentence => sentence + " !!!")
+        .map(sentence => sentence.toUpperCase)
+        .catchAll(leftSide => ZIO.succeed(s"I catch the left side of the either $leftSide"))
+
+    val value = main.unsafeRun(rightMonad)
+    println(value)
+
+    val leftMonad: ZIO[Any, Int, String] =
+      ZIO.fromEither(eitherValue())
+        .map(sentence => sentence + " !!!")
+        .map(sentence => sentence.toUpperCase)
+        .catchAll(leftSide => ZIO.succeed(s"I catch the left side of the either $leftSide"))
+
+    val leftValue = main.unsafeRun(leftMonad)
+    println(leftValue)
+  }
+
+  /**
+    * In case we want to create a IO from a Future execution, we use [fromFuture] operator.
+    * ZIO provide the option to zip the futures and just like Scala future zip it return a Tuple
+    * of the results.
+    */
+  @Test
+  def futureZIO(): Unit = {
+    val monadFuture: Task[String] =
+      ZIO.fromFuture { implicit ec =>
+        Future("I'll see you in the future")
+      }
+        .zip(ZIO.fromFuture({ implicit ec =>
+          Future(", for sure!")
+        }))
+        .map(sentence => (sentence._1 + sentence._2).toUpperCase)
+
+    val value = main.unsafeRun(monadFuture)
+    println(value)
+  }
+
+  //##########################//
+  //         PROGRAM          //
+  //##########################//
+
+  /**
+    * Main program that compose all ZIO monads created with effects.
+    * To be more Haskell style we use for comprehension emulating the
+    * [do block] style of Haskell
+    */
+  @Test
+  def mainProgramWithEffects(): Unit = {
+    val userMonad = for {
+      user <- login("politrons")
+      user <- updateAge(user)
+      user <- findUserAsEmployee(user)
+      user <- persistEmployeeInDataBase(user)
+    } yield user
+
+    val value = main.unsafeRun(userMonad)
+    println(value)
+  }
+
+  def login(username: String): ZIO[Any, Throwable, User] =
+    ZIO.fromOption(Some(User("politrons", 38)))
+      .catchAll(unit => ZIO.succeed(User("No user", 0)))
+
+  def updateAge(user: User): ZIO[Any, Throwable, User] =
+    ZIO.fromTry(Try(user.copy(age = user.age + 1)))
+
+  def findUserAsEmployee(user: User): ZIO[Any, Throwable, User] =
+    ZIO.fromEither(Right(user))
+
+  def persistEmployeeInDataBase(user: User): ZIO[Any, Throwable, User] =
+    ZIO.fromFuture {
+      implicit ec => Future(user)
+    }
+
+
+  def maybe(): Option[String] = None
+
+  def eitherValue(): Either[Int, String] = Left(100)
+
+  def rightValue(): Either[Int, String] = Right("This monad was Success!")
+
+  case class User(name: String, age: Int)
 
 }
