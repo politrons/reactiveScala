@@ -1,7 +1,7 @@
 package app.impl.scalaz.zio
 
 import org.junit.Test
-import scalaz.zio.DefaultRuntime
+import scalaz.zio.{DefaultRuntime, ZIO}
 
 import scala.util.{Failure, Success, Try}
 
@@ -26,7 +26,7 @@ class ZIOMonadWorkshop {
   }
 
   def login(username: String): Option[User] = {
-    if(username == null) None else Option(User(username, 1535234551))
+    if (username == null) None else Option(User(username, 1535234551))
   }
 
   def updateAge(user: User): Try[User] = Try(user.copy(time = user.time + 1))
@@ -43,5 +43,17 @@ class ZIOMonadWorkshop {
 
   case class UserError(desc: String) extends Exception
 
+
+  //  @Test
+  //  def mainProgramWithEffects(): Unit = {
+  //    val value: ZIO[Any, Nothing, Either[UserError, User]] = (for {
+  //      user <- ZIO.fromOption(login(null)).catchAll(_ => ZIO.fail(UserError("Not username provided")))
+  //      user1 <- ZIO.fromTry(updateAge(user))
+  //      employee <- ZIO.fromEither(findUserAsEmployee(user1))
+  //      employee1 <- ZIO.succeed(employee.copy(status = "online")).either
+  //    } yield employee1).catchAll(t => ZIO.succeed(Left(UserError(t.getMessage))))
+  //    val either = main.unsafeRun(value)
+  //    println(either)
+  //  }
 
 }
