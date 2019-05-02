@@ -25,7 +25,9 @@ class ZIOMonadWorkshop {
 
   }
 
-  def login(username: String): Option[User] = Some(User("politrons", 1535234551))
+  def login(username: String): Option[User] = {
+    if(username == null) None else Option(User(username, 1535234551))
+  }
 
   def updateAge(user: User): Try[User] = Try(user.copy(time = user.time + 1))
 
