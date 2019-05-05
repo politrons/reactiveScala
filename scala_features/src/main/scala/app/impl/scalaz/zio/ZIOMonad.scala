@@ -288,12 +288,20 @@ class ZIOMonad {
 
   }
 
+  /**
+    * Define here the environment type to be implemented pèr real case and some test cases.
+    * Or even multiple programs.
+    */
   trait CustomLogic {
     def getAddress: ZIO[Any, Nothing, String]
 
     def getPort: ZIO[Any, Nothing, Int]
   }
 
+  /**
+    * Implementation of the environment type to be used for DEV. It could be used to test some behavior and
+    * corner cases in testing.
+    */
   object CustomDevLogic extends CustomLogic {
 
     override def getAddress: ZIO[Any, Nothing, String] = ZIO.succeed("Dev socket address")
@@ -301,6 +309,9 @@ class ZIOMonad {
     override def getPort: ZIO[Any, Nothing, Int] = ZIO.succeed(666)
   }
 
+  /**
+    * Implementation of the environment type to be used for LIVE version.
+    */
   object CustomLiveLogic extends CustomLogic {
 
     override def getAddress: ZIO[Any, Nothing, String] = ZIO.succeed("Real socket address")
