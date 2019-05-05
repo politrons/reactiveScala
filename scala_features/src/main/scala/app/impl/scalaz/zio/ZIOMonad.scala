@@ -246,7 +246,7 @@ class ZIOMonad {
     * You just need to access to the Environment arguments using [access] operator, which it's
     * a function that pass the environment type, so you can access to the functions that the env type provide.
     *
-    * Once you evaluate your program you need to pass the argument using [provide] operator.
+    * Once you evaluate your program you need to pass the implementation of the environment using [provide] operator.
     */
   @Test
   def environmentType(): Unit = {
