@@ -253,9 +253,9 @@ class ZIOMonad {
 
     val userMonad: ZIO[User, Nothing, String] =
       for {
-        server <- ZIO.access[User](env => env.name)
-        port <- ZIO.access[User](_.age)
-      } yield s"Name: $server, age: $port"
+        name <- ZIO.access[User](env => env.name)
+        age <- ZIO.access[User](_.age)
+      } yield s"Name: $name, age: $age"
 
     val info = main.unsafeRun(userMonad.provide(User("Politrons", 38)))
     println(info)
