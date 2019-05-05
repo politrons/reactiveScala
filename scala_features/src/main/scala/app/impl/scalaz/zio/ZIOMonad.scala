@@ -243,7 +243,10 @@ class ZIOMonad {
     * This is really handy when you want to have different values per environment, or you just want
     * to apply Module pattern to make your DSL completely abstract of the implementation passed per environment.
     *
-    * You just need to access to the Environment arguments using [access] operator, which it's
+    * In order to access to the whole environment type you just need to use [environment] operator and you will receive the instance
+    * of the type
+    *
+    * If you just want access some part of the environment, you just need to use [access] operator, which it's
     * a function that pass the environment type, so you can access to the functions that the env type provide.
     *
     * Once you evaluate your program you need to pass the implementation of the environment using [provide] operator.
@@ -253,9 +256,10 @@ class ZIOMonad {
 
     val userMonad: ZIO[User, Nothing, String] =
       for {
+        user <- ZIO.environment[User]
         name <- ZIO.access[User](env => env.name)
         age <- ZIO.access[User](_.age)
-      } yield s"Name: $name, age: $age"
+      } yield s"Before User Name: ${user.name}, age: ${user.age}. After Name: ${name.toUpperCase()}, age: ${age + 1}"
 
     val info = main.unsafeRun(userMonad.provide(User("Politrons", 38)))
     println(info)
