@@ -1,9 +1,10 @@
 package app.impl.scalaz.zio
 
 import org.junit.Test
-import scalaz.zio.{DefaultRuntime, ZIO}
+import scalaz.zio.{DefaultRuntime, Fiber, IO, ZIO}
 
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.Future
+import scala.util.{Failure, Random, Success, Try}
 
 class ZIOMonadWorkshop {
 
@@ -22,8 +23,8 @@ class ZIOMonadWorkshop {
       case None => UserError("Not username provided")
     }
     println(maybeUser)
-
   }
+
 
   def login(username: String): Option[User] = {
     if (username == null) None else Option(User(username, 1535234551))
@@ -43,6 +44,28 @@ class ZIOMonadWorkshop {
 
   case class UserError(desc: String) extends Exception
 
+
+
+  //  @Test
+  //  def mainProgramWithEffects(): Unit = {
+  //    val car1 = createCar("Audi")
+  //    val car2 = createCar("BMW")
+  //    val car3 = createCar("Renault")
+  //    val car4 = createCar("Honda")
+  //    val winnerOfRace: ZIO[Any, Throwable, String] = for {
+  //      winner <- car1.race(car2).race(car3).race(car4)
+  //      result <- ZIO.succeed(winner)
+  //    } yield result
+  //    val value = main.unsafeRun(winnerOfRace)
+  //    println(value)
+  //  }
+
+  //  private def createCar(car: String): ZIO[Any, Throwable, String] =
+  //    IO.fromFuture(implicit ec => Future {
+  //      Thread.sleep((Math.random * 1500).toInt)
+  //      println(s"$car running in ${Thread.currentThread().getName}")
+  //      s" $car win!"
+  //    })
 
   //  @Test
   //  def mainProgramWithEffects(): Unit = {
