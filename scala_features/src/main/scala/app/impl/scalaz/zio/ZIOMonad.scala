@@ -234,4 +234,94 @@ class ZIOMonad {
 
   case class User(name: String, age: Int)
 
+  //##########################//
+  //         ENVIRONMENT      //
+  //##########################//
+
+  /**
+    * Just like Monad Reader, we can use a environment type, that can be used internally in your program.
+    * This is really handy when you want to have different values per environment, or you just want
+    * to apply Module pattern to make your DSL completely abstract of the implementation passed per environment.
+    *
+    * In order to access to the whole environment type you just need to use [environment] operator and you will receive the instance
+    * of the type
+    *
+    * If you just want access some part of the environment, you just need to use [access] operator, which it's
+    * a function that pass the environment type, so you can access to the functions that the env type provide.
+    *
+    * Once you evaluate your program you need to pass the implementation of the environment using [provide] operator.
+    */
+  @Test
+  def environmentType(): Unit = {
+
+    val userMonad: ZIO[User, Nothing, String] =
+      for {
+        user <- ZIO.environment[User]
+        name <- ZIO.access[User](env => env.name)
+        age <- ZIO.access[User](_.age)
+      } yield s"Before User Name: ${user.name}, age: ${user.age}. After Name: ${name.toUpperCase()}, age: ${age + 1}"
+
+    val info = main.unsafeRun(userMonad.provide(User("Politrons", 38)))
+    println(info)
+
+  }
+
+  /**
+    * Using the environment we're able to use a pipeline, extracting the monads from environment type
+    * allowing polymorphism in the implementation of that environment.
+    *
+    * Here [CustomLogic] it's a trait that have two implementations, one for DEV environment and another
+    * for production environment. Using the [accessM] operator we can extract the value from the monad
+    * from the implementations of the trait function, in PROD env it will return something different from
+    * the DEV env, but our for comprehension remain the same without have to being refactor.
+    */
+  @Test
+  def environmentModulePattern(): Unit = {
+
+    val userMonad: ZIO[CustomLogic, Nothing, String] =
+      for {
+        server <- ZIO.accessM[CustomLogic](env => env.getAddress)
+        port <- ZIO.accessM[CustomLogic](_.getPort)
+      } yield s"Server: $server, port: $port"
+
+    val devInfo = main.unsafeRun(userMonad.provide(CustomDevLogic))
+    println(devInfo)
+
+    val realInfo = main.unsafeRun(userMonad.provide(CustomLiveLogic))
+    println(realInfo)
+
+  }
+
+  /**
+    * Define here the environment type to be implemented pèr real case and some test cases.
+    * Or even multiple programs.
+    */
+  trait CustomLogic {
+    def getAddress: ZIO[Any, Nothing, String]
+
+    def getPort: ZIO[Any, Nothing, Int]
+  }
+
+  /**
+    * Implementation of the environment type to be used for DEV. It could be used to test some behavior and
+    * corner cases in testing.
+    */
+  object CustomDevLogic extends CustomLogic {
+
+    override def getAddress: ZIO[Any, Nothing, String] = ZIO.succeed("Dev socket address")
+
+    override def getPort: ZIO[Any, Nothing, Int] = ZIO.succeed(666)
+  }
+
+  /**
+    * Implementation of the environment type to be used for LIVE version.
+    */
+  object CustomLiveLogic extends CustomLogic {
+
+    override def getAddress: ZIO[Any, Nothing, String] = ZIO.succeed("Real socket address")
+
+    override def getPort: ZIO[Any, Nothing, Int] = ZIO.succeed(1981)
+  }
+
+
 }
