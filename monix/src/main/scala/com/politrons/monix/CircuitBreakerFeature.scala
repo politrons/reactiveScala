@@ -3,7 +3,9 @@ package com.politrons.monix
 import monix.eval.{Task, TaskCircuitBreaker}
 import monix.execution.Scheduler.Implicits.global
 import org.junit.Test
+import scalaz.zio.{DefaultRuntime, ZIO}
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 /**
@@ -45,6 +47,35 @@ class CircuitBreakerFeature {
       })
     0 to 1000 foreach { _ =>
       callbackCB.protect(task).runAsync
+      println(s"State:${breaker.state}")
+      Thread.sleep(1000)
+    }
+  }
+
+  val main: DefaultRuntime = new DefaultRuntime {}
+
+
+  @Test
+  def circuitBreakerComposeWithZIO(): Unit = {
+    val callbackCB = breaker.doOnOpen(Task(println("Circuit breaker change state to open")))
+      .doOnHalfOpen(Task(println("Circuit breaker change state to half-open")))
+      .doOnClosed(Task(println("Circuit breaker change state to close")))
+
+
+    val task = Task(getSentence(0.4))
+      .map(value => {
+        Thread.sleep(1000)
+        println(s"Value processed:${value.toUpperCase()}")
+      })
+    0 to 1000 foreach { _ =>
+
+      callbackCB.protect(task)
+        .runAsync
+        .flatMap(value => {
+          val zio = ZIO.effect(value + "Concat!")
+          Future(main.unsafeRun(zio))
+        })
+
       println(s"State:${breaker.state}")
       Thread.sleep(1000)
     }
