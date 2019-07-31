@@ -69,6 +69,18 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Category theory](scala_features/src/main/scala/app/impl/scalaz/CategoryTheory.scala)**
 * **[ZIO monad](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOMonad.scala)**
 
+![My image](scala_features/src/main/resources/img/native.png)
+# Scala-native
+
+Scala Native is an optimizing ahead-of-time compiler and lightweight managed runtime designed specifically for Scala.
+
+Here we cover some of the most important features of the library with practical examples.
+
+* **[Features](https://github.com/politrons/scala-native/blob/master/src/main/scala/com/politrons/server/Features.scala)**
+
+Documentation of how to configure a scala-native project [here](https://github.com/politrons/scala-native)
+
+
 ![My image](scala_features/src/main/resources/img/shapeless.png)
 # Shapeless
 
