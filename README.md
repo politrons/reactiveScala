@@ -69,7 +69,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Category theory](scala_features/src/main/scala/app/impl/scalaz/CategoryTheory.scala)**
 * **[ZIO monad](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOMonad.scala)**
 
-![My image](scala_features/src/main/resources/img/native.png)
+![My image](scala_features/src/main/resources/img/native.jpg)
 # Scala-native
 
 Scala Native is an optimizing ahead-of-time compiler and lightweight managed runtime designed specifically for Scala.
