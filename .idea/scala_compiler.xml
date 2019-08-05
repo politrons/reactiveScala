@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <profile name="Gradle 1" modules="category_theory_main,category_theory_test,fs2_main,fs2_test,h2_main,h2_test,macros_main,macros_test,monix_main,monix_test,scala_features_main,scala_features_test,test_macros_main,test_macros_test">
+      <option name="postfixOps" value="true" />
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <parameters>
