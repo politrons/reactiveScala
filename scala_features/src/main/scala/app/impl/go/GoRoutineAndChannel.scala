@@ -16,32 +16,21 @@ object GoRoutineAndChannel {
     Channel(Promise[T]())
   }
 
-  //Fire & Forget
-  def go[T](func: () => T): Unit = {
-    Future {
-      func()
-    }
-  }
-
   //Write response function in channel
-  def go[T](channel: Channel[T], func: () => T): Unit = {
+  def go[T](func: () => T)(channel: Channel[T]*): Unit = {
     Future {
-      channel.promise.success(func())
+      if (channel.nonEmpty) channel.head.promise.success(func())
     }
   }
 
-  def goCompose[T, Z](channel: Channel[T], composeChannel: Channel[Z], func: Channel[Z] => T): Unit = {
+  def goCompose[T, Z](func: Channel[Z] => T)(channel: Channel[T], composeChannel: Channel[Z]): Unit = {
     Future {
       channel.promise.success(func(composeChannel))
     }
   }
 
   implicit class CustomChannel[T](channel: Channel[T]) {
-    def <=(): T = {
-      Await.result(channel.promise.future, 100 seconds)
-    }
-
-    def <=(duration: Duration): T = {
+    def <=(duration: Duration = 100 seconds): T = {
       Await.result(channel.promise.future, duration)
     }
   }
@@ -56,10 +45,10 @@ class GoRoutineAndChannel {
   def asyncStringChannel(): Unit = {
     val channel: Channel[String] = makeChan[String]
 
-    go(channel, () => {
+    go(() => {
       val newValue = UUID.randomUUID().toString
       s"${Thread.currentThread().getName}-${newValue.toUpperCase}"
-    })
+    })(channel)
 
     val responseFromChannel = channel <= ()
     println(s"Main thread:${Thread.currentThread().getName}")
@@ -71,9 +60,9 @@ class GoRoutineAndChannel {
   def asyncFooChannel(): Unit = {
     val channel: Channel[Foo] = makeChan[Foo]
 
-    go(channel, () => {
+    go(() => {
       Foo(s"${Thread.currentThread().getName}:I'm Foo type")
-    })
+    })(channel)
 
     val responseFromChannel = channel <= ()
     println(s"Main thread:${Thread.currentThread().getName}")
@@ -85,10 +74,8 @@ class GoRoutineAndChannel {
   def asyncFireAndForget(): Unit = {
     go(() => {
       println(s"${Thread.currentThread().getName}-Fire & Forget")
-    })
-
+    })()
     Thread.sleep(1000)
-
   }
 
   @Test
@@ -96,15 +83,14 @@ class GoRoutineAndChannel {
     val channel1: Channel[String] = makeChan[String]
     val channel2: Channel[Foo] = makeChan[Foo]
 
-
-    go(channel1, () => {
+    go(() => {
       s"${Thread.currentThread().getName}:Hello composition in Scala go"
-    })
+    })(channel1)
 
-    goCompose[Foo, String](channel2, channel1, channel => {
+    goCompose[Foo, String](channel => {
       val previousValue = channel <= ()
       Foo(previousValue)
-    })
+    })(channel2, channel1)
 
     val responseFromChannel = channel2 <= ()
     println(s"Main thread:${Thread.currentThread().getName}")
@@ -117,14 +103,13 @@ class GoRoutineAndChannel {
   def asyncChannelWithDuration(): Unit = {
     val channel: Channel[Foo] = makeChan[Foo]
 
-    go(channel, () => {
+    go(() => {
       Foo(s"${Thread.currentThread().getName}:With timeout")
-    })
+    })(channel)
 
     val responseFromChannel = channel <= (10 seconds)
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
-
   }
 
   case class Foo(value: String)
