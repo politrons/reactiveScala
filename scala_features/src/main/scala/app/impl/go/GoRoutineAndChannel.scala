@@ -40,6 +40,10 @@ object GoRoutineAndChannel {
     def <=(): T = {
       Await.result(channel.promise.future, 100 seconds)
     }
+
+    def <=(duration: Duration): T = {
+      Await.result(channel.promise.future, duration)
+    }
   }
 
 }
@@ -103,6 +107,21 @@ class GoRoutineAndChannel {
     })
 
     val responseFromChannel = channel2 <= ()
+    println(s"Main thread:${Thread.currentThread().getName}")
+    println(responseFromChannel)
+
+  }
+
+  //We can also specify the time
+  @Test
+  def asyncChannelWithDuration(): Unit = {
+    val channel: Channel[Foo] = makeChan[Foo]
+
+    go(channel, () => {
+      Foo(s"${Thread.currentThread().getName}:With timeout")
+    })
+
+    val responseFromChannel = channel <= (10 seconds)
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
 
