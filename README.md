@@ -155,6 +155,12 @@ Examples of use Tagless Final encode to enjoy the potential of free structures.
 
 * **[Tagless](scala_features/src/main/scala/app/impl/tagless/TagLessFeature.scala)**
 
+![My image](scala_features/src/main/resources/img/gologo.jpg)
+# Go features
+
+Examples of some ported features of [Golang](https://golang.org/) in scala.
+
+* **[Go routine & Channel](scala_features/src/main/scala/app/impl/go/GoRoutineAndChannel.scala)**
 
 # Macros
 
