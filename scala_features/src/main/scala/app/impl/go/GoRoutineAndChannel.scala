@@ -22,9 +22,13 @@ import scala.concurrent.{Await, Future, Promise}
 object GoRoutineAndChannel {
 
   /**
-    *  Channel: ADT(Algebra data type) which contains as constructor a Promise of T defined in the Channel.
-   */
-  case class Channel[T](promise: Promise[T])
+    * Channel: ADT(Algebra data type) which contains as constructor a Promise of T defined in the Channel.
+    */
+  case class Channel[T](var promise: Promise[T])
+
+  case class NoMoreElements()
+
+  case class Panic() extends Exception
 
   /**
     * makeChan[T]: Factory method  which create an instance of [Channel using the type T]
@@ -40,7 +44,7 @@ object GoRoutineAndChannel {
     *
     * As the second argument for channel we use varargs so in case we dont provide a channel, we will make fire & forget
     *
-    * @param func supplier function that it will be executed asynchronously.
+    * @param func     supplier function that it will be executed asynchronously.
     * @param channels where it will write the response of the function
     * @tparam T Type of the input and output type of the channel
     **/
@@ -53,8 +57,8 @@ object GoRoutineAndChannel {
   /**
     * goCompose: Operator similar to [flatMap] to make the function that we pass run asynchronously and allow composition.
     *
-    * @param func with input [composeChannel] where we will compose a previous channel response with the logic of the new one.
-    * @param channel where it will write the response of the function
+    * @param func           with input [composeChannel] where we will compose a previous channel response with the logic of the new one.
+    * @param channel        where it will write the response of the function
     * @param composeChannel previously used in another [go] or [goCompose] operator, and contains some response value to compose.
     * @tparam Z Type of the input and output type of the channel
     * @tparam T Type of the compose channel
@@ -66,15 +70,21 @@ object GoRoutineAndChannel {
   }
 
   /**
-    * Extended method to read from the channel the response of the asynchronous function.
+    * Operator to read from the channel the response of the asynchronous function.
     * Just like in Golang the operator it's blocking until get the response, or the timeout it's reached.
-   */
-  implicit class CustomChannel[T](channel: Channel[T]) {
-    def <=(duration: Duration = 100 seconds): T = {
-      Await.result(channel.promise.future, duration)
+    *
+    * Once we're able to get the response from the future we will remove the promise from the channel
+    */
+  def <=[T](channel: Channel[T], duration: Duration = 100 seconds): (NoMoreElements, T) = {
+    Option(channel.promise) match {
+      case Some(promise) =>
+        val response = Await.result(promise.future, duration)
+        channel.promise = null
+        (null, response)
+      case None => (NoMoreElements(), null.asInstanceOf[T])
     }
   }
-
+  
 }
 
 import app.impl.go.GoRoutineAndChannel._
@@ -100,14 +110,16 @@ class GoRoutineAndChannel {
       s"${Thread.currentThread().getName}-${newValue.toUpperCase}"
     })(channel)
 
-    val responseFromChannel = channel <= ()
+    val (error, responseFromChannel) = <=(channel)
+    if (error != null) throw Panic()
+
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
   }
 
   /**
     * Same example than before but using another Type in the Channel, just to prove the DSL it has and use Strong type system
-   */
+    */
   @Test
   def asyncFooChannel(): Unit = {
     val channel: Channel[Foo] = makeChan[Foo]
@@ -116,7 +128,9 @@ class GoRoutineAndChannel {
       Foo(s"${Thread.currentThread().getName}:I'm Foo type")
     })(channel)
 
-    val responseFromChannel = channel <= ()
+    val (error, responseFromChannel) = <=(channel)
+    if (error != null) throw Panic()
+
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
 
@@ -152,16 +166,20 @@ class GoRoutineAndChannel {
     })(channel1)
 
     goCompose[Foo, String](channel => {
-      val previousValue = channel <= ()
+      val (error, previousValue) = <=(channel)
+      if (error != null) throw Panic()
       Foo(previousValue)
     })(channel2, channel1)
 
     goCompose[Option[Foo], Foo](channel => {
-      val previousValue = channel <= ()
+      val (error, previousValue) = <=(channel)
+      if (error != null) throw Panic()
       Some(previousValue)
     })(channel3, channel2)
 
-    val responseFromChannel = channel3 <= ()
+    val (error, responseFromChannel) = <=(channel3)
+    if (error != null) throw Panic()
+
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
 
@@ -169,7 +187,7 @@ class GoRoutineAndChannel {
 
   /**
     * We can also specify the timeout in the operator to specify how much we want to wait for the response.
-   */
+    */
   @Test
   def asyncChannelWithDuration(): Unit = {
     val channel: Channel[Foo] = makeChan[Foo]
@@ -178,9 +196,31 @@ class GoRoutineAndChannel {
       Foo(s"${Thread.currentThread().getName}:With timeout")
     })(channel)
 
-    val responseFromChannel = channel <= (10 seconds)
+    val (error, responseFromChannel) = <=(channel, 10 seconds)
+    if (error != null) throw Panic()
+
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
+  }
+
+  @Test
+  def asyncMultipleReadsInChannel(): Unit = {
+    val channel: Channel[String] = makeChan[String]
+
+    go(() => {
+      val newValue = UUID.randomUUID().toString
+      s"${Thread.currentThread().getName}-${newValue.toUpperCase}"
+    })(channel)
+
+    val responseFromChannel = <=(channel)
+    val responseFromChannel1 = <=(channel)
+    val responseFromChannel2 = <=(channel)
+
+    println(s"Main thread:${Thread.currentThread().getName}")
+    println(responseFromChannel)
+    println(responseFromChannel1)
+    println(responseFromChannel2)
+
   }
 
   case class Foo(value: String)
