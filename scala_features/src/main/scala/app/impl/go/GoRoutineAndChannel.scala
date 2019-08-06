@@ -7,6 +7,7 @@ import org.junit.Test
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future, Promise}
+import scala.util.{Failure, Success, Try}
 
 
 //***************************//
@@ -50,7 +51,9 @@ object GoRoutineAndChannel {
     **/
   def go[T](func: () => T)(channels: Channel[T]*): Unit = {
     Future {
-      if (channels.nonEmpty) channels.head.promise.success(func())
+      if (channels.nonEmpty) {
+        channels.head.promise.success(func())
+      }
     }
   }
 
@@ -73,18 +76,20 @@ object GoRoutineAndChannel {
     * Operator to read from the channel the response of the asynchronous function.
     * Just like in Golang the operator it's blocking until get the response, or the timeout it's reached.
     *
-    * Once we're able to get the response from the future we will remove the promise from the channel
+    * Once we're able to get the response from the future we will refresh the promise from the channel
+    *
+    * Just to make it looks like Golang, we return a tuple of possible value to the left, and the error to the right.
+    * This is something that definitely Scala do better with Monad Either where the Right is always the right effect value.
     */
-  def <=[T](channel: Channel[T], duration: Duration = 100 seconds): (NoMoreElements, T) = {
-    Option(channel.promise) match {
-      case Some(promise) =>
-        val response = Await.result(promise.future, duration)
-        channel.promise = null
-        (null, response)
-      case None => (NoMoreElements(), null.asInstanceOf[T])
+  def <=[T](channel: Channel[T], duration: Duration = 1 seconds): (T, NoMoreElements) = {
+    Try(Await.result(channel.promise.future, duration)) match {
+      case Success(response) =>
+        channel.promise = Promise()
+        (response, null)
+      case Failure(_) => (null.asInstanceOf[T], NoMoreElements())
     }
   }
-  
+
 }
 
 import app.impl.go.GoRoutineAndChannel._
@@ -110,7 +115,7 @@ class GoRoutineAndChannel {
       s"${Thread.currentThread().getName}-${newValue.toUpperCase}"
     })(channel)
 
-    val (error, responseFromChannel) = <=(channel)
+    val (responseFromChannel, error) = <=(channel)
     if (error != null) throw Panic()
 
     println(s"Main thread:${Thread.currentThread().getName}")
@@ -128,7 +133,7 @@ class GoRoutineAndChannel {
       Foo(s"${Thread.currentThread().getName}:I'm Foo type")
     })(channel)
 
-    val (error, responseFromChannel) = <=(channel)
+    val (responseFromChannel, error) = <=(channel)
     if (error != null) throw Panic()
 
     println(s"Main thread:${Thread.currentThread().getName}")
@@ -166,18 +171,18 @@ class GoRoutineAndChannel {
     })(channel1)
 
     goCompose[Foo, String](channel => {
-      val (error, previousValue) = <=(channel)
+      val (previousValue, error) = <=(channel)
       if (error != null) throw Panic()
       Foo(previousValue)
     })(channel2, channel1)
 
     goCompose[Option[Foo], Foo](channel => {
-      val (error, previousValue) = <=(channel)
+      val (previousValue, error) = <=(channel)
       if (error != null) throw Panic()
       Some(previousValue)
     })(channel3, channel2)
 
-    val (error, responseFromChannel) = <=(channel3)
+    val (responseFromChannel, error) = <=(channel3)
     if (error != null) throw Panic()
 
     println(s"Main thread:${Thread.currentThread().getName}")
@@ -196,13 +201,18 @@ class GoRoutineAndChannel {
       Foo(s"${Thread.currentThread().getName}:With timeout")
     })(channel)
 
-    val (error, responseFromChannel) = <=(channel, 10 seconds)
+    val (responseFromChannel, error) = <=(channel, 10 seconds)
     if (error != null) throw Panic()
 
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
   }
 
+  /**
+    * In this test we prove that once we read a message from the channel the message is gone from
+    * the channel and if we try to read the message again we receive the Left side of the tuple
+    * with the [NoMoreElements]
+    */
   @Test
   def asyncMultipleReadsInChannel(): Unit = {
     val channel: Channel[String] = makeChan[String]
@@ -219,6 +229,36 @@ class GoRoutineAndChannel {
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
     println(responseFromChannel1)
+    println(responseFromChannel2)
+
+  }
+
+  @Test
+  def asyncMultipleWritesInChannel(): Unit = {
+    val channel: Channel[String] = makeChan[String]
+
+    go(() => {
+      val newValue = UUID.randomUUID().toString
+      s"${Thread.currentThread().getName}-${newValue.toUpperCase}"
+    })(channel)
+
+    val responseFromChannel = <=(channel)
+    println(responseFromChannel)
+
+    go(() => {
+      val newValue = UUID.randomUUID().toString
+      s"${Thread.currentThread().getName}-${newValue.toUpperCase}"
+    })(channel)
+
+    val responseFromChannel1 = <=(channel)
+    println(responseFromChannel1)
+
+    go(() => {
+      val newValue = UUID.randomUUID().toString
+      s"${Thread.currentThread().getName}-${newValue.toUpperCase}"
+    })(channel)
+
+    val responseFromChannel2 = <=(channel)
     println(responseFromChannel2)
 
   }
