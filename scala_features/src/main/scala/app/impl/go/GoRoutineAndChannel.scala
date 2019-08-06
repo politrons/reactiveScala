@@ -53,7 +53,6 @@ class GoRoutineAndChannel {
     val responseFromChannel = channel <= ()
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
-
   }
 
   @Test
@@ -78,10 +77,18 @@ class GoRoutineAndChannel {
     Thread.sleep(1000)
   }
 
+  /**
+    * Using [goCompose] operator we're able to compose multiple [Channels] to get same effect than [flatMap]
+    * multiple monads.
+    * In this example we create three channels one per type, and we run three process sequentially async each.
+    * In every process we get the previous value, and it does not matter if the action to get the value it's blocking
+    * since the action also happens asynchronously
+    */
   @Test
   def asyncCompositionChannel(): Unit = {
     val channel1: Channel[String] = makeChan[String]
     val channel2: Channel[Foo] = makeChan[Foo]
+    val channel3: Channel[Option[Foo]] = makeChan[Option[Foo]]
 
     go(() => {
       s"${Thread.currentThread().getName}:Hello composition in Scala go"
@@ -92,7 +99,12 @@ class GoRoutineAndChannel {
       Foo(previousValue)
     })(channel2, channel1)
 
-    val responseFromChannel = channel2 <= ()
+    goCompose[Option[Foo], Foo](channel => {
+      val previousValue = channel <= ()
+      Some(previousValue)
+    })(channel3, channel2)
+
+    val responseFromChannel = channel3 <= ()
     println(s"Main thread:${Thread.currentThread().getName}")
     println(responseFromChannel)
 
