@@ -8,27 +8,67 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future, Promise}
 
+
+//***************************//
+//       DSL OF LIBRARY      //
+//***************************//
+
+/**
+  * This implementation try to emulate how asynchronous programing works in Golang using
+  * [Go routines] and [channels].
+  *
+  * The library use the next component described below.
+  */
 object GoRoutineAndChannel {
 
+  /**
+    *  Channel: ADT(Algebra data type) which contains as constructor a Promise of T defined in the Channel.
+   */
   case class Channel[T](promise: Promise[T])
 
+  /**
+    * makeChan[T]: Factory method  which create an instance of [Channel using the type T]
+    */
   def makeChan[T]: Channel[T] = {
     Channel(Promise[T]())
   }
 
-  //Write response function in channel
-  def go[T](func: () => T)(channel: Channel[T]*): Unit = {
+  /**
+    *
+    * go: Operator make the function that we pass run asynchronously, and with the response of that function, in case
+    * we pass a Channel it will write the response in there.
+    *
+    * As the second argument for channel we use varargs so in case we dont provide a channel, we will make fire & forget
+    *
+    * @param func supplier function that it will be executed asynchronously.
+    * @param channels where it will write the response of the function
+    * @tparam T Type of the input and output type of the channel
+    **/
+  def go[T](func: () => T)(channels: Channel[T]*): Unit = {
     Future {
-      if (channel.nonEmpty) channel.head.promise.success(func())
+      if (channels.nonEmpty) channels.head.promise.success(func())
     }
   }
 
+  /**
+    * goCompose: Operator similar to [flatMap] to make the function that we pass run asynchronously and allow composition.
+    *
+    * @param func with input [composeChannel] where we will compose a previous channel response with the logic of the new one.
+    * @param channel where it will write the response of the function
+    * @param composeChannel previously used in another [go] or [goCompose] operator, and contains some response value to compose.
+    * @tparam Z Type of the input and output type of the channel
+    * @tparam T Type of the compose channel
+    */
   def goCompose[T, Z](func: Channel[Z] => T)(channel: Channel[T], composeChannel: Channel[Z]): Unit = {
     Future {
       channel.promise.success(func(composeChannel))
     }
   }
 
+  /**
+    * Extended method to read from the channel the response of the asynchronous function.
+    * Just like in Golang the operator it's blocking until get the response, or the timeout it's reached.
+   */
   implicit class CustomChannel[T](channel: Channel[T]) {
     def <=(duration: Duration = 100 seconds): T = {
       Await.result(channel.promise.future, duration)
@@ -39,8 +79,18 @@ object GoRoutineAndChannel {
 
 import app.impl.go.GoRoutineAndChannel._
 
+//***************************//
+//    EXAMPLE USE OF DSL     //
+//***************************//
 class GoRoutineAndChannel {
 
+  /**
+    * In this example we just create the channel using [makeChan] and we pass together with a function
+    * to the operator [go] which it will make the function run asynchronously. Once we get the response
+    * we will fulfill the promise with the response of the function.
+    *
+    * Then from the channel extended method [<=] we will get the response of the Future generated previously by the promise.
+    */
   @Test
   def asyncStringChannel(): Unit = {
     val channel: Channel[String] = makeChan[String]
@@ -55,6 +105,9 @@ class GoRoutineAndChannel {
     println(responseFromChannel)
   }
 
+  /**
+    * Same example than before but using another Type in the Channel, just to prove the DSL it has and use Strong type system
+   */
   @Test
   def asyncFooChannel(): Unit = {
     val channel: Channel[Foo] = makeChan[Foo]
@@ -69,6 +122,10 @@ class GoRoutineAndChannel {
 
   }
 
+  /**
+    * In this example since we dont pass any channel to the [go] routine operator, it wont be response write in the channel
+    * and it will be consider a Fire & Forget
+    */
   @Test
   def asyncFireAndForget(): Unit = {
     go(() => {
@@ -110,7 +167,9 @@ class GoRoutineAndChannel {
 
   }
 
-  //We can also specify the time
+  /**
+    * We can also specify the timeout in the operator to specify how much we want to wait for the response.
+   */
   @Test
   def asyncChannelWithDuration(): Unit = {
     val channel: Channel[Foo] = makeChan[Foo]
