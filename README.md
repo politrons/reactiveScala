@@ -133,6 +133,13 @@ The original project [here](https://monix.io/)
 * **[Service](scala_features/src/main/scala/app/impl/finagle/FinagleService.scala)**
 * **[Filter](scala_features/src/main/scala/app/impl/finagle/TimeoutFilter.scala)**
 
+![My image](scala_features/src/main/resources/img/gologo.jpg)
+# Go features
+
+Examples of some ported features of [Golang](https://golang.org/) in scala.
+
+* **[Go routine & Channel](scala_features/src/main/scala/app/impl/go/GoRoutineAndChannel.scala)**
+
 ![My image](scala_features/src/main/resources/img/design.png)
 # Design patterns
 
@@ -154,13 +161,6 @@ Examples of how Scala and Haskell can look alike.
 Examples of use Tagless Final encode to enjoy the potential of free structures.
 
 * **[Tagless](scala_features/src/main/scala/app/impl/tagless/TagLessFeature.scala)**
-
-![My image](scala_features/src/main/resources/img/gologo.jpg)
-# Go features
-
-Examples of some ported features of [Golang](https://golang.org/) in scala.
-
-* **[Go routine & Channel](scala_features/src/main/scala/app/impl/go/GoRoutineAndChannel.scala)**
 
 # Macros
 
