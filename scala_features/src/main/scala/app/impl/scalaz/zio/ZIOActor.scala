@@ -1,6 +1,6 @@
 package app.impl.scalaz.zio
 
-import ZIOActorSystem.{ActorQueue, Capacity, Permit, ZIOActor, createActor}
+import ZIOActor.{ActorQueue, Capacity, Permit, ZIOActor, createActor}
 import org.junit.Test
 import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
 
@@ -23,7 +23,7 @@ import scala.concurrent.duration._
   * To ensure we release the semaphore, even in error cases we use [bracket] which provide a
   * before-after-run task where we acquire the semaphore in the before, and we release in the after
   */
-object ZIOActorSystem extends DefaultRuntime {
+object ZIOActor extends DefaultRuntime {
 
   trait InboxStrategy
 
@@ -106,9 +106,9 @@ object ZIOActorSystem extends DefaultRuntime {
 
 }
 
-class ZIOActorSystem extends DefaultRuntime {
+class ZIOActor extends DefaultRuntime {
 
-  val myZioActor: ZIOActor = ZIOActorSystem.createActor(Capacity(1000), Permit(15))
+  val myZioActor = createActor(Capacity(1000), Permit(15))
 
   @Test
   def actorTell(): Unit = {
