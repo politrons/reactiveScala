@@ -108,7 +108,7 @@ object ZIOActorSystem extends DefaultRuntime {
 
 class ZIOActorSystem extends DefaultRuntime {
 
-  val myZioActor: ZIOActor = createActor(Capacity(1000), Permit(15))
+  val myZioActor: ZIOActor = ZIOActorSystem.createActor(Capacity(1000), Permit(15))
 
   @Test
   def actorTell(): Unit = {
