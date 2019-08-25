@@ -5,7 +5,8 @@ import org.junit.Test
 import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
 import ZIOActor.ActorQueue
 
-import scala.concurrent.Promise
+import scala.concurrent.{Await, Future, Promise}
+import scala.concurrent.duration._
 
 /**
   * ZIOActor to provide async back-pressure, bulkhead pattern.
@@ -43,10 +44,10 @@ object ZIOActor extends DefaultRuntime {
   /**
     * Function to configure which strategy for the inbox it will be configured
     */
-  val inboxStrategy: Capacity => InboxStrategy => UIO[Queue[ZIO[Any, Nothing, Any]]] = capacity => {
-    case Bounded() => Queue.bounded[ZIO[Any, Nothing, Any]](capacity.value)
-    case Sliding() => Queue.sliding[ZIO[Any, Nothing, Any]](capacity.value)
-    case Dropping() => Queue.dropping[ZIO[Any, Nothing, Any]](capacity.value)
+  val inboxStrategy: Capacity => InboxStrategy => UIO[Queue[(Promise[Any], ZIO[Any, Nothing, Any])]] = capacity => {
+    case Bounded() => Queue.bounded[(Promise[Any], ZIO[Any, Nothing, Any])](capacity.value)
+    case Sliding() => Queue.sliding[(Promise[Any], ZIO[Any, Nothing, Any])](capacity.value)
+    case Dropping() => Queue.dropping[(Promise[Any], ZIO[Any, Nothing, Any])](capacity.value)
   }
 
   /**
@@ -59,33 +60,45 @@ object ZIOActor extends DefaultRuntime {
     */
   def createActor(capacity: Capacity = Capacity(100),
                   permit: Permit = Permit(10),
-                  strategy: InboxStrategy = Bounded()): Queue[ZIO[Any, Nothing, Any]] = unsafeRun {
+                  strategy: InboxStrategy = Bounded()): Queue[(Promise[Any], ZIO[Any, Nothing, Any])] = unsafeRun {
     for {
       semaphore <- Semaphore.make(permits = permit.value)
       query <- inboxStrategy(capacity)(strategy)
       _ <- query.take.flatMap(program => {
         semaphore.acquire.bracket(_ => semaphore.release) { _ =>
-          program
+          for {
+            response <- program._2
+            _ <- ZIO.effect(program._1.success(response))
+          } yield ()
         }
       }).forever.fork
     } yield query
 
   }
 
-  //Ask patter pretty soon!
-
-
   /**
     * Extension method class to provide a DSL to interact once the actor is created by [createActor]
     */
-  implicit class ActorQueue(queue: Queue[ZIO[Any, Nothing, Any]]) {
+  implicit class ActorQueue(queue: Queue[(Promise[Any], ZIO[Any, Nothing, Any])]) {
 
     def tell(program: ZIO[Any, Nothing, Any]): Unit = {
-      unsafeRun(queue.offer(program))
+      unsafeRun(queue.offer((Promise[Any], program)))
     }
 
     def !(program: ZIO[Any, Nothing, Any]): Unit = {
-      unsafeRun(queue.offer(program))
+      unsafeRun(queue.offer((Promise[Any], program)))
+    }
+
+    def ask(program: ZIO[Any, Nothing, Any]): Future[Any] = {
+      val promise = Promise[Any]
+      unsafeRun(queue.offer((promise, program)))
+      promise.future
+    }
+
+    def ?(program: ZIO[Any, Nothing, Any]): Future[Any] = {
+      val promise = Promise[Any]
+      unsafeRun(queue.offer((promise, program)))
+      promise.future
     }
   }
 
@@ -93,7 +106,7 @@ object ZIOActor extends DefaultRuntime {
 
 class ZIOActor extends DefaultRuntime {
 
-  val myZioActor: Queue[ZIO[Any, Nothing, Any]] = ZIOActor.createActor(Capacity(1000), Permit(15))
+  val myZioActor = ZIOActor.createActor(Capacity(1000), Permit(15))
 
   @Test
   def actorTell(): Unit = {
@@ -122,5 +135,34 @@ class ZIOActor extends DefaultRuntime {
     //Sugar style
     myZioActor ! helloWorldProgram
 
+  }
+
+  @Test
+  def actorAsk(): Unit = {
+    runActorAskProgram("Hello Actor in Future ZIO World")
+    runActorAskProgram("Reactive and Pure functional programing in Future")
+    Thread.sleep(1000)
+  }
+
+  /**
+    * A test program that it send to the actor using Fire & Forget patter with [tell] or [!] as it does in Akka
+    */
+  private def runActorAskProgram(message: String) = {
+    val helloWorldProgram: ZIO[Any, Nothing, String] =
+      (for {
+        message <- ZIO.effect(message + " !!!")
+        upper <- ZIO.effect(message.toUpperCase)
+      } yield upper).catchAll(t => {
+        ZIO.succeed("Unhandled Error")
+      })
+
+    //Normal
+    val future = myZioActor.ask(helloWorldProgram)
+    val value = Await.result(future, 10 seconds)
+    println(value)
+    //Sugar style
+    val future1 = myZioActor ? helloWorldProgram
+    val value1 = Await.result(future1, 10 seconds)
+    println(value1)
   }
 }
