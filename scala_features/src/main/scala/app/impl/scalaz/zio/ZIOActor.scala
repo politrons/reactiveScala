@@ -73,15 +73,7 @@ object ZIOActor extends DefaultRuntime {
   }
 
   //Ask patter pretty soon!
-//  def returnQueue(promise: Promise[_]) = unsafeRun {
-//    for {
-//      query <- Queue.bounded[ZIO[Any, Nothing, Any]](1000)
-//      result <- query.take.flatMap(program => {
-//        program
-//      }).forever.fork
-//      _ <- ZIO.effect(promise.success(result))
-//    } yield query
-//  }
+
 
   /**
     * Extension method class to provide a DSL to interact once the actor is created by [createActor]
