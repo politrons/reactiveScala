@@ -46,7 +46,7 @@ object ZIOActor extends DefaultRuntime {
   val inboxStrategy: Capacity => InboxStrategy => UIO[Queue[ZIO[Any, Nothing, Any]]] = capacity => {
     case Bounded() => Queue.bounded[ZIO[Any, Nothing, Any]](capacity.value)
     case Sliding() => Queue.sliding[ZIO[Any, Nothing, Any]](capacity.value)
-    case Dropping() => Queue.sliding[ZIO[Any, Nothing, Any]](capacity.value)
+    case Dropping() => Queue.dropping[ZIO[Any, Nothing, Any]](capacity.value)
   }
 
   /**
