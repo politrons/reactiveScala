@@ -48,7 +48,7 @@ RxJava examples [here](https://github.com/politrons/reactive)
 * **[Implicit](scala_features/src/main/scala/app/impl/rx/ImplicitObservables.scala)**
 
 ![My image](scala_features/src/main/resources/img/scalaz.jpeg)
-# 
+# ScalaZ
 ScalaZ Principled Functional Programming in Scala.
 
 Here we cover with some practical examples, the most common use of ScalaZ API.
@@ -70,7 +70,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 * **[Category theory](scala_features/src/main/scala/app/impl/scalaz/CategoryTheory.scala)**
 
 ![My image](scala_features/src/main/resources/img/ZIO.png)
-# 
+# ZIO
 
 ZIO A type-safe, composable library for asynchronous and concurrent programming in Scala.
 
@@ -80,7 +80,7 @@ Here we cover with some practical examples, the most common use of ZIO library.
 * **[ZIO Actor](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOActor.scala)**
 
 ![My image](scala_features/src/main/resources/img/native.jpg)
-# 
+# Scala-native
 
 Scala Native is an optimizing ahead-of-time compiler and lightweight managed runtime designed specifically for Scala.
 
