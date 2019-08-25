@@ -2,7 +2,7 @@ package app.impl.scalaz.zio
 
 import app.impl.scalaz.zio.ZIOActor.{Capacity, Permit}
 import org.junit.Test
-import scalaz.zio.{DefaultRuntime, Queue, Semaphore, ZIO}
+import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
 import ZIOActor.ActorQueue
 
 /**
@@ -23,19 +23,43 @@ import ZIOActor.ActorQueue
   */
 object ZIOActor extends DefaultRuntime {
 
-  trait Strategy
+  trait InboxStrategy
+
+  /**
+    * ADT of the Actor
+    */
+  case class Bounded() extends InboxStrategy
+
+  case class Sliding() extends InboxStrategy
+
+  case class Dropping() extends InboxStrategy
 
   case class Capacity(value: Int) extends AnyVal
 
   case class Permit(value: Long) extends AnyVal
 
-  var inboxStrategy = Queue[ZIO[Any, Nothing, Any]]
+  /**
+    * Function to configure which strategy for the inbox it will be configured
+    */
+  val inboxStrategy: Capacity => InboxStrategy => UIO[Queue[ZIO[Any, Nothing, Any]]] = capacity => {
+    case Bounded() => Queue.bounded[ZIO[Any, Nothing, Any]](capacity.value)
+    case Sliding() => Queue.sliding[ZIO[Any, Nothing, Any]](capacity.value)
+    case Dropping() => Queue.sliding[ZIO[Any, Nothing, Any]](capacity.value)
+  }
 
+  /**
+    * Factory function to create the actor with the Possibility of some optional configuration
+    * @param capacity of the inbox. Once we reach we will Apply the [InboxStrategy]
+    * @param permit of max thread that can work async with this actor
+    * @param strategy of what to do with the Queue once we reach the maximum
+    * @return
+    */
   def createActor(capacity: Capacity = Capacity(100),
-                  permit: Permit = Permit(10)): Queue[ZIO[Any, Nothing, Any]] = unsafeRun {
+                  permit: Permit = Permit(10),
+                  strategy: InboxStrategy = Bounded()): Queue[ZIO[Any, Nothing, Any]] = unsafeRun {
     for {
       semaphore <- Semaphore.make(permits = permit.value)
-      query <- Queue.bounded[ZIO[Any, Nothing, Any]](capacity.value)
+      query <- inboxStrategy(capacity)(strategy)
       _ <- query.take.flatMap(program => {
         semaphore.acquire.bracket(_ => semaphore.release) { _ =>
           program
@@ -72,7 +96,10 @@ class ZIOActor extends DefaultRuntime {
     Thread.sleep(1000)
   }
 
-  private def runActorTellProgram(message: _root_.java.lang.String) = {
+  /**
+    * A test program that it send to the actor using Fire & Forget patter with [tell] or [!] as it does in Akka
+    */
+  private def runActorTellProgram(message: String) = {
     val helloWorldProgram: ZIO[Any, Nothing, Unit] =
       (for {
         message <- ZIO.effect(message + " !!!")
