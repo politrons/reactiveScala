@@ -5,6 +5,8 @@ import org.junit.Test
 import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
 import ZIOActor.ActorQueue
 
+import scala.concurrent.Promise
+
 /**
   * ZIOActor to provide async back-pressure, bulkhead pattern.
   *
@@ -49,8 +51,9 @@ object ZIOActor extends DefaultRuntime {
 
   /**
     * Factory function to create the actor with the Possibility of some optional configuration
+    *
     * @param capacity of the inbox. Once we reach we will Apply the [InboxStrategy]
-    * @param permit of max thread that can work async with this actor
+    * @param permit   of max thread that can work async with this actor
     * @param strategy of what to do with the Queue once we reach the maximum
     * @return
     */
@@ -68,6 +71,8 @@ object ZIOActor extends DefaultRuntime {
     } yield query
 
   }
+
+  //Ask patter pretty soon!
 
   /**
     * Extension method class to provide a DSL to interact once the actor is created by [createActor]
