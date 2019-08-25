@@ -24,6 +24,7 @@ dependencies {
     compile group: 'org.glassfish.grizzly', name: 'grizzly-http-server', version: '2.4.0'
     compile group: 'org.scalaz', name: 'scalaz-zio_2.12', version: '0.19'
     compile 'org.scala-lang:scala-library:2.12.8'
+    compile group: 'dev.zio', name: 'zio_2.12', version: '1.0.0-RC11-1'
 
     compile project(':macros')
     compile project(':h2')
