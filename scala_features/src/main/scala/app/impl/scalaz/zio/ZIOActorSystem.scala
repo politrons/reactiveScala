@@ -1,9 +1,8 @@
 package app.impl.scalaz.zio
 
-import app.impl.scalaz.zio.ZIOActor.{Capacity, Permit}
+import ZIOActorSystem.{ActorQueue, Capacity, Permit, ZIOActor, createActor}
 import org.junit.Test
 import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
-import ZIOActor.ActorQueue
 
 import scala.concurrent.{Await, Future, Promise}
 import scala.concurrent.duration._
@@ -24,7 +23,7 @@ import scala.concurrent.duration._
   * To ensure we release the semaphore, even in error cases we use [bracket] which provide a
   * before-after-run task where we acquire the semaphore in the before, and we release in the after
   */
-object ZIOActor extends DefaultRuntime {
+object ZIOActorSystem extends DefaultRuntime {
 
   trait InboxStrategy
 
@@ -40,6 +39,8 @@ object ZIOActor extends DefaultRuntime {
   case class Capacity(value: Int) extends AnyVal
 
   case class Permit(value: Long) extends AnyVal
+
+  case class ZIOActor(inbox: Queue[(Promise[Any], ZIO[Any, Nothing, Any])])
 
   /**
     * Function to configure which strategy for the inbox it will be configured
@@ -60,11 +61,12 @@ object ZIOActor extends DefaultRuntime {
     */
   def createActor(capacity: Capacity = Capacity(100),
                   permit: Permit = Permit(10),
-                  strategy: InboxStrategy = Bounded()): Queue[(Promise[Any], ZIO[Any, Nothing, Any])] = unsafeRun {
+                  strategy: InboxStrategy = Bounded()): ZIOActor = unsafeRun {
     for {
       semaphore <- Semaphore.make(permits = permit.value)
-      query <- inboxStrategy(capacity)(strategy)
-      _ <- query.take.flatMap(program => {
+      queue <- inboxStrategy(capacity)(strategy)
+      zioActor <- ZIO.succeed(ZIOActor(queue))
+      _ <- queue.take.flatMap(program => {
         semaphore.acquire.bracket(_ => semaphore.release) { _ =>
           for {
             response <- program._2
@@ -72,41 +74,41 @@ object ZIOActor extends DefaultRuntime {
           } yield ()
         }
       }).forever.fork
-    } yield query
+    } yield zioActor
 
   }
 
   /**
     * Extension method class to provide a DSL to interact once the actor is created by [createActor]
     */
-  implicit class ActorQueue(queue: Queue[(Promise[Any], ZIO[Any, Nothing, Any])]) {
+  implicit class ActorQueue(zioActor: ZIOActor) {
 
     def tell(program: ZIO[Any, Nothing, Any]): Unit = {
-      unsafeRun(queue.offer((Promise[Any], program)))
+      unsafeRun(zioActor.inbox.offer((Promise[Any], program)))
     }
 
     def !(program: ZIO[Any, Nothing, Any]): Unit = {
-      unsafeRun(queue.offer((Promise[Any], program)))
+      unsafeRun(zioActor.inbox.offer((Promise[Any], program)))
     }
 
     def ask(program: ZIO[Any, Nothing, Any]): Future[Any] = {
       val promise = Promise[Any]
-      unsafeRun(queue.offer((promise, program)))
+      unsafeRun(zioActor.inbox.offer((promise, program)))
       promise.future
     }
 
     def ?(program: ZIO[Any, Nothing, Any]): Future[Any] = {
       val promise = Promise[Any]
-      unsafeRun(queue.offer((promise, program)))
+      unsafeRun(zioActor.inbox.offer((promise, program)))
       promise.future
     }
   }
 
 }
 
-class ZIOActor extends DefaultRuntime {
+class ZIOActorSystem extends DefaultRuntime {
 
-  val myZioActor = ZIOActor.createActor(Capacity(1000), Permit(15))
+  val myZioActor: ZIOActor = createActor(Capacity(1000), Permit(15))
 
   @Test
   def actorTell(): Unit = {
