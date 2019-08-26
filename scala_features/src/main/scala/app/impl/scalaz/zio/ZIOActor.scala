@@ -1,6 +1,6 @@
 package app.impl.scalaz.zio
 
-import ZIOActor.{ActorQueue, Capacity, Permit, ZIOActor, createActor}
+import app.impl.scalaz.zio.ZIOActorSystem.{Capacity, Permit, ZIOActor, createActor}
 import org.junit.Test
 import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
 
@@ -23,7 +23,7 @@ import scala.concurrent.duration._
   * To ensure we release the semaphore, even in error cases we use [bracket] which provide a
   * before-after-run task where we acquire the semaphore in the before, and we release in the after
   */
-object ZIOActor extends DefaultRuntime {
+object ZIOActorSystem extends DefaultRuntime {
 
   trait InboxStrategy
 
@@ -40,15 +40,15 @@ object ZIOActor extends DefaultRuntime {
 
   case class Permit(value: Long) extends AnyVal
 
-  case class ZIOActor(inbox: Queue[(Promise[Any], ZIO[Any, Nothing, Any])])
+  case class ZIOActor[T](inbox: Queue[(Promise[T], ZIO[Any, Nothing, T])])
 
   /**
     * Function to configure which strategy for the inbox it will be configured
     */
-  val inboxStrategy: Capacity => InboxStrategy => UIO[Queue[(Promise[Any], ZIO[Any, Nothing, Any])]] = capacity => {
-    case Bounded() => Queue.bounded[(Promise[Any], ZIO[Any, Nothing, Any])](capacity.value)
-    case Sliding() => Queue.sliding[(Promise[Any], ZIO[Any, Nothing, Any])](capacity.value)
-    case Dropping() => Queue.dropping[(Promise[Any], ZIO[Any, Nothing, Any])](capacity.value)
+  def inboxStrategy[T]: Capacity => InboxStrategy => UIO[Queue[(Promise[T], ZIO[Any, Nothing, T])]] = capacity => {
+    case Bounded() => Queue.bounded[(Promise[T], ZIO[Any, Nothing, T])](capacity.value)
+    case Sliding() => Queue.sliding[(Promise[T], ZIO[Any, Nothing, T])](capacity.value)
+    case Dropping() => Queue.dropping[(Promise[T], ZIO[Any, Nothing, T])](capacity.value)
   }
 
   /**
@@ -59,13 +59,13 @@ object ZIOActor extends DefaultRuntime {
     * @param strategy of what to do with the Queue once we reach the maximum
     * @return
     */
-  def createActor(capacity: Capacity = Capacity(100),
+  def createActor[T](capacity: Capacity = Capacity(100),
                   permit: Permit = Permit(10),
-                  strategy: InboxStrategy = Bounded()): ZIOActor = unsafeRun {
+                  strategy: InboxStrategy = Bounded()): ZIOActor[T] = unsafeRun {
     for {
       semaphore <- Semaphore.make(permits = permit.value)
-      queue <- inboxStrategy(capacity)(strategy)
-      zioActor <- ZIO.succeed(ZIOActor(queue))
+      queue <- inboxStrategy[T](capacity)(strategy)
+      zioActor <- ZIO.succeed(ZIOActor[T](queue))
       _ <- queue.take.flatMap(program => {
         semaphore.acquire.bracket(_ => semaphore.release) { _ =>
           for {
@@ -81,24 +81,24 @@ object ZIOActor extends DefaultRuntime {
   /**
     * Extension method class to provide a DSL to interact once the actor is created by [createActor]
     */
-  implicit class ActorQueue(zioActor: ZIOActor) {
+  implicit class ActorQueue[T](zioActor: ZIOActor[T]) {
 
-    def tell(program: ZIO[Any, Nothing, Any]): Unit = {
-      unsafeRun(zioActor.inbox.offer((Promise[Any], program)))
+    def tell(program: ZIO[Any, Nothing, T]): Unit = {
+      unsafeRun(zioActor.inbox.offer((Promise[T], program)))
     }
 
-    def !(program: ZIO[Any, Nothing, Any]): Unit = {
-      unsafeRun(zioActor.inbox.offer((Promise[Any], program)))
+    def !(program: ZIO[Any, Nothing, T]): Unit = {
+      unsafeRun(zioActor.inbox.offer((Promise[T], program)))
     }
 
-    def ask(program: ZIO[Any, Nothing, Any]): Future[Any] = {
-      val promise = Promise[Any]
+    def ask(program: ZIO[Any, Nothing, T]): Future[T] = {
+      val promise = Promise[T]
       unsafeRun(zioActor.inbox.offer((promise, program)))
       promise.future
     }
 
-    def ?(program: ZIO[Any, Nothing, Any]): Future[Any] = {
-      val promise = Promise[Any]
+    def ?(program: ZIO[Any, Nothing, T]): Future[T] = {
+      val promise = Promise[T]
       unsafeRun(zioActor.inbox.offer((promise, program)))
       promise.future
     }
@@ -108,7 +108,7 @@ object ZIOActor extends DefaultRuntime {
 
 class ZIOActor extends DefaultRuntime {
 
-  val myZioActor = createActor(Capacity(1000), Permit(15))
+  val myZioActorUnit: ZIOActorSystem.ZIOActor[Unit] = createActor[Unit](Capacity(1000), Permit(15))
 
   @Test
   def actorTell(): Unit = {
@@ -132,12 +132,14 @@ class ZIOActor extends DefaultRuntime {
       })
 
     //Normal
-    myZioActor.tell(helloWorldProgram)
+    myZioActorUnit.tell(helloWorldProgram)
 
     //Sugar style
-    myZioActor ! helloWorldProgram
+    myZioActorUnit ! helloWorldProgram
 
   }
+
+  val myZioActorString: ZIOActorSystem.ZIOActor[String] = createActor[String](Capacity(1000), Permit(15))
 
   @Test
   def actorAsk(): Unit = {
@@ -159,11 +161,11 @@ class ZIOActor extends DefaultRuntime {
       })
 
     //Normal
-    val future = myZioActor.ask(helloWorldProgram)
+    val future = myZioActorString.ask(helloWorldProgram)
     val value = Await.result(future, 10 seconds)
     println(value)
     //Sugar style
-    val future1 = myZioActor ? helloWorldProgram
+    val future1 = myZioActorString ? helloWorldProgram
     val value1 = Await.result(future1, 10 seconds)
     println(value1)
   }
