@@ -103,8 +103,8 @@ object ZIOActorSystem extends DefaultRuntime {
       promise.future
     }
   }
-
 }
+
 
 class ZIOActor extends DefaultRuntime {
 

@@ -45,7 +45,6 @@ class ZIOMonadWorkshop {
   case class UserError(desc: String) extends Exception
 
 
-
   //  @Test
   //  def mainProgramWithEffects(): Unit = {
   //    val car1 = createCar("Audi")
@@ -78,5 +77,46 @@ class ZIOMonadWorkshop {
   //    val either = main.unsafeRun(value)
   //    println(either)
   //  }
+
+
+  @Test
+  def foreachZIO(): Unit = {
+    val strings = main.unsafeRun((for {
+      xx <- ZIO.foreach(List[String]("hello", "zio", "world"))(value => {
+        ZIO.effect(value.toUpperCase)
+      })
+
+    } yield xx).catchAll(t => ZIO.succeed(List(t.getMessage))))
+    println(strings)
+  }
+
+  @Test
+  def foreachZIOWithError(): Unit = {
+    val strings = main.unsafeRun((for {
+      xx <- ZIO.foreach(List[String]("hello", null, "world"))(value => {
+        ZIO.effect(value.toUpperCase)
+      })
+
+    } yield xx).catchAll(t => ZIO.succeed(List("Some effect might happens"))))
+    println(strings)
+  }
+
+  @Test
+  def zioWhen(): Unit = {
+    main.unsafeRun((for {
+      _ <- ZIO.when(true)(ZIO.effect(println("Hello if condition")))
+    } yield ()).catchAll(_ => ZIO.succeed("Else condition here")))
+
+    main.unsafeRun(for {
+      _ <- ZIO.when(false)(ZIO.effect(println("Hello if condition")))
+    } yield ())
+
+
+    main.unsafeRun(for {
+      _ <- ZIO.whenM(ZIO.effect(true))(ZIO.effect(println("Hello if effect condition")))
+    } yield ())
+
+  }
+
 
 }
