@@ -6,7 +6,7 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FeatureSpec, GivenW
 class FizzBuzzStep2Spec extends FeatureSpec with GivenWhenThen with BeforeAndAfterAll with BeforeAndAfterEach with ScalaFutures {
 
   feature("Step 2 corner cases ") {
-    scenario("positive numbers fizz for numbers that are multiply of 3") {
+    scenario("If the number contains a 3 you must output the text 'lucky'") {
       Given("a range number from 2 to 16")
       val from = 2
       val to = 14
