@@ -24,11 +24,10 @@ case class ShoppingCart() {
 
   private def getCheckoutInfo: CheckoutInfo = {
     basket.products.foldRight(CheckoutInfo(BigDecimal(0.0), 0, 0))((product, checkout) => {
-      val totalPrice = product.price + checkout.totalPrice
       product.description match {
-        case "apple" => checkout.copy(totalPrice = totalPrice, checkout.apples + 1, checkout.oranges)
-        case "orange" => checkout.copy(totalPrice = totalPrice, checkout.apples, checkout.oranges + 1)
-        case _ => checkout.copy(totalPrice = totalPrice)
+        case "apple" => checkout.copy(product.price + checkout.totalPrice, checkout.apples + 1, checkout.oranges)
+        case "orange" => checkout.copy(product.price + checkout.totalPrice, checkout.apples, checkout.oranges + 1)
+        case _ => checkout.copy(product.price + checkout.totalPrice)
       }
     })
   }
