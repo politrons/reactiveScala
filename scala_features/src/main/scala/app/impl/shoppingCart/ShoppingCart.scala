@@ -19,7 +19,7 @@ case class ShoppingCart() {
 
   def checkout(): BigDecimal = {
     val checkoutInfo = getCheckoutInfo
-    getOrangeDiscount(getAppleDiscount(checkoutInfo.totalPrice, checkoutInfo.apples), checkoutInfo.oranges)
+    applyDiscount("orange", applyDiscount("apple", checkoutInfo.totalPrice, checkoutInfo.apples), checkoutInfo.oranges)
   }
 
   private def getCheckoutInfo: CheckoutInfo = {
@@ -32,23 +32,13 @@ case class ShoppingCart() {
     })
   }
 
-  private def getOrangeDiscount: (BigDecimal, Int) => BigDecimal = {
-    (price, oranges) =>
-      if (oranges > 1) {
-        val discount = oranges / 3
-        price - 0.25 * discount
-      } else {
-        price
+  private def applyDiscount: (String, BigDecimal, Int) => BigDecimal = {
+    (product, price, productNumber) =>
+      product match {
+        case  _ if product == "orange" && productNumber > 1 => price - 0.25 * (productNumber / 3)
+        case  _ if product == "apple" && productNumber > 1 => price - 0.6 * (productNumber / 2)
+        case _ => price
       }
   }
 
-  private def getAppleDiscount: (BigDecimal, Int) => BigDecimal = {
-    (price, apples) =>
-      if (apples > 1) {
-        val discount = apples / 2
-        price - 0.6 * discount
-      } else {
-        price
-      }
-  }
 }
