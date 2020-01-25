@@ -10,7 +10,7 @@ case class ShoppingCart() {
 
   case class Basket(products: List[Product])
 
-  case class CheckoutInfo(totalPrice: BigDecimal, applesAndOranges: (Int, Int))
+  case class CheckoutInfo(totalPrice: BigDecimal, apples: Int, oranges: Int)
 
   def addProduct(productId: String, description: String, price: BigDecimal): List[Product] = {
     basket = basket.copy(products = basket.products ++ List(Product(productId, description, price)))
@@ -19,17 +19,17 @@ case class ShoppingCart() {
 
   def checkout(): BigDecimal = {
     val checkoutInfo = getCheckoutInfo
-    getOrangeDiscount(getAppleDiscount(checkoutInfo.totalPrice, checkoutInfo.applesAndOranges._1), checkoutInfo.applesAndOranges._2)
+    getOrangeDiscount(getAppleDiscount(checkoutInfo.totalPrice, checkoutInfo.apples), checkoutInfo.oranges)
   }
 
   private def getCheckoutInfo: CheckoutInfo = {
-    basket.products.foldRight(CheckoutInfo(BigDecimal(0.0), (0, 0)))((product, checkout) => {
-      val tuple = product.description match {
-        case "apple" => (checkout.applesAndOranges._1 + 1, checkout.applesAndOranges._2)
-        case "orange" => (checkout.applesAndOranges._1, checkout.applesAndOranges._2 + 1)
-        case _ => checkout.applesAndOranges
+    basket.products.foldRight(CheckoutInfo(BigDecimal(0.0), 0, 0))((product, checkout) => {
+      val totalPrice = product.price + checkout.totalPrice
+      product.description match {
+        case "apple" => checkout.copy(totalPrice = totalPrice, checkout.apples + 1, checkout.oranges)
+        case "orange" => checkout.copy(totalPrice = totalPrice, checkout.apples, checkout.oranges + 1)
+        case _ => checkout.copy(totalPrice = totalPrice)
       }
-      CheckoutInfo(product.price + checkout.totalPrice, tuple)
     })
   }
 
