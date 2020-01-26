@@ -44,7 +44,7 @@ case class ShoppingCart() {
     })
   }
 
-  def getDiscountProductsAmount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): Int = {
+  private def getDiscountProductsAmount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): Int = {
     checkoutInfo.discountProducts.find(discountProduct => discountProduct.isInstanceOf[T]) match {
       case Some(apple: Apple) => apple.amount + 1
       case Some(orange: Orange) => orange.amount + 1
@@ -52,7 +52,7 @@ case class ShoppingCart() {
     }
   }
 
-  def filterProductsWithDiscount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): List[DiscountProduct] = {
+  private def filterProductsWithDiscount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): List[DiscountProduct] = {
     checkoutInfo.discountProducts.filter(discountProduct => !discountProduct.isInstanceOf[T])
   }
 
