@@ -37,6 +37,35 @@ class ShoppingCartSpec extends FeatureSpec with GivenWhenThen {
       assert(shoppingCart.checkout() == 0.6)
     }
 
+    scenario("Add two apple and one orange total price is just one apple and orange price") {
+      Given("A shopping cart")
+      val shoppingCart = ShoppingCart()
+      When("I add an apple")
+      shoppingCart.addProduct("1", "apple", 0.6)
+      And("I add an apple")
+      shoppingCart.addProduct("1", "apple", 0.6)
+      When("I add an apple")
+      shoppingCart.addProduct("1", "orange", 1)
+      Then("total price is  one apple and orange ")
+      assert(shoppingCart.checkout() == 1.6)
+    }
+
+    scenario("Add two apple, one orange and a coke total price is just one apple, orange and coke price") {
+      Given("A shopping cart")
+      val shoppingCart = ShoppingCart()
+      When("I add an apple")
+      shoppingCart.addProduct("1", "apple", 0.6)
+      And("I add an apple")
+      shoppingCart.addProduct("1", "apple", 0.6)
+      When("I add an apple")
+      shoppingCart.addProduct("1", "orange", 1)
+      When("I add an apple")
+      shoppingCart.addProduct("1", "coke", 2)
+      Then("total price is  one apple and orange ")
+      assert(shoppingCart.checkout() == 3.6)
+    }
+
+
     scenario("Add three apple total price is just two apple price") {
       Given("A shopping cart")
       val shoppingCart = ShoppingCart()

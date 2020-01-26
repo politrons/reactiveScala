@@ -18,7 +18,7 @@ case class ShoppingCart() {
 
   case class Basket(products: List[Product])
 
-  case class CheckoutInfo(totalPrice: BigDecimal, apples: Apple, oranges: Orange)
+  case class CheckoutInfo(totalPrice: BigDecimal, discountProducts: List[DiscountProduct])
 
   // Logic
   // -------
@@ -28,28 +28,42 @@ case class ShoppingCart() {
     basket.products
   }
 
-  def checkout(): BigDecimal = {
-    val checkoutInfo = getCheckoutInfo
-    applyDiscount(applyDiscount(checkoutInfo.totalPrice, checkoutInfo.apples), checkoutInfo.oranges)
-  }
+  def checkout(): BigDecimal = applyDiscount(getCheckoutInfo)
 
   private def getCheckoutInfo: CheckoutInfo = {
-    basket.products.foldRight(CheckoutInfo(BigDecimal(0.0), Apple(0), Orange(0)))((product, checkout) => {
+    basket.products.foldRight(CheckoutInfo(BigDecimal(0.0), List()))((product, checkoutInfo) => {
       product.description match {
-        case AppleType => checkout.copy(product.price + checkout.totalPrice, Apple(checkout.apples.amount + 1), checkout.oranges)
-        case OrangeType => checkout.copy(product.price + checkout.totalPrice, checkout.apples, Orange(checkout.oranges.amount + 1))
-        case _ => checkout.copy(product.price + checkout.totalPrice)
+        case AppleType =>
+          val productsWithNoApple = filterProductsWithDiscount(checkoutInfo)
+          checkoutInfo.copy(product.price + checkoutInfo.totalPrice, Apple(getDiscountProductsAmount(checkoutInfo)) :: productsWithNoApple)
+        case OrangeType =>
+          val productsWithNoOranges = filterProductsWithDiscount(checkoutInfo)
+          checkoutInfo.copy(product.price + checkoutInfo.totalPrice, Orange(getDiscountProductsAmount(checkoutInfo)) :: productsWithNoOranges)
+        case _ => checkoutInfo.copy(product.price + checkoutInfo.totalPrice)
       }
     })
   }
 
-  private def applyDiscount: (BigDecimal, DiscountProduct) => BigDecimal = {
-    (price, discountProduct) =>
-      discountProduct match {
-        case apple: Apple if apple.amount > 1 => price - 0.6 * (apple.amount / 2)
-        case orange: Orange if orange.amount > 1 => price - 0.25 * (orange.amount / 3)
-        case _ => price
-      }
+  def getDiscountProductsAmount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): Int = {
+    checkoutInfo.discountProducts.find(discountProduct => discountProduct.isInstanceOf[T]) match {
+      case Some(apple: Apple) => apple.amount + 1
+      case Some(orange: Orange) => orange.amount + 1
+      case None => 1
+    }
+  }
+
+  def filterProductsWithDiscount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): List[DiscountProduct] = {
+    checkoutInfo.discountProducts.filter(discountProduct => !discountProduct.isInstanceOf[T])
+  }
+
+  private def applyDiscount: CheckoutInfo => BigDecimal = {
+    checkoutInfo =>
+      checkoutInfo.discountProducts.foldRight(checkoutInfo.totalPrice)((discountProduct, discountPrice) =>
+        discountProduct match {
+          case apple: Apple if apple.amount > 1 => discountPrice - 0.6 * (apple.amount / 2)
+          case orange: Orange if orange.amount > 1 => discountPrice - 0.25 * (orange.amount / 3)
+          case _ => discountPrice
+        })
   }
 
 }
