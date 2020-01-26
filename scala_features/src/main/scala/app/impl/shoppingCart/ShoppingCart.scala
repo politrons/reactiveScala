@@ -33,15 +33,15 @@ case class ShoppingCart() {
   private def getCheckoutInfo: CheckoutInfo = {
     basket.products.foldRight(CheckoutInfo(BigDecimal(0.0), List()))((product, checkoutInfo) => {
       product.description match {
-        case AppleType =>
-          val productsWithNoApple = filterProductsWithDiscount(checkoutInfo)
-          checkoutInfo.copy(product.price + checkoutInfo.totalPrice, Apple(getDiscountProductsAmount(checkoutInfo)) :: productsWithNoApple)
-        case OrangeType =>
-          val productsWithNoOranges = filterProductsWithDiscount(checkoutInfo)
-          checkoutInfo.copy(product.price + checkoutInfo.totalPrice, Orange(getDiscountProductsAmount(checkoutInfo)) :: productsWithNoOranges)
+        case AppleType => createNewCheckoutInfo(product, checkoutInfo, Apple(getDiscountProductsAmount(checkoutInfo)) :: filterProductsWithDiscountType(checkoutInfo))
+        case OrangeType => createNewCheckoutInfo(product, checkoutInfo, Orange(getDiscountProductsAmount(checkoutInfo)) :: filterProductsWithDiscountType(checkoutInfo))
         case _ => checkoutInfo.copy(product.price + checkoutInfo.totalPrice)
       }
     })
+  }
+
+  private def createNewCheckoutInfo(product: Product, checkoutInfo: CheckoutInfo, discountProducts: List[DiscountProduct]): CheckoutInfo = {
+    checkoutInfo.copy(product.price + checkoutInfo.totalPrice, discountProducts)
   }
 
   private def getDiscountProductsAmount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): Int = {
@@ -52,7 +52,7 @@ case class ShoppingCart() {
     }
   }
 
-  private def filterProductsWithDiscount[T <: DiscountProduct](checkoutInfo: CheckoutInfo): List[DiscountProduct] = {
+  private def filterProductsWithDiscountType[T <: DiscountProduct](checkoutInfo: CheckoutInfo): List[DiscountProduct] = {
     checkoutInfo.discountProducts.filter(discountProduct => !discountProduct.isInstanceOf[T])
   }
 
