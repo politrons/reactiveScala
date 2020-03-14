@@ -3,7 +3,7 @@ package app.impl.scalaz.zio
 import java.util.UUID
 
 import org.junit.Test
-import zio.{Has, IO, UIO, ZIO, ZLayer}
+import zio._
 
 class ZIOLayer {
 
@@ -37,14 +37,18 @@ class ZIOLayer {
     */
   @Test
   def featureZLayer(): Unit = {
+    // Behaviors
+    // ---------
     val stringDependency: ZLayer[Any, Any, Has[String]] = ZLayer.succeed("This is a simple layer")
     val value100: ZLayer[Any, Any, Has[Long]] = ZLayer.succeed(100)
-    val value1000: ZLayer[Any, Any, Has[Long]] = ZLayer.succeed(1000)
+    val value1000: ZLayer[Any, Any, Has[Long]] = ZLayer.fromEffect(ZIO.succeed(1000))
 
     val _: ZLayer[Any with Long, Any, Has[String] with Has[Long]] = stringDependency ++ value1000
 
     def getNumberProcess: ZIO[Has[Long], Nothing, Long] = ZIO.accessM(has => ZIO.succeed(has.get))
 
+    // Structures
+    // -----------
     val program: ZIO[Has[Long], Nothing, Unit] = for {
       number <- getNumberProcess
       _ <- ZIO.succeed(println(s"Number processed by environment: $number"))
@@ -68,7 +72,7 @@ class ZIOLayer {
     trait Service {
       def getBasket(basketId: BasketId): ZIO[Any, BasketError, Basket]
 
-      def createBasket(product: Product): IO[BasketError, Basket]
+      def createBasket(product: Product): IO[BasketError, BasketId]
     }
 
     /**
@@ -82,18 +86,20 @@ class ZIOLayer {
       */
     val basketDependencies: ZLayer[Any, Nothing, Has[BasketModule.Service]] = ZLayer.succeed(new Service {
       override def getBasket(basketId: BasketId): ZIO[Any, BasketError, Basket] = {
-
         ZIO.effect {
           baskets.find(entry => entry._1 == basketId) match {
             case Some(tuple) => tuple._2
             case None => throw new NullPointerException
           }
-
         }.catchAll(t => ZIO.fail(BasketError(t.getMessage)))
       }
 
-      override def createBasket(product: Product): IO[BasketError, Basket] =
-        ZIO.effect(Basket(BasketId(UUID.randomUUID().toString), List(product))).catchAll(t => ZIO.fail(BasketError(t.getMessage)))
+      override def createBasket(product: Product): IO[BasketError, BasketId] =
+        ZIO.effect {
+          val basket = Basket(BasketId(UUID.randomUUID().toString), List(product))
+          baskets = baskets ++ Map(basket.id -> basket)
+          basket.id
+        }.catchAll(t => ZIO.fail(BasketError(t.getMessage)))
     })
 
     /**
@@ -106,50 +112,45 @@ class ZIOLayer {
       *
       * @return
       */
-    def findBasketById(basketId: BasketId): ZIO[Has[BasketModule.Service], BasketError, Basket] =
+    def findBasketById(basketId: BasketId): ZIO[Has[BasketModule.Service], BasketError, Basket] = {
       ZIO.accessM(_.get.getBasket(basketId))
-
-    def createNewBasket(product: Product): ZIO[Has[BasketModule.Service], BasketError, Basket] =
-      ZIO.accessM(_.get.createBasket(product))
-  }
-
-  object Logging {
-
-    trait Service {
-      def info(s: String): UIO[Unit]
-
-      def error(s: String): UIO[Unit]
     }
 
+    def createNewBasket(product: Product): ZIO[Has[BasketModule.Service], BasketError, BasketId] = {
+      ZIO.accessM(_.get.createBasket(product))
+    }
+  }
 
-    import zio.console.Console
+  /**
+    * Another module where we encapsulate the logic of Products
+    */
+  object ProductModule {
 
-    val loggerDependencies: ZLayer[Console, Nothing, Has[Logging.Service]] = ZLayer.fromFunction(console =>
-      new Service {
-        def info(s: String): UIO[Unit] = console.get.putStrLn(s"info - $s")
+    trait Service {
+      def createProduct(name: String, price: Long): UIO[Product]
+    }
 
-        def error(s: String): UIO[Unit] = console.get.putStrLn(s"error - $s")
-      }
-    )
+    val productDependencies: ZLayer[Any, Nothing, Has[ProductModule.Service]] = ZLayer.succeed(new Service {
+      override def createProduct(name: String, price: Long): UIO[Product] = ZIO.succeed(Product(name, price))
+    })
 
-    //accessor methods
-    def info(s: String): ZIO[Has[Logging.Service], Nothing, Unit] =
-      ZIO.accessM(_.get.info(s))
-
-    def error(s: String): ZIO[Has[Logging.Service], Nothing, Unit] =
-      ZIO.accessM(_.get.error(s))
+    def createProduct(name: String, price: Long): ZIO[Has[ProductModule.Service], Nothing, Product] =
+      ZIO.accessM(_.get.createProduct(name, price))
   }
 
   @Test
   def runBasketProgram(): Unit = {
 
-    val createBasket: ZIO[Has[Logging.Service] with Has[BasketModule.Service], BasketError, Unit] = for {
-      _ <- Logging.info(s"Creating basket") // ZIO[Logging, Nothing, Unit]
-      basket <- BasketModule.createNewBasket(Product("coca-cole", 2)) // ZIO[UserRepo, DBError, Unit]
-      _ <- Logging.info(s"Basket created $basket") // ZIO[Logging, Nothing, Unit]
+    val createBasket: ZIO[Has[ProductModule.Service] with Has[BasketModule.Service], BasketError, Unit] = for {
+      product <- ProductModule.createProduct(s"Coke-cola", 100) // ZIO[Logging, Nothing, Unit]
+      _ <- ZIO.succeed(println(s"Product created $product"))
+      basketId <- BasketModule.createNewBasket(product) // ZIO[UserRepo, DBError, Unit]
+      _ <- ZIO.succeed(println(s"Basket created with id:$basketId"))
+      basket <- BasketModule.findBasketById(basketId)
+      _ <- ZIO.succeed(println(s"Basket found $basket"))
     } yield ()
 
-    val programDependencies = BasketModule.basketDependencies ++ Logging.loggerDependencies
+    val programDependencies = BasketModule.basketDependencies ++ ProductModule.productDependencies
 
     val program: ZIO[zio.ZEnv, Any, Unit] = createBasket.provideCustomLayer(programDependencies)
 
