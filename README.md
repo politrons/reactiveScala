@@ -78,6 +78,7 @@ Here we cover with some practical examples, the most common use of ZIO library.
 
 * **[ZIO monad](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOMonad.scala)**
 * **[ZIO Actor](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOActor.scala)**
+* **[ZIO ZLayer](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOMonad.scala)**
 
 ![My image](scala_features/src/main/resources/img/native.jpg)
 # Scala-native
