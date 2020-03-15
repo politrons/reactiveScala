@@ -78,6 +78,10 @@ class ZIOLayer {
     runtime.unsafeRun(program.provideCustomLayer(numberMultiply1000))
   }
 
+  /**
+    * In this example we provide a program with multi Has[A] layers in the Env type.
+    * Having this we can use this two Has layers in our program using [ZIO.accessM]
+    */
   @Test
   def programWithMultipleZLayer(): Unit = {
     // Unique program definition
@@ -85,7 +89,7 @@ class ZIOLayer {
     val program: ZIO[Has[CalcNumber] with Has[String], Any, Unit] = for {
       value <- ZIO.accessM[Has[String]](has => ZIO.succeed(has.get))
       _ <- ZIO.succeed(println(s"Value extracted from environment: $value"))
-      number <- getNumberProcess(10)
+      number <- getNumberProcess(1981)
       _ <- ZIO.succeed(println(s"Number processed by environment: $number"))
     } yield ()
 
@@ -95,8 +99,8 @@ class ZIOLayer {
   }
 
   /**
-    * Basket ZLayer example
-    * ---------------------
+    * Multi module Basket ZLayer example
+    * ----------------------------------
     *
     * Module object that keeps all logic, and only expose a Service with the functions to be used.
     * Internally those functions implementations it will use the Env argument provided into the program
@@ -196,7 +200,8 @@ class ZIOLayer {
       _ <- ZIO.succeed(println(s"Basket found $basket"))
     } yield ()
 
-    val programDependencies = BasketModule.basketDependencies ++ ProductModule.productDependencies
+    val programDependencies: ZLayer[Any, Any, Has[BasketModule.Service] with Has[ProductModule.Service]] =
+      BasketModule.basketDependencies ++ ProductModule.productDependencies
 
     val program: ZIO[zio.ZEnv, Any, Unit] = createBasket.provideCustomLayer(programDependencies)
 
