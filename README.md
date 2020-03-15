@@ -71,6 +71,7 @@ Here we cover with some practical examples, the most common use of ScalaZ API.
 
 ![My image](scala_features/src/main/resources/img/ZIO.png)
 # ZIO
+
 ZIO A type-safe, composable library for asynchronous and concurrent programming in Scala.
 
 Here we cover with some practical examples, the most common use of ZIO library.
