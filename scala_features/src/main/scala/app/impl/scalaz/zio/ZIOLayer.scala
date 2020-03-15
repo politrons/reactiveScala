@@ -5,6 +5,9 @@ import java.util.UUID
 import org.junit.Test
 import zio._
 
+/**
+  * ZLayer is a recipe type that receive an RInput and return a ROut, with the possible effect or E
+  */
 class ZIOLayer {
 
   // ADT
@@ -22,41 +25,73 @@ class ZIOLayer {
   val runtime: zio.Runtime[zio.ZEnv] = zio.Runtime.default
 
   /**
-    * ZLayer
+    * Structures/DSL
+    * ---------------
+    * This patter is quite similar to type classes, we have an trait and multiple implementation, and depending which one
+    * we pass as Env arg to the program we will have one behavior or another.
+    */
+  trait CalcNumber {
+    def multiplyBy(number: Long): UIO[Long]
+  }
+
+  def getNumberProcess(number: Long): ZIO[Has[CalcNumber], Nothing, Long] = ZIO.accessM(_.get.multiplyBy(number))
+
+  /**
+    * Behaviors
     * ---------
-    * ZLayer is a recipe type that receive an RInput and return a ROut, with the possible effect or E
-    *
-    * We can also combine ZLayer to be provided as Env arg for a ZIO program using ++
-    *
     * Using this pattern we can create multiple behavior of our program, and depending which
-    * implementation of ZLayer we provide, the program it will behave in one way or another.
-    *
-    * In this example we provide two execution of the same program, passing two different ZLayer as Env argument.
+    * implementation of ZLayer we provide to the program when we run it, the program it will behave in one way or another.
+    */
+  val numberMultiply100: ZLayer[Any, Nothing, Has[CalcNumber]] = ZLayer.succeed(new CalcNumber {
+    override def multiplyBy(number: Long): UIO[Long] = ZIO.succeed(number * 100)
+  })
+
+  val numberMultiply1000: ZLayer[Any, Nothing, Has[CalcNumber]] = ZLayer.succeed(new CalcNumber {
+    override def multiplyBy(number: Long): UIO[Long] = ZIO.succeed(number * 1000)
+  })
+
+  val stringValue: ZLayer[Any, Any, Has[String]] = ZLayer.succeed("This is a simple layer")
+
+  /**
+    * Using ++ operator we can combine multiple layers to have multi dependency to be passed as Env argument.
+    */
+  val multipleZLayer: ZLayer[Any, Any, Has[CalcNumber] with Has[String]] = numberMultiply100 ++ stringValue
+
+  /**
+    * In this example we provide two execution of the same program, passing two different ZLayer as Env argument
+    * [numberMultiply100] and [numberMultiply1000].
     * With this pattern using [ZLayer] and [Has] we are able to create a DSL [Program] and passing different ZLayer
     * we provide different behaviors.
     */
   @Test
-  def featureZLayer(): Unit = {
-    // Behaviors
-    // ---------
-    val stringDep: ZLayer[Any, Any, Has[String]] = ZLayer.succeed("This is a simple layer")
-    val value100Dep: ZLayer[Any, Any, Has[Long]] = ZLayer.succeed(100)
-    val value1000Dep: ZLayer[Any, Any, Has[Long]] = ZLayer.fromEffect(ZIO.succeed(1000))
-
-    val multiDependency: ZLayer[Any with Long, Any, Has[String] with Has[Long]] = stringDep ++ value100Dep
-
-    // Structures
-    // -----------
-    def getNumberProcess: ZIO[Has[Long], Nothing, Long] = ZIO.accessM(has => ZIO.succeed(has.get))
-
-    val program: ZIO[Has[Long], Nothing, Unit] = for {
-      number <- getNumberProcess
+  def programWithOneZLayer(): Unit = {
+    // Unique program definition
+    // --------------------------
+    val program: ZIO[Has[CalcNumber], Nothing, Unit] = for {
+      number <- getNumberProcess(10)
       _ <- ZIO.succeed(println(s"Number processed by environment: $number"))
     } yield ()
 
-    runtime.unsafeRun(program.provideSomeLayer(value100Dep))
-    runtime.unsafeRun(program.provideCustomLayer(value1000Dep))
+    // Multiple program executions behaviors
+    // --------------------------------------
+    runtime.unsafeRun(program.provideSomeLayer(numberMultiply100))
+    runtime.unsafeRun(program.provideCustomLayer(numberMultiply1000))
+  }
 
+  @Test
+  def programWithMultipleZLayer(): Unit = {
+    // Unique program definition
+    // --------------------------
+    val program: ZIO[Has[CalcNumber] with Has[String], Any, Unit] = for {
+      value <- ZIO.accessM[Has[String]](has => ZIO.succeed(has.get))
+      _ <- ZIO.succeed(println(s"Value extracted from environment: $value"))
+      number <- getNumberProcess(10)
+      _ <- ZIO.succeed(println(s"Number processed by environment: $number"))
+    } yield ()
+
+    // Multiple program executions behaviors
+    // --------------------------------------
+    runtime.unsafeRun(program.provideCustomLayer(multipleZLayer))
   }
 
   /**
