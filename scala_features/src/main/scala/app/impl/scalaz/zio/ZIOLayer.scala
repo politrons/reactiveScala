@@ -10,18 +10,6 @@ import zio._
   */
 class ZIOLayer {
 
-  // ADT
-  // ---------
-  case class BasketId(uuid: String)
-
-  case class Basket(id: BasketId, products: List[Product])
-
-  case class Product(name: String, price: Long)
-
-  case class BasketError(message: String)
-
-  var baskets: Map[BasketId, Basket] = Map()
-
   val runtime: zio.Runtime[zio.ZEnv] = zio.Runtime.default
 
   /**
@@ -101,7 +89,18 @@ class ZIOLayer {
   /**
     * Multi module Basket ZLayer example
     * ----------------------------------
-    *
+    */
+  case class BasketId(uuid: String)
+
+  case class Basket(id: BasketId, products: List[Product])
+
+  case class Product(name: String, price: Long)
+
+  case class BasketError(message: String)
+
+  var baskets: Map[BasketId, Basket] = Map()
+
+  /**
     * Module object that keeps all logic, and only expose a Service with the functions to be used.
     * Internally those functions implementations it will use the Env argument provided into the program
     * so basically we can change the implementation of the service if we have more than one [ZLayer]
