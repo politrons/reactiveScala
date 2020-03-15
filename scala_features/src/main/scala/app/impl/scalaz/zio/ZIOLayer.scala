@@ -122,7 +122,7 @@ class ZIOLayer {
   }
 
   /**
-    * Another module where we encapsulate the logic of Products
+    * Product module where we encapsulate the logic of Products
     */
   object ProductModule {
 
@@ -130,17 +130,27 @@ class ZIOLayer {
       def createProduct(name: String, price: Long): UIO[Product]
     }
 
+    /**
+      * Behavior of our module
+      * -----------------------
+      * We define the logic of the [Product service] like if a type class is.
+      * Once we have the [ZLayer it can be used to be passed as Env type to a program to provide behavior]
+      */
     val productDependencies: ZLayer[Any, Nothing, Has[ProductModule.Service]] = ZLayer.succeed(new Service {
       override def createProduct(name: String, price: Long): UIO[Product] = ZIO.succeed(Product(name, price))
     })
 
+    /**
+      * Structure of our module
+      * -----------------------
+      * The DSL of Product module. Using the Env Has[A] invoke the implementation for that environment
+      */
     def createProduct(name: String, price: Long): ZIO[Has[ProductModule.Service], Nothing, Product] =
       ZIO.accessM(_.get.createProduct(name, price))
   }
 
   @Test
   def runBasketProgram(): Unit = {
-
     val createBasket: ZIO[Has[ProductModule.Service] with Has[BasketModule.Service], BasketError, Unit] = for {
       product <- ProductModule.createProduct(s"Coke-cola", 100) // ZIO[Logging, Nothing, Unit]
       _ <- ZIO.succeed(println(s"Product created $product"))
