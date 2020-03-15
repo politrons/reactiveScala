@@ -39,27 +39,30 @@ class ZIOLayer {
   def featureZLayer(): Unit = {
     // Behaviors
     // ---------
-    val stringDependency: ZLayer[Any, Any, Has[String]] = ZLayer.succeed("This is a simple layer")
-    val value100: ZLayer[Any, Any, Has[Long]] = ZLayer.succeed(100)
-    val value1000: ZLayer[Any, Any, Has[Long]] = ZLayer.fromEffect(ZIO.succeed(1000))
+    val stringDep: ZLayer[Any, Any, Has[String]] = ZLayer.succeed("This is a simple layer")
+    val value100Dep: ZLayer[Any, Any, Has[Long]] = ZLayer.succeed(100)
+    val value1000Dep: ZLayer[Any, Any, Has[Long]] = ZLayer.fromEffect(ZIO.succeed(1000))
 
-    val _: ZLayer[Any with Long, Any, Has[String] with Has[Long]] = stringDependency ++ value1000
-
-    def getNumberProcess: ZIO[Has[Long], Nothing, Long] = ZIO.accessM(has => ZIO.succeed(has.get))
+    val multiDependency: ZLayer[Any with Long, Any, Has[String] with Has[Long]] = stringDep ++ value100Dep
 
     // Structures
     // -----------
+    def getNumberProcess: ZIO[Has[Long], Nothing, Long] = ZIO.accessM(has => ZIO.succeed(has.get))
+
     val program: ZIO[Has[Long], Nothing, Unit] = for {
       number <- getNumberProcess
       _ <- ZIO.succeed(println(s"Number processed by environment: $number"))
     } yield ()
 
-    runtime.unsafeRun(program.provideSomeLayer(value100))
-    runtime.unsafeRun(program.provideCustomLayer(value1000))
+    runtime.unsafeRun(program.provideSomeLayer(value100Dep))
+    runtime.unsafeRun(program.provideCustomLayer(value1000Dep))
 
   }
 
   /**
+    * Basket ZLayer example
+    * ---------------------
+    *
     * Module object that keeps all logic, and only expose a Service with the functions to be used.
     * Internally those functions implementations it will use the Env argument provided into the program
     * so basically we can change the implementation of the service if we have more than one [ZLayer]
@@ -109,8 +112,6 @@ class ZIOLayer {
       * when we use [ZIO.accessM], which it will get the function argument of the Env defined in the type.
       * So we can use it, to extract that Env value and transform the value into A
       * Here as Env we pass the service we expose so we can then invoke internally his use.
-      *
-      * @return
       */
     def findBasketById(basketId: BasketId): ZIO[Has[BasketModule.Service], BasketError, Basket] = {
       ZIO.accessM(_.get.getBasket(basketId))
@@ -152,9 +153,9 @@ class ZIOLayer {
   @Test
   def runBasketProgram(): Unit = {
     val createBasket: ZIO[Has[ProductModule.Service] with Has[BasketModule.Service], BasketError, Unit] = for {
-      product <- ProductModule.createProduct(s"Coke-cola", 100) // ZIO[Logging, Nothing, Unit]
+      product <- ProductModule.createProduct(s"Coke-cola", 100)
       _ <- ZIO.succeed(println(s"Product created $product"))
-      basketId <- BasketModule.createNewBasket(product) // ZIO[UserRepo, DBError, Unit]
+      basketId <- BasketModule.createNewBasket(product)
       _ <- ZIO.succeed(println(s"Basket created with id:$basketId"))
       basket <- BasketModule.findBasketById(basketId)
       _ <- ZIO.succeed(println(s"Basket found $basket"))
