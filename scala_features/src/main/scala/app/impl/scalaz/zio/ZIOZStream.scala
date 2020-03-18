@@ -78,7 +78,7 @@ class ZIOZStream extends DefaultRuntime {
     * similar as how Akka actor works. Here we create a Queue we pass to the Stream, and we specify that the stream
     * it will work [forever] in another fiber [fork] then, run the program and it return the Queue.
     * Once we have the Queue we dont have to do more than just push elements in it, using [offer] operator,
-    * which it will create a ZIO program, so we have to evaluated.
+    *
     */
   @Test
   def streamQueue(): Unit = {
