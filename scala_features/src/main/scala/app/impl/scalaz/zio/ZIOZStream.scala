@@ -7,8 +7,8 @@ import scalaz.zio.stream._
 import scala.util.Random
 
 /**
-  * ZIO ZStream works quite similar as Akka Stream DSL works, here we show examples of the DSL to create
-  * Streams and Sinks
+  * ZIO ZStream works quite similar like Akka Stream DSL does. Here we show examples of the DSL to create
+  * Streams and Sinks, and how they work together.
   */
 class ZIOZStream extends DefaultRuntime {
 
