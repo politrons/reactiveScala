@@ -101,6 +101,24 @@ class ZIOZStream extends DefaultRuntime {
   }
 
   /**
+    * Merge operator allow us to merge different Stream outputs into just one, one of the coolest thing about this merge
+    * operator is that allow merge together different types after being processed.
+    */
+  @Test
+  def streamMerge(): Unit = {
+    val mergeProgram =
+      ZStream("Hello")
+        .merge(ZStream("Zio").map(value => value.toUpperCase))
+        .merge(ZStream(2.0))
+        .merge(ZStream("stream").map(value => value.concat("!")))
+        .merge(ZStream(981).map(value => value + 1000))
+        .map(value => s"@$value@")
+        .run(Sink.collect[String])
+    println(unsafeRun(mergeProgram))
+
+  }
+
+  /**
     * Sink
     * ------
     * The DSL of the end of the pipeline once we want to transform the Stream into ZIO program output.
