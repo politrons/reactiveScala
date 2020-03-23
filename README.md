@@ -31,6 +31,21 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Phantom Types](scala_features/src/main/scala/app/impl/scala/PhantomTypes.scala)**
 * **[Option](scala_features/src/main/scala/app/impl/scala/OptionFeature.scala)**
 
+# Scala ![My image](scala_features/src/main/resources/img/scala_small.jpg) features
+
+Here we cover with some practical examples, the new features of the version 3 
+
+* **[Given instances](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/GivenInstancesFeatures.scala)**
+* **[Implicit functions](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/ImplicitFunctionFeature.scala)**
+* **[Intersection types](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/IntersectionTypesFeature.scala)**
+* **[Union types](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/UnionTypesFeature.scala)**
+* **[Enum types](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/EnumTypesFeatures.scala)**
+* **[Type Lambda](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/TypeLambdaFeature.scala)**
+* **[Trait Params](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/TraitParamsFeature.scala)**
+* **[Extension methods](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/ExtensionMethodsFeature.scala)**
+* **[Export Clauses](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/ExportClausesFeature.scala)**
+* **[Auto param tuples](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/AutoParamTuplingFeature.scala)**
+* **[Multiverse equality](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/MultiversalEqualityFeature.scala)**
 
 # ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
 
