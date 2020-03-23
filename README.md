@@ -31,7 +31,7 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Phantom Types](scala_features/src/main/scala/app/impl/scala/PhantomTypes.scala)**
 * **[Option](scala_features/src/main/scala/app/impl/scala/OptionFeature.scala)**
 
-# Scala ![My image](scala_features/src/main/resources/img/scala_small.jpg) features
+# Scala ![My image](scala_features/src/main/resources/img/scala_small.jpg)
 
 Here we cover with some practical examples, the new features of the version 3 
 
