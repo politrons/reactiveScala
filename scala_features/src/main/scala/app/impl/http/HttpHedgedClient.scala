@@ -9,6 +9,10 @@ import com.twitter.finagle.{Http, http}
 import com.twitter.util.{Duration, Future}
 import zio.{Has, UIO, URIO, ZIO, ZLayer}
 
+/**
+ * The whole idea behind this Http connector is about this paper of Google engineers [https://blog.acolyer.org/2015/01/15/the-tail-at-scale/]
+ * in particular the Hedged request pattern to improve the performance in communications between peers.
+ */
 object HttpHedgedClient {
 
   val runtime: zio.Runtime[zio.ZEnv] = zio.Runtime.default
