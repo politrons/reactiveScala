@@ -8,6 +8,8 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.{Http, http}
 import com.twitter.util.{Duration, Future}
 import zio.{Has, UIO, URIO, ZIO, ZLayer}
+import scala.concurrent.{Future => ScalaFuture}
+import scala.concurrent.Promise
 
 /**
  * The whole idea behind this Http connector is about this paper of Google engineers [https://blog.acolyer.org/2015/01/15/the-tail-at-scale/]
@@ -53,7 +55,7 @@ object HttpHedgedClient {
 
     def withHedged(times: Int): Unit
 
-    def run(): Future[Any]
+    def run(): ScalaFuture[Any]
 
   }
 
@@ -97,8 +99,9 @@ object HttpHedgedClient {
       httpClient = httpClient.copy(host = host)
     }
 
-    override def run(): Future[Any] = {
-      httpClient.client.newService(httpClient.host)(httpClient.request)
+    override def run(): ScalaFuture[Any] = {
+      val twitterFuture = httpClient.client.newService(httpClient.host)(httpClient.request)
+      twitterFuture.toScalaFuture
     }
 
     private def serialize(value: Any): String = {
@@ -149,7 +152,7 @@ object HttpHedgedClient {
     ZIO.access(_.get.withHost(host))
   }
 
-  def Run(): ZIO[Has[HttpHedgedClient.Service], Nothing, Future[Any]] = {
+  def Run(): ZIO[Has[HttpHedgedClient.Service], Nothing, ScalaFuture[Any]] = {
     for {
       hedgedProgram <- processHedgedProgram
       future <- hedgedProgram
@@ -160,18 +163,32 @@ object HttpHedgedClient {
    * Function responsible to get the hedged value passed in the DSL and run in parallel using [race] function
    * of ZIO all of them, having this pattern [Hedged request] over an idempotent API allow us, to ensure that
    * always a request/response is done correctly without have to apply a retry strategy which improve the performance,
-   *  with the cost of generate more traffic and produce also more Throughput in the server.
+   * with the cost of generate more traffic and produce also more Throughput in the server.
    */
-  private def processHedgedProgram: URIO[Has[Service], UIO[Future[Any]]] = {
+  private def processHedgedProgram: URIO[Has[Service], UIO[ScalaFuture[Any]]] = {
     ZIO.access[Has[Service]](hasService => {
       (1 to hasService.get.httpClient.hedged).toList.foldRight(ZIO.succeed(hasService.get.run()))((_, zio) => {
         for {
           fiber1 <- zio.fork
           fiber2 <- ZIO.succeed(hasService.get.run()).fork
-          result <- fiber1.join race fiber2.join
-        } yield result
+          future <- fiber1.join race fiber2.join
+        } yield future
       })
     })
   }
+
+  /**
+   * Implicit function to transform Twitter Future to Scala Future
+   */
+  implicit class TwitterFutureToScalaFuture[T](future: Future[T]) {
+
+    def toScalaFuture: ScalaFuture[T] = {
+      val promise = Promise[T]()
+      future.onSuccess(value => promise.success(value))
+      future.onFailure(t => promise.failure(t))
+      promise.future
+    }
+  }
+
 }
 

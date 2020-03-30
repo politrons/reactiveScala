@@ -1,8 +1,9 @@
 package app.impl.http
 
-import com.twitter.util.{Await, Future}
 import org.junit.Test
 import zio.{Has, ZIO}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 /**
  * Here we create our programs using the DSL of HttpHedgedClient, and using the different provide
@@ -25,7 +26,7 @@ class HedgedClientRunner {
     val programResponse: Future[Any] = HttpHedgedClient.runtime.unsafeRun {
       httpGetProgram.provideCustomLayer(HttpHedgedClient.finagleEngine)
     }
-    println(Await.ready(programResponse))
+    println(Await.ready(programResponse, 10 seconds))
   }
 
   @Test
@@ -41,7 +42,7 @@ class HedgedClientRunner {
     val programResponse: Future[Any] = HttpHedgedClient.runtime.unsafeRun {
       httpGetProgram.provideCustomLayer(HttpHedgedClient.finagleEngine)
     }
-    println(Await.ready(programResponse))
+    println(Await.ready(programResponse, 10 seconds))
   }
 
 }
