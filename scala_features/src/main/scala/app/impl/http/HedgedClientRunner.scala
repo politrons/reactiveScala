@@ -19,8 +19,8 @@ class HedgedClientRunner {
     for {
       _ <- HttpHedgedClient.Get()
       _ <- HttpHedgedClient.Host("www.google.com:80")
-      _ <- HttpHedgedClient.Timeout(5000)
-      _ <- HttpHedgedClient.Hedged(10)
+      _ <- HttpHedgedClient.Timeout(1000)
+      _ <- HttpHedgedClient.Hedged(4)
       future <- HttpHedgedClient.Run()
     } yield future
 
@@ -31,8 +31,8 @@ class HedgedClientRunner {
     HttpHedgedClient.Get()
       .flatMap(_ => HttpHedgedClient.Uri("/"))
       .flatMap(_ => HttpHedgedClient.Host("www.google.com:80"))
-      .flatMap(_ => HttpHedgedClient.Timeout(5000))
-      .flatMap(_ => HttpHedgedClient.Hedged(10))
+      .flatMap(_ => HttpHedgedClient.Timeout(1000))
+      .flatMap(_ => HttpHedgedClient.Hedged(4))
       .flatMap(_ => HttpHedgedClient.Run())
 
   /**
