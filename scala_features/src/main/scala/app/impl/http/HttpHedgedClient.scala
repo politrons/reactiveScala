@@ -2,14 +2,15 @@ package app.impl.http
 
 import java.util.concurrent.TimeUnit._
 
+import akka.http.scaladsl.model.{HttpMethods, HttpRequest}
 import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.twitter.finagle.http.Request
 import com.twitter.finagle.{Http, http}
 import com.twitter.util.{Duration, Future}
-import zio.{Has, UIO, URIO, ZIO, ZLayer}
-import scala.concurrent.{Future => ScalaFuture}
-import scala.concurrent.Promise
+import zio._
+
+import scala.concurrent.{Promise, Future => ScalaFuture}
 
 /**
  * The whole idea behind this Http connector is about this paper of Google engineers [https://blog.acolyer.org/2015/01/15/the-tail-at-scale/]
@@ -21,14 +22,28 @@ object HttpHedgedClient {
 
   private val objectMapper: ObjectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-  /**
-   * Internal ADT of the library to keep state. (Mmmmmmm maybe better a Monad state)
-   */
-  case class HttpClientInfo(hedged: Int = 1,
-                            host: String = "",
-                            client: Http.Client = Http.client,
-                            request: Request = http.Request(http.Method.Get, "/"))
+  var finagleClientInfo: FinagleClientInfo = FinagleClientInfo()
 
+  trait HttpClientInfo {
+
+    def getHedged: Int
+  }
+
+  /**
+   * Internal ADT of the library to keep state of Finagle configuration. (Mmmmmmm maybe better a Monad state)
+   */
+  case class FinagleClientInfo(hedged: Int = 1,
+                               host: String = "",
+                               client: Http.Client = Http.client,
+                               request: Request = http.Request(http.Method.Get, "/")) extends HttpClientInfo {
+
+    override def getHedged: Int = hedged
+  }
+
+  case class AkkaHttpClientInfo(hedged: Int = 1,
+                                request: HttpRequest = HttpRequest()) extends HttpClientInfo {
+    override def getHedged: Int = hedged
+  }
 
   /**
    * Definition of the library
@@ -39,7 +54,7 @@ object HttpHedgedClient {
    */
   trait Service {
 
-    var httpClient: HttpClientInfo = HttpClientInfo()
+    def getHttpClient: HttpClientInfo
 
     def withUri(uri: String): Unit
 
@@ -49,7 +64,7 @@ object HttpHedgedClient {
 
     def withPostMethod(): Unit
 
-    def withBody(body: Any): Unit
+    def withBody(body: String): Unit
 
     def withTimeout(time: Long): Unit
 
@@ -69,50 +84,77 @@ object HttpHedgedClient {
    */
   val finagleEngine: ZLayer[Any, Nothing, Has[Service]] = ZLayer.succeed(new Service {
 
+    override def getHttpClient: HttpClientInfo = finagleClientInfo
+
     override def withUri(uri: String): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.uri(uri))
+      finagleClientInfo = finagleClientInfo.copy(request = finagleClientInfo.request.uri(uri))
     }
 
     override def withGetMethod(): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.method(http.Method.Get))
+      finagleClientInfo = finagleClientInfo.copy(request = finagleClientInfo.request.method(http.Method.Get))
     }
 
     override def withPostMethod(): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.method(http.Method.Post))
+      finagleClientInfo = finagleClientInfo.copy(request = finagleClientInfo.request.method(http.Method.Post))
     }
 
-    override def withBody(body: Any): Unit = {
-      val request = httpClient.request
+    override def withBody(body: String): Unit = {
+      val request = finagleClientInfo.request
       request.contentString = serialize(body)
-      httpClient = httpClient.copy(request = request)
+      finagleClientInfo = finagleClientInfo.copy(request = request)
     }
 
     override def withHedged(times: Int): Unit = {
-      httpClient = httpClient.copy(hedged = times)
+      finagleClientInfo = finagleClientInfo.copy(hedged = times)
     }
 
     override def withTimeout(timeout: Long): Unit = {
-      httpClient = httpClient.copy(client = httpClient.client.withRequestTimeout(Duration(timeout, MILLISECONDS)))
+      finagleClientInfo = finagleClientInfo.copy(client = finagleClientInfo.client.withRequestTimeout(Duration(timeout, MILLISECONDS)))
     }
 
     override def withHost(host: String): Unit = {
-      httpClient = httpClient.copy(host = host)
+      finagleClientInfo = finagleClientInfo.copy(host = host)
     }
 
     override def run(): ScalaFuture[Any] = {
-      val twitterFuture = httpClient.client.newService(httpClient.host)(httpClient.request)
+      val twitterFuture = finagleClientInfo.client.newService(finagleClientInfo.host)(finagleClientInfo.request)
       twitterFuture.toScalaFuture
     }
-
-    private def serialize(value: Any): String = {
-      import java.io.StringWriter
-      val writer = new StringWriter()
-      objectMapper.writeValue(writer, value)
-      writer.toString
-    }
-
   })
 
+  val akkaEngine: ZLayer[Any, Nothing, Has[Service]] = ZLayer.succeed(new Service {
+
+    var httpClient: AkkaHttpClientInfo = AkkaHttpClientInfo()
+
+    override def getHttpClient: HttpClientInfo = httpClient
+
+    override def withUri(uri: String): Unit = {
+      httpClient = httpClient.copy(request = httpClient.request.withUri(uri))
+    }
+
+    override def withHost(host: String): Unit = {
+      httpClient = httpClient.copy(request = httpClient.request.withUri(host))
+    }
+
+    override def withGetMethod(): Unit = {
+      httpClient = httpClient.copy(request = httpClient.request.withMethod(HttpMethods.GET))
+    }
+
+    override def withPostMethod(): Unit = {
+      httpClient = httpClient.copy(request = httpClient.request.withMethod(HttpMethods.POST))
+    }
+
+    override def withBody(body: String): Unit = {
+      httpClient = httpClient.copy(request = httpClient.request.withEntity(body))
+
+    }
+
+    override def withTimeout(time: Long): Unit = ???
+
+    override def withHedged(times: Int): Unit = ???
+
+    override def run(): ScalaFuture[Any] = ???
+  })
 
   /**
    * DSL / Structure of Client
@@ -136,7 +178,7 @@ object HttpHedgedClient {
     ZIO.access(hasService => hasService.get.withPostMethod())
   }
 
-  def Body(body: Any): ZIO[Has[HttpHedgedClient.Service], Nothing, Unit] = {
+  def Body(body: String): ZIO[Has[HttpHedgedClient.Service], Nothing, Unit] = {
     ZIO.access(hasService => hasService.get.withBody(body))
   }
 
@@ -167,7 +209,7 @@ object HttpHedgedClient {
    */
   private def processHedgedProgram: URIO[Has[Service], UIO[ScalaFuture[Any]]] = {
     ZIO.access[Has[Service]](hasService => {
-      (1 to hasService.get.httpClient.hedged).toList.foldRight(ZIO.succeed(hasService.get.run()))((_, zio) => {
+      (1 to hasService.get.getHttpClient.getHedged).toList.foldRight(ZIO.succeed(hasService.get.run()))((_, zio) => {
         for {
           fiber1 <- zio.fork
           fiber2 <- ZIO.succeed(hasService.get.run()).fork
@@ -175,6 +217,13 @@ object HttpHedgedClient {
         } yield future
       })
     })
+  }
+
+  private def serialize(value: Any): String = {
+    import java.io.StringWriter
+    val writer = new StringWriter()
+    objectMapper.writeValue(writer, value)
+    writer.toString
   }
 
   /**
