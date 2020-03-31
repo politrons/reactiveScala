@@ -1,10 +1,12 @@
 package app.impl.http
 
+import app.impl.http.HttpHedgedClient.{HttpClientInfo, Service}
 import org.junit.Test
-import zio.{Has, ZIO}
+import zio.{Has, ZIO, ZLayer}
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 /**
  * Here we create our programs using the DSL of HttpHedgedClient, and using the different provide
@@ -63,6 +65,41 @@ class HedgedClientRunner {
       programWithSugar.provideCustomLayer(HttpHedgedClient.akkaEngine)
     }
     println(Await.ready(programResponse, 10 seconds))
+  }
+
+  @Test
+  def customEngine(): Unit = {
+
+    val customEngine = ZLayer.succeed(new Service {
+      override def getHttpClient: HttpHedgedClient.HttpClientInfo = new HttpClientInfo {
+        override def getHedged: Int = 1
+      }
+
+      override def withUri(uri: String): Unit = {}
+
+      override def withHost(host: String): Unit = {}
+
+      override def withGetMethod(): Unit = {}
+
+      override def withPostMethod(): Unit = {}
+
+      override def withBody(body: String): Unit = {}
+
+      override def withTimeout(time: Long): Unit = {}
+
+      override def withHedged(times: Int): Unit = {}
+
+      override def run(): Future[Any] = {
+        Future {
+          "Hello from custom engine. Pretty cool for testing right?"
+        }
+      }
+    })
+    val programResponse: Future[Any] = HttpHedgedClient.runtime.unsafeRun {
+      programWithSugar.provideCustomLayer(customEngine)
+    }
+    println(Await.ready(programResponse, 10 seconds))
+
   }
 
 }
