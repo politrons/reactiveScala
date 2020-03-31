@@ -152,7 +152,6 @@ The original project [here](https://monix.io/)
 
 * **[Stream feature](fs2/src/main/scala/StreamFeature.scala)**
 
-
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
 
@@ -183,6 +182,13 @@ Examples of some ported features of [Golang](https://golang.org/) in scala.
 Examples of how Scala and Haskell can look alike.
 
 * **[ScalaHaskell](scala_features/src/main/scala/app/impl/haskell/ScalaHaskell.scala)**
+
+# Hedged Http client
+
+Hedged requests: send the same requests to multiple servers, and use whatever response comes back first.
+
+* **[Connector](scala_features/src/main/scala/app/impl/http/HedgedClientRunner.scala)**
+* **[DSL Runner](scala_features/src/main/scala/app/impl/http/HedgedClientRunner.scala)**
 
 # Tagless Final
 

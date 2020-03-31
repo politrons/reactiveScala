@@ -1,6 +1,7 @@
 package app.impl.http
 
 import java.util.concurrent.TimeUnit._
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpMethods, HttpRequest}
@@ -9,12 +10,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PRO
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.twitter.finagle.http.Request
 import com.twitter.finagle.{http, Http => FinagleHttp}
-import com.twitter.util.{Duration, Future}
+import com.twitter.util.{Duration, Future => TwitterFuture}
 import zio._
-import scala.concurrent.{ExecutionContextExecutor, Promise, Future => ScalaFuture}
+
+import scala.concurrent.{Promise, Future => ScalaFuture}
 
 /**
- * The whole idea behind this Http connector is about this paper of Google engineers [https://blog.acolyer.org/2015/01/15/the-tail-at-scale/]
+ * The whole idea behind this Http connector is about this paper [https://blog.acolyer.org/2015/01/15/the-tail-at-scale/]
  * in particular the Hedged request pattern to improve the performance in communications between peers.
  */
 object HttpHedgedClient {
@@ -24,12 +26,11 @@ object HttpHedgedClient {
   private val objectMapper: ObjectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
 
   trait HttpClientInfo {
-
     def getHedged: Int
   }
 
   /**
-   * Internal ADT of the library to keep state of Finagle configuration. (Mmmmmmm maybe better a Monad state)
+   * Internal ADT of the library to keep state of Finagle service configuration. (Mmmmmmm maybe better a Monad state)
    */
   case class FinagleClientInfo(hedged: Int = 1,
                                host: String = "",
@@ -39,6 +40,9 @@ object HttpHedgedClient {
     override def getHedged: Int = hedged
   }
 
+  /**
+   * Internal ADT of the library to keep state of Akka service configuration.
+   */
   case class AkkaHttpClientInfo(hedged: Int = 1,
                                 request: HttpRequest = HttpRequest()) extends HttpClientInfo {
     override def getHedged: Int = hedged
@@ -220,6 +224,8 @@ object HttpHedgedClient {
    * of ZIO all of them, having this pattern [Hedged request] over an idempotent API allow us, to ensure that
    * always a request/response is done correctly without have to apply a retry strategy which improve the performance,
    * with the cost of generate more traffic and produce also more Throughput in the server.
+   * WIP: Hedged request to avoid doubling or tripling your computation load though, don’t send the hedging requests straight away.
+   * defer sending a secondary request until the first request has been outstanding for more than the 95th-percentile expected
    */
   private def processHedgedProgram: URIO[Has[Service], UIO[ScalaFuture[Any]]] = {
     ZIO.access[Has[Service]](hasService => {
@@ -243,7 +249,7 @@ object HttpHedgedClient {
   /**
    * Implicit function to transform Twitter Future to Scala Future
    */
-  implicit class TwitterFutureToScalaFuture[T](future: Future[T]) {
+  implicit class TwitterFutureToScalaFuture[T](future: TwitterFuture[T]) {
 
     def toScalaFuture: ScalaFuture[T] = {
       val promise = Promise[T]()
