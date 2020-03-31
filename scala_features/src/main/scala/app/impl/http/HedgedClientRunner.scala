@@ -1,89 +1,68 @@
 package app.impl.http
 
-import io.vertx.core.Vertx
-import io.vertx.core.http.HttpClient
 import org.junit.Test
 import zio.{Has, ZIO}
 
-import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
-import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
-import akka.stream.ActorMaterializer
-
-import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.concurrent.duration._
 
 /**
  * Here we create our programs using the DSL of HttpHedgedClient, and using the different provide
- * like finagle
+ * like finagle or Akka http
  */
 class HedgedClientRunner {
 
-  @Test
-  def withSugarSyntax(): Unit = {
-    val httpGetProgram: ZIO[Has[HttpHedgedClient.Service], Nothing, Future[Any]] =
-      for {
-        _ <- HttpHedgedClient.Get()
-        _ <- HttpHedgedClient.Uri("/")
-        _ <- HttpHedgedClient.Host("www.google.com:80")
-        _ <- HttpHedgedClient.Timeout(5000)
-        _ <- HttpHedgedClient.Hedged(10)
-        future <- HttpHedgedClient.Run()
-      } yield future
+  /**
+   * DSL program to be used by different engines using sugar for comprehension.
+   */
+  val programWithSugar: ZIO[Has[HttpHedgedClient.Service], Nothing, Future[Any]] =
+    for {
+      _ <- HttpHedgedClient.Get()
+      _ <- HttpHedgedClient.Host("www.google.com:80")
+      _ <- HttpHedgedClient.Timeout(5000)
+      _ <- HttpHedgedClient.Hedged(10)
+      future <- HttpHedgedClient.Run()
+    } yield future
 
+  /**
+   * DSL program to be used by different engines.
+   */
+  val programWithoutSugar: ZIO[Has[HttpHedgedClient.Service], Nothing, Future[Any]] =
+    HttpHedgedClient.Get()
+      .flatMap(_ => HttpHedgedClient.Uri("/"))
+      .flatMap(_ => HttpHedgedClient.Host("www.google.com:80"))
+      .flatMap(_ => HttpHedgedClient.Timeout(5000))
+      .flatMap(_ => HttpHedgedClient.Hedged(10))
+      .flatMap(_ => HttpHedgedClient.Run())
+
+  /**
+   * In this example we use programWithSugar structure with finagleEngine as behavior
+   */
+  @Test
+  def finagleEngineWithSugarSyntax(): Unit = {
     val programResponse: Future[Any] = HttpHedgedClient.runtime.unsafeRun {
-      httpGetProgram.provideCustomLayer(HttpHedgedClient.finagleEngine)
+      programWithSugar.provideCustomLayer(HttpHedgedClient.finagleEngine)
     }
     println(Await.ready(programResponse, 10 seconds))
   }
 
   @Test
-  def noSugarSyntax(): Unit = {
-    val httpGetProgram: ZIO[Has[HttpHedgedClient.Service], Nothing, Future[Any]] =
-      HttpHedgedClient.Get()
-        .flatMap(_ => HttpHedgedClient.Uri("/"))
-        .flatMap(_ => HttpHedgedClient.Host("www.google.com:80"))
-        .flatMap(_ => HttpHedgedClient.Timeout(5000))
-        .flatMap(_ => HttpHedgedClient.Hedged(10))
-        .flatMap(_ => HttpHedgedClient.Run())
-
+  def finagleEngineWithoutSugarSyntax(): Unit = {
     val programResponse: Future[Any] = HttpHedgedClient.runtime.unsafeRun {
-      httpGetProgram.provideCustomLayer(HttpHedgedClient.finagleEngine)
+      programWithoutSugar.provideCustomLayer(HttpHedgedClient.finagleEngine)
     }
     println(Await.ready(programResponse, 10 seconds))
   }
 
-  @Test
-  def vertxEngine(): Unit = {
-
-    val client: HttpClient = Vertx.vertx().createHttpClient()
-    val request = client.get("www.google.com:80", "/")
-
-  }
-
+  /**
+   * In this example we use programWithSugar structure with akkaEngine as behavior
+   */
   @Test
   def akkaEngine(): Unit = {
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
-    // needed for the future flatMap/onComplete in the end
-    implicit val executionContext = system.dispatcher
-
-    val request: HttpRequest = HttpRequest()
-      .withMethod(HttpMethods.GET)
-      .withUri("http://www.google.com")
-
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(request)
-
-    responseFuture
-      .onComplete {
-        case Success(res) => println(res)
-        case Failure(_) => println("something wrong")
-      }
-
-    Thread.sleep(10000)
-
+    val programResponse: Future[Any] = HttpHedgedClient.runtime.unsafeRun {
+      programWithSugar.provideCustomLayer(HttpHedgedClient.akkaEngine)
+    }
+    println(Await.ready(programResponse, 10 seconds))
   }
 
 }

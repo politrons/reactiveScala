@@ -1,16 +1,17 @@
 package app.impl.http
 
 import java.util.concurrent.TimeUnit._
-
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpMethods, HttpRequest}
+import akka.stream.ActorMaterializer
 import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.{Http, http}
+import com.twitter.finagle.{http, Http => FinagleHttp}
 import com.twitter.util.{Duration, Future}
 import zio._
-
-import scala.concurrent.{Promise, Future => ScalaFuture}
+import scala.concurrent.{ExecutionContextExecutor, Promise, Future => ScalaFuture}
 
 /**
  * The whole idea behind this Http connector is about this paper of Google engineers [https://blog.acolyer.org/2015/01/15/the-tail-at-scale/]
@@ -22,8 +23,6 @@ object HttpHedgedClient {
 
   private val objectMapper: ObjectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-  var finagleClientInfo: FinagleClientInfo = FinagleClientInfo()
-
   trait HttpClientInfo {
 
     def getHedged: Int
@@ -34,7 +33,7 @@ object HttpHedgedClient {
    */
   case class FinagleClientInfo(hedged: Int = 1,
                                host: String = "",
-                               client: Http.Client = Http.client,
+                               client: FinagleHttp.Client = FinagleHttp.client,
                                request: Request = http.Request(http.Method.Get, "/")) extends HttpClientInfo {
 
     override def getHedged: Int = hedged
@@ -84,76 +83,91 @@ object HttpHedgedClient {
    */
   val finagleEngine: ZLayer[Any, Nothing, Has[Service]] = ZLayer.succeed(new Service {
 
-    override def getHttpClient: HttpClientInfo = finagleClientInfo
+    var clientInfo: FinagleClientInfo = FinagleClientInfo()
+
+    override def getHttpClient: HttpClientInfo = clientInfo
 
     override def withUri(uri: String): Unit = {
-      finagleClientInfo = finagleClientInfo.copy(request = finagleClientInfo.request.uri(uri))
+      clientInfo = clientInfo.copy(request = clientInfo.request.uri(uri))
     }
 
     override def withGetMethod(): Unit = {
-      finagleClientInfo = finagleClientInfo.copy(request = finagleClientInfo.request.method(http.Method.Get))
+      clientInfo = clientInfo.copy(request = clientInfo.request.method(http.Method.Get))
     }
 
     override def withPostMethod(): Unit = {
-      finagleClientInfo = finagleClientInfo.copy(request = finagleClientInfo.request.method(http.Method.Post))
+      clientInfo = clientInfo.copy(request = clientInfo.request.method(http.Method.Post))
     }
 
     override def withBody(body: String): Unit = {
-      val request = finagleClientInfo.request
+      val request = clientInfo.request
       request.contentString = serialize(body)
-      finagleClientInfo = finagleClientInfo.copy(request = request)
+      clientInfo = clientInfo.copy(request = request)
     }
 
     override def withHedged(times: Int): Unit = {
-      finagleClientInfo = finagleClientInfo.copy(hedged = times)
+      clientInfo = clientInfo.copy(hedged = times)
     }
 
     override def withTimeout(timeout: Long): Unit = {
-      finagleClientInfo = finagleClientInfo.copy(client = finagleClientInfo.client.withRequestTimeout(Duration(timeout, MILLISECONDS)))
+      clientInfo = clientInfo.copy(client = clientInfo.client.withRequestTimeout(Duration(timeout, MILLISECONDS)))
     }
 
     override def withHost(host: String): Unit = {
-      finagleClientInfo = finagleClientInfo.copy(host = host)
+      clientInfo = clientInfo.copy(host = host)
     }
 
     override def run(): ScalaFuture[Any] = {
-      val twitterFuture = finagleClientInfo.client.newService(finagleClientInfo.host)(finagleClientInfo.request)
+      val twitterFuture = clientInfo.client.newService(clientInfo.host)(clientInfo.request)
       twitterFuture.toScalaFuture
     }
   })
 
+  /**
+   * Akka Http behavior/engine
+   * --------------------------
+   * This is the behavior/engine of the program for Akka http client.
+   * We use just like type classes pattern the implementation of [Service] and is
+   * wrapped into a [ZLayer] to be later inject in the program to then is able
+   * the program to use the Has[Service] in the DSL that you can see bellow.
+   */
   val akkaEngine: ZLayer[Any, Nothing, Has[Service]] = ZLayer.succeed(new Service {
 
-    var httpClient: AkkaHttpClientInfo = AkkaHttpClientInfo()
+    implicit val system: ActorSystem = ActorSystem()
+    implicit val materializer: ActorMaterializer = ActorMaterializer()
 
-    override def getHttpClient: HttpClientInfo = httpClient
+    var clientInfo: AkkaHttpClientInfo = AkkaHttpClientInfo()
+
+    override def getHttpClient: HttpClientInfo = clientInfo
 
     override def withUri(uri: String): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.withUri(uri))
+      clientInfo = clientInfo.copy(request = clientInfo.request.withUri(uri))
     }
 
     override def withHost(host: String): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.withUri(host))
+      val finalHost = if (!host.contains("http") || !host.contains("https")) s"http://$host" else host
+      clientInfo = clientInfo.copy(request = clientInfo.request.withUri(finalHost))
     }
 
     override def withGetMethod(): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.withMethod(HttpMethods.GET))
+      clientInfo = clientInfo.copy(request = clientInfo.request.withMethod(HttpMethods.GET))
     }
 
     override def withPostMethod(): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.withMethod(HttpMethods.POST))
+      clientInfo = clientInfo.copy(request = clientInfo.request.withMethod(HttpMethods.POST))
     }
 
     override def withBody(body: String): Unit = {
-      httpClient = httpClient.copy(request = httpClient.request.withEntity(body))
-
+      clientInfo = clientInfo.copy(request = clientInfo.request.withEntity(body))
     }
 
-    override def withTimeout(time: Long): Unit = ???
+    override def withTimeout(time: Long): Unit = {} // Not implemented
 
-    override def withHedged(times: Int): Unit = ???
+    override def withHedged(times: Int): Unit = clientInfo = clientInfo.copy(hedged = times)
 
-    override def run(): ScalaFuture[Any] = ???
+    override def run(): ScalaFuture[Any] = {
+      Http().singleRequest(clientInfo.request)
+    }
   })
 
   /**
