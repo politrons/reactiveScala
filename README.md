@@ -187,7 +187,7 @@ Examples of how Scala and Haskell can look alike.
 
 Hedged requests: send the same requests to multiple servers, and use whatever response comes back first.
 
-* **[Connector](scala_features/src/main/scala/app/impl/http/HedgedClientRunner.scala)**
+* **[Connector](scala_features/src/main/scala/app/impl/http/HttpHedgedClient.scala)**
 * **[DSL Runner](scala_features/src/main/scala/app/impl/http/HedgedClientRunner.scala)**
 
 # Tagless Final
