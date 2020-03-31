@@ -16,6 +16,8 @@ import zio._
 import scala.concurrent.{Promise, Future => ScalaFuture}
 
 /**
+ * This connector library allow create pure functional ZIO programs, and then change the behavior of the program
+ * injecting as provider one behavior/engine or another.
  * The whole idea behind this Http connector is about this paper [https://blog.acolyer.org/2015/01/15/the-tail-at-scale/]
  * in particular the Hedged request pattern to improve the performance in communications between peers.
  */

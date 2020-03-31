@@ -10,7 +10,7 @@ import scala.concurrent.{Await, Future}
 
 /**
  * Here we create our programs using the DSL of HttpHedgedClient, and using the different provide
- * like finagle or Akka http
+ * like finagle, Akka http or even a Custom client engine.
  */
 class HedgedClientRunner {
 
@@ -67,6 +67,10 @@ class HedgedClientRunner {
     println(Await.ready(programResponse, 10 seconds))
   }
 
+  /**
+   * One of the coolest feature of this connector it's to allow a custom engine implementation
+   * by the consumer without have to change the DSL or Program already created.
+   */
   @Test
   def customEngine(): Unit = {
 
