@@ -24,10 +24,11 @@ dependencies {
     compile group: 'org.glassfish.grizzly', name: 'grizzly-http-server', version: '2.4.0'
     compile group: 'org.scalaz', name: 'scalaz-zio_2.12', version: '0.19'
     compile 'org.scala-lang:scala-library:2.12.8'
-    compile group: 'dev.zio', name: 'zio_2.12', version: '1.0.0-RC18-2'
     compile project(':macros')
     compile project(':h2')
-//    compile group: 'io.vertx', name: 'vertx-web-client', version: '3.6.0'
+    //ZIO
+    compile group: 'dev.zio', name: 'zio-config_2.12', version: '1.0.0-RC15'
+    compile group: 'dev.zio', name: 'zio_2.12', version: '1.0.0-RC18-2'
     //Akka
     compile group: 'com.typesafe.akka', name: 'akka-http_2.12', version: '10.1.7'
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.19'

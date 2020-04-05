@@ -1,4 +1,4 @@
-package app.impl.scalaz.zio
+package app.impl.zio
 
 import org.junit.Test
 import scalaz.zio.{DefaultRuntime, IO, Task, ZIO}

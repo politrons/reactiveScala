@@ -1,6 +1,6 @@
-package app.impl.scalaz.zio
+package app.impl.zio
 
-import app.impl.scalaz.zio.ZIOActorSystem.{Capacity, Permit, ZIOActor, createActor}
+import app.impl.zio.ZIOActorSystem.{Capacity, Permit, ZIOActor, createActor}
 import org.junit.Test
 import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
 

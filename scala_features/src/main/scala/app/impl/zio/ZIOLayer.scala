@@ -1,4 +1,4 @@
-package app.impl.scalaz.zio
+package app.impl.zio
 
 import java.util.UUID
 
