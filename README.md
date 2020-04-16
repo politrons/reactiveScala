@@ -47,6 +47,8 @@ Here we cover with some practical examples, the new features of the version 3
 * **[Auto param tuples](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/AutoParamTuplingFeature.scala)**
 * **[Multiverse equality](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/MultiversalEqualityFeature.scala)**
 * **[Pattern matching](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/PatternMatchingFeature.scala)**
+* **[Inline](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/InlineFeature.scala)**
+* **[Structure & Style](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/StructureStyleFeature.scala)**
 
 # ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
 
