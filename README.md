@@ -210,7 +210,7 @@ Examples of use Tagless Final encode to enjoy the potential of free structures.
 Examples of this library to validate values types in compilation time.
 
 * [Examples](scala_features/src/main/scala/app/impl/types/RefinedFeature.scala)
-* 
+
 # Algorithms
 
 * **[Sorting](scala_features/src/main/scala/app/impl/algorithms/SortAlgorithm.scala)**

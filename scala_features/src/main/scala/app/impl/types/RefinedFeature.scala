@@ -1,6 +1,5 @@
 package app.impl.types
 
-import java.util.UUID
 
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
@@ -11,6 +10,8 @@ import eu.timepit.refined.string._
 import org.junit.Test
 
 /**
+ * All this examples are done on top of this awesome library [Refined] https://github.com/fthomas/refined#using-refined
+ *
  * Refined library used with numbers allow us wrap and ensure in compilation time that numbers has the value as we
  * expect.
  * When we use [refineMV] passing as type the rule we want to apply[Positive, Negative, Greater, Less] and then the value we ensure in compilation time
