@@ -86,6 +86,7 @@ class RefinedFeature {
    * We use the next rules here:
    * * [Url] -> Check the format of the url, it can break in compilation or in runtime with an Either.
    * * [UUID] -> Check the format of the UUID, it can break in compilation or in runtime with an Either.
+   * * [ValidNumericType] -> Check if the string number it fit in the numeric type, it can break in compilation or in runtime with an Either.
    */
   @Test
   def stringFeatures(): Unit = {
