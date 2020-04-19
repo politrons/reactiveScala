@@ -99,6 +99,7 @@ Here we cover with some practical examples, the most common use of ZIO library.
 * **[ZIO ZLayer](scala_features/src/main/scala/app/impl/zio/ZIOLayer.scala)**
 * **[ZIO ZStream](scala_features/src/main/scala/app/impl/zio/ZIOZStream.scala)**
 * **[ZIO Config](scala_features/src/main/scala/app/impl/zio/ZIOConfigFeature.scala)**
+* **[ZIO Test](scala_features/src/main/scala/app/impl/zio/ZIOTestFeature.scala)**
 
 ![My image](scala_features/src/main/resources/img/native.jpg)
 # Scala-native
@@ -204,7 +205,12 @@ Examples of use Tagless Final encode to enjoy the potential of free structures.
 * [DSL validator](macros/src/main/scala/app/impl/macros/::.scala)
 * [Runner](test_macros/src/main/scala/app/impl/macros/Main.scala)
 
+# Refined
 
+Examples of this library to validate values types in compilation time.
+
+* [Examples](scala_features/src/main/scala/app/impl/types/RefinedFeature.scala)
+* 
 # Algorithms
 
 * **[Sorting](scala_features/src/main/scala/app/impl/algorithms/SortAlgorithm.scala)**
