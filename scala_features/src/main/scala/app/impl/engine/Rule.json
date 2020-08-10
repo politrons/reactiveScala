@@ -1,0 +1,40 @@
+{
+  "rules": {
+    "rule1": [
+      {
+        "filed": "foo",
+        "operator": "==",
+        "value": "hello world"
+      },
+      {
+        "filed": "bla",
+        "operator": "!=",
+        "value": "politrons"
+      },
+      {
+        "filed": "numberField",
+        "operator": ">=",
+        "value": "1981"
+      }
+    ],
+    "rule2": [
+      {
+        "filed": "foo",
+        "operator": "==",
+        "value": "hello world"
+      },
+      {
+        "filed": "bla",
+        "operator": "!=",
+        "value": "politrons"
+      },
+      {
+        "filed": "numberField",
+        "operator": ">=",
+        "value": "1981"
+      }
+    ]
+  }
+}
+
+

@@ -5,8 +5,10 @@ import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
 import eu.timepit.refined.boolean.{And, Not}
+import eu.timepit.refined.collection.Contains
 import eu.timepit.refined.numeric._
 import eu.timepit.refined.string._
+import eu.timepit.refined.types.string.NonEmptyString
 import org.junit.Test
 
 /**
@@ -104,5 +106,37 @@ class RefinedFeature {
     val intStringValid: String Refined ValidInt = "1981"
     //val intStringInvalid : String Refined ValidInt = "1981.0" --> It wont compile
     println(intStringValid)
+
+    type EnvRegex = MatchesRegex[W.`"[\btest|\bacc]+"`.T]
+
+    refineMV[EnvRegex]("test")
+
+  }
+
+  @Test
+  def valueClass(): Unit = {
+    type UserNameR = NonEmptyString
+    type NameR = NonEmptyString
+
+    case class Aho(value: UserNameR)
+
+    val aho = Aho("hello")
+
+    println(aho.value)
+
+    val value = String.valueOf(aho.value)
+    println(value)
+
+    type EnvRegex = String Refined MatchesRegex[W.`"[\btest|\bacc]+"`.T]
+
+    case class EnvClass(value:EnvRegex )
+
+    println(EnvClass("test"))
+
+    type EnvRegexNotEmpty = EnvRegex And NonEmptyString
+
+    case class EnvNonEmptyClass(value:EnvRegexNotEmpty )
+
+    println(EnvClass("acc"))
   }
 }
