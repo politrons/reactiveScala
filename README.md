@@ -100,6 +100,10 @@ Here we cover with some practical examples, the most common use of ZIO library.
 * **[ZIO ZStream](scala_features/src/main/scala/app/impl/zio/ZIOZStream.scala)**
 * **[ZIO Config](scala_features/src/main/scala/app/impl/zio/ZIOConfigFeature.scala)**
 * **[ZIO Test](scala_features/src/main/scala/app/impl/zio/ZIOTestFeature.scala)**
+* **[ZIO flip](scala_features/src/main/scala/app/impl/zio/ZIOFlip.scala)**
+* **[ZIO queue](scala_features/src/main/scala/app/impl/zio/ZIOQueue.scala)**
+* **[ZIO fiber](scala_features/src/main/scala/app/impl/zio/ZIOFiber.scala)**
+
 
 ![My image](scala_features/src/main/resources/img/native.jpg)
 # Scala-native
