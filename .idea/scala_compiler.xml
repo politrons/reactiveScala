@@ -8,6 +8,8 @@
         <parameter value="-target:jvm-1.8" />
       </parameters>
     </profile>
-    <profile name="Maven 1" modules="reactiveScala.zio,zio" />
+    <profile name="Maven 1" modules="reactiveScala.zio,zio">
+      <option name="postfixOps" value="true" />
+    </profile>
   </component>
 </project>

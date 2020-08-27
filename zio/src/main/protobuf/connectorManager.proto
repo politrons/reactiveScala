@@ -3,11 +3,13 @@ package com.features.zio;
 
 service ConnectorManager {
 
-  rpc ConnectorRequest (RequestInfo) returns (ResponseInfo) {}
+  rpc ConnectorRequest (ConnectorInfoDTO) returns (ResponseInfo) {}
 }
 
-message RequestInfo {
-  string name = 1;
+message ConnectorInfoDTO {
+  string connectorName = 1;
+  string requestInfo = 2;
+
 }
 
 message ResponseInfo {
