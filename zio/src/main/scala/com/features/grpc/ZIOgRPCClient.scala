@@ -1,12 +1,9 @@
 package com.features.grpc
 
-import java.nio.charset.StandardCharsets
-
 import com.features.zio.connectorManager.{ConnectorInfoDTO, ConnectorManagerGrpc}
 import io.grpc.{ManagedChannel, ManagedChannelBuilder}
-import org.apache.commons.io.IOUtils
-import zio.{Task, ZIO}
 import zio.Runtime.{default => Main}
+import zio.{Has, Task, UIO, ULayer, ZIO, ZLayer}
 
 object ZIOgRPCClient extends App {
 
@@ -22,8 +19,33 @@ object ZIOgRPCClient extends App {
 
   Thread.sleep(2000)
 
-  private val clientProgram: ZIO[Any, Throwable, Unit] = (for {
-    channel <- createChannel()
+  /**
+   * Definition of the dependency
+   */
+  trait Channel {
+    def createChannel(): UIO[ManagedChannel]
+  }
+
+  /**
+   * Implementation of ZLayer as dependency of Channel to be injected in the program
+   */
+  val channel: ULayer[Has[Channel]] = ZLayer.succeed(() => {
+    ZIO.succeed {
+      ManagedChannelBuilder.forAddress("localhost", 9999)
+        .usePlaintext()
+        .asInstanceOf[ManagedChannelBuilder[_]]
+        .build()
+    }
+  })
+
+  /**
+   * DSL of how to obtain channel from the dependency
+   * @return ManagedChannel
+   */
+  def getChannel: ZIO[Has[Channel], Nothing, ManagedChannel] = ZIO.accessM(has => has.get.createChannel())
+
+  private val clientProgram: ZIO[Has[Channel], Throwable, Unit] = (for {
+    channel <- getChannel
     connectorManagerStub <- ZIO.effect(ConnectorManagerGrpc.stub(channel))
     request <- ZIO.effect(ConnectorInfoDTO(connectorName = "Rest", requestInfo = "READ"))
     response <- ZIO.fromFuture(_ => connectorManagerStub.connectorRequest(request))
@@ -32,23 +54,11 @@ object ZIOgRPCClient extends App {
     println(s"Error running ZIO gRPC client. Caused by $t")
     ZIO.fail(t)
   })
-  Main.unsafeRun(clientProgram)
+  Main.unsafeRun(clientProgram.provideCustomLayer(channel))
+  //Kill the process, and the server running with it.
   process.destroy()
 
-  private def createChannel(): Task[ManagedChannel] = {
-    ZIO.effect {
-      ManagedChannelBuilder.forAddress("localhost", 9999)
-        .usePlaintext()
-        .asInstanceOf[ManagedChannelBuilder[_]]
-        .build()
-    }
-  }
 
 }
-
-/*
-java -cp zio-1.0-SNAPSHOT-jar-with-dependencies.jar com.features.grpc.ZIOgRPCServer
-*/
-
 
 
