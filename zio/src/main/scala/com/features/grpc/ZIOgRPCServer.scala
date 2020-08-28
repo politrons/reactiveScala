@@ -2,15 +2,33 @@ package com.features.grpc
 
 import com.features.zio.connectorManager.{ConnectorInfoDTO, ConnectorManagerGrpc, ResponseInfo}
 import io.grpc.ServerBuilder
-import zio.ZIO
+import zio.{Has, UIO, ULayer, ZIO, ZLayer}
+
 import scala.concurrent.{ExecutionContext, Future}
 import zio.Runtime.{default => Main}
 
 object ZIOgRPCServer extends App {
 
   private val port = 9999
-  private val serverProgram: ZIO[Any, Throwable, Unit] = (for {
-    connectorManager <- ZIO.effect(new ConnectorManagerImpl)
+
+  trait ConnectorManager {
+    def getConnectorManager: UIO[ConnectorManagerGrpc.ConnectorManager]
+  }
+
+  val connectorManagerDep: ULayer[Has[ConnectorManager]] = ZLayer.succeed(new ConnectorManager {
+    override def getConnectorManager: UIO[ConnectorManagerGrpc.ConnectorManager] = ZIO.succeed {
+      (connector: ConnectorInfoDTO) => {
+        val reply = ResponseInfo(message = s"Some logic ${connector.requestInfo} of ${connector.connectorName}")
+        Future.successful(reply)
+      }
+    }
+  })
+
+  def getConnectorManager: ZIO[Has[ConnectorManager], Nothing, ConnectorManagerGrpc.ConnectorManager] =
+    ZIO.accessM(_.get.getConnectorManager)
+
+  private val serverProgram: ZIO[Has[ConnectorManager], Throwable, Unit] = (for {
+    connectorManager <- getConnectorManager
     service <- ZIO.effect(ConnectorManagerGrpc.bindService(connectorManager, ExecutionContext.global))
     server <- ZIO.effect(ServerBuilder.forPort(port)
       .addService(service)
@@ -24,15 +42,7 @@ object ZIOgRPCServer extends App {
     ZIO.fail(t)
   })
 
-  Main.unsafeRun(serverProgram)
-
-  private class ConnectorManagerImpl extends ConnectorManagerGrpc.ConnectorManager {
-    override def connectorRequest(connector: ConnectorInfoDTO): Future[ResponseInfo] = {
-      val reply = ResponseInfo(message = s"Some logic ${connector.requestInfo} of ${connector.connectorName}")
-      Future.successful(reply)
-    }
-
-  }
+  Main.unsafeRun(serverProgram.provideCustomLayer(connectorManagerDep))
 
 }
 
