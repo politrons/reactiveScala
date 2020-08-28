@@ -9,6 +9,10 @@ object ZIOgRPCClient extends App {
 
   val process = runServerFromAnotherJVM()
 
+  /**
+   * Experiment of how we can run gRPC between client and server from different JVM and still obtain a very
+   * good performance, just like if both were running under the same JVM.
+   */
   private def runServerFromAnotherJVM(): Process = {
     val path = "/Users/nb38tv/Developer/projects/reactiveScala/zio/target"
     val JavaCommand = s"java -cp $path/zio-1.0-SNAPSHOT-jar-with-dependencies.jar com.features.grpc.ZIOgRPCServer"
@@ -44,6 +48,9 @@ object ZIOgRPCClient extends App {
    */
   def getChannel: ZIO[Has[Channel], Nothing, ManagedChannel] = ZIO.accessM(has => has.get.createChannel())
 
+  /**
+   * Client gRPC program that receive as dependency the channel where it must connected.
+   */
   private val clientProgram: ZIO[Has[Channel], Throwable, Unit] = (for {
     channel <- getChannel
     connectorManagerStub <- ZIO.effect(ConnectorManagerGrpc.stub(channel))
