@@ -1,11 +1,26 @@
 package com.features.grpc
 
+import java.nio.charset.StandardCharsets
+
 import com.features.zio.connectorManager.{ConnectorInfoDTO, ConnectorManagerGrpc}
 import io.grpc.{ManagedChannel, ManagedChannelBuilder}
+import org.apache.commons.io.IOUtils
 import zio.{Task, ZIO}
 import zio.Runtime.{default => Main}
 
 object ZIOgRPCClient extends App {
+
+  val process = runServerFromAnotherJVM()
+
+  private def runServerFromAnotherJVM(): Process = {
+    val path = "/Users/nb38tv/Developer/projects/reactiveScala/zio/target"
+    val JavaCommand = s"java -cp $path/zio-1.0-SNAPSHOT-jar-with-dependencies.jar com.features.grpc.ZIOgRPCServer"
+    val process: Process = Runtime.getRuntime.exec(JavaCommand)
+    println(s"Service process alive:${process.isAlive}")
+    process
+  }
+
+  Thread.sleep(2000)
 
   private val clientProgram: ZIO[Any, Throwable, Unit] = (for {
     channel <- createChannel()
@@ -18,6 +33,7 @@ object ZIOgRPCClient extends App {
     ZIO.fail(t)
   })
   Main.unsafeRun(clientProgram)
+  process.destroy()
 
   private def createChannel(): Task[ManagedChannel] = {
     ZIO.effect {
