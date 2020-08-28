@@ -33,7 +33,11 @@
       <artifactId>scalapb-runtime-grpc_2.12</artifactId>
       <version>0.10.8</version>
     </dependency>
-
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+    </dependency>
     <!--gRPC-->
     <dependency>
       <groupId>io.grpc</groupId>
@@ -50,8 +54,6 @@
       <artifactId>grpc-stub</artifactId>
       <version>1.30.2</version>
     </dependency>
-
-    <!-- https://mvnrepository.com/artifact/io.netty/netty-tcnative-boringssl-static -->
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-tcnative-boringssl-static</artifactId>
@@ -64,8 +66,6 @@
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>
     <plugins>
-
-
       <plugin>
         <groupId>com.github.os72</groupId>
         <artifactId>protoc-jar-maven-plugin</artifactId>

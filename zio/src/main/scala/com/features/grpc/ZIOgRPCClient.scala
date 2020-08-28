@@ -1,10 +1,10 @@
 package com.features.grpc
 
 import com.features.zio.connectorManager.{ConnectorInfoDTO, ConnectorManagerGrpc, ResponseInfo}
-import io.grpc.{ManagedChannel, ManagedChannelBuilder, ServerBuilder}
+import io.grpc.{ManagedChannel, ManagedChannelBuilder}
 
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 object ZIOgRPCClient extends App {
 
