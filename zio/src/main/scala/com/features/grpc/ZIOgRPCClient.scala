@@ -25,9 +25,9 @@ object ZIOgRPCClient extends App {
   Thread.sleep(2000)
 
   /**
-   * Implementation of ZLayer as dependency of Channel to be injected in the program
+   * Implementation/Behavior of ZLayer as dependency of Channel to be injected in the program
    */
-  val channel: ULayer[Has[ManagedChannel]] = ZLayer.succeed {
+  val channelDependency: ULayer[Has[ManagedChannel]] = ZLayer.succeed {
     ManagedChannelBuilder.forAddress("localhost", 9999)
       .usePlaintext()
       .asInstanceOf[ManagedChannelBuilder[_]]
@@ -35,20 +35,20 @@ object ZIOgRPCClient extends App {
   }
 
   /**
-   * Implementation of ZLayer as dependency of [ManagedChannel => ConnectorManagerStub] function to be injected in the program
+   * Implementation/Behavior of ZLayer as dependency of [ManagedChannel => ConnectorManagerStub] function to be injected in the program
    * and obtain the [ConnectorManagerStub] receiving the [ManagedChannel]
    */
-  val connectorManagerStub: ULayer[Has[ManagedChannel => ConnectorManagerStub]] = ZLayer.succeed {
+  val connectorManagerStubDependency: ULayer[Has[ManagedChannel => ConnectorManagerStub]] = ZLayer.succeed {
     channel: ManagedChannel => ConnectorManagerGrpc.stub(channel)
   }
 
   /**
-   * DSL/Behavior of how to obtain channel from the dependency
+   * DSL/Structure of how to obtain channel from the dependency
    */
   def getChannel: ZIO[Has[ManagedChannel], Nothing, ManagedChannel] = ZIO.access(has => has.get)
 
   /**
-   * DSL/Behavior of how to obtain ConnectorManagerStub from the dependency passing ManagedChannel
+   * DSL/Structure of how to obtain ConnectorManagerStub from the dependency passing ManagedChannel
    */
   def getConnectorManagerStub(channel: ManagedChannel): ZIO[Has[ManagedChannel => ConnectorManagerStub], Nothing, ConnectorManagerStub] =
     ZIO.access(_.get.apply(channel))
@@ -71,7 +71,7 @@ object ZIOgRPCClient extends App {
    * ZLayer with all dependencies together to be passed to the program.
    */
   val dependencies: ZLayer[Any, Nothing, Has[ManagedChannel] with Has[ManagedChannel => ConnectorManagerStub]] =
-    channel ++ connectorManagerStub
+    channelDependency ++ connectorManagerStubDependency
 
   Main.unsafeRun(clientProgram.provideCustomLayer(dependencies))
   //Kill the other JVM process, and the server running with it.
