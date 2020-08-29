@@ -54,7 +54,7 @@ object ZIOgRPCClient extends App {
     ZIO.access(_.get.apply(channel))
 
   /**
-   * Client gRPC program that receive as dependency the channel where it must connected.
+   * Client gRPC program that receive as dependency the channel and ConnectorManagerStub to make the request against the server.
    */
   private val clientProgram: ZIO[Has[ManagedChannel] with Has[ManagedChannel => ConnectorManagerStub], Throwable, Unit] = (for {
     channel <- getChannel
