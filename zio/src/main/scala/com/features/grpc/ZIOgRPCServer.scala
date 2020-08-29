@@ -1,5 +1,6 @@
 package com.features.grpc
 
+import com.features.zio.connectorManager.ConnectorManagerGrpc.ConnectorManager
 import com.features.zio.connectorManager.{ConnectorInfoDTO, ConnectorManagerGrpc, ResponseInfo}
 import io.grpc.{Server, ServerBuilder, ServerServiceDefinition}
 import zio.Runtime.{default => Main}
@@ -12,13 +13,6 @@ object ZIOgRPCServer extends App {
   private val port = 9999
 
   /**
-   * Description of ConnectorManager dependency
-   */
-  trait ConnectorManager {
-    def getConnectorManager: Task[ConnectorManagerGrpc.ConnectorManager]
-  }
-
-  /**
    * Description of grpc Server dependency
    */
   trait GRPCServer {
@@ -28,13 +22,9 @@ object ZIOgRPCServer extends App {
   /**
    * Implementation/Behavior of ZLayer as dependency to be passed to the program to obtain ConnectorManager.
    */
-  val connectorManagerDependency: ULayer[Has[ConnectorManager]] = ZLayer.succeed(new ConnectorManager {
-    override def getConnectorManager: Task[ConnectorManagerGrpc.ConnectorManager] = ZIO.succeed {
-      (connector: ConnectorInfoDTO) => {
-        val reply = ResponseInfo(message = s"Some logic ${connector.requestInfo} of ${connector.connectorName}")
-        Future.successful(reply)
-      }
-    }
+  val connectorManagerDependency: ULayer[Has[ConnectorManager]] = ZLayer.succeed((connector: ConnectorInfoDTO) => {
+    val reply = ResponseInfo(message = s"Some logic ${connector.requestInfo} of ${connector.connectorName}")
+    Future.successful(reply)
   })
 
   /**
@@ -53,7 +43,7 @@ object ZIOgRPCServer extends App {
    * DSL/Structure of how to obtain the Connector manager dependency inside the program
    */
   def getConnectorManager: ZIO[Has[ConnectorManager], Throwable, ConnectorManagerGrpc.ConnectorManager] =
-    ZIO.accessM(_.get.getConnectorManager)
+    ZIO.access(_.get)
 
   /**
    * DSL/Structure of how to obtain the grpc Server dependency inside the program
@@ -61,13 +51,15 @@ object ZIOgRPCServer extends App {
   def getGRPCServer(service: ServerServiceDefinition): ZIO[Has[GRPCServer], Throwable, Server] =
     ZIO.accessM(_.get.getServer(service))
 
+  /**
+   * DSL/Structure of how to obtain the Executor context that the Server it will use for each process
+   */
   def getExecutorContext: ZIO[Has[ExecutionContextExecutor], Nothing, ExecutionContextExecutor] =
     ZIO.access(_.get)
 
   /**
-   * Server program that receive the ConnectorManager, GRPCServer as dependency.
-   * We extract those dependencies using the behavior functions, and we use it to bind it
-   * together and run the server
+   * Server program that receive the ConnectorManager, GRPCServer and ExecutionContextExecutor as dependencies.
+   * We extract those dependencies using the behavior functions, and we use it to bind it together to start the server
    */
   private val serverProgram: ZIO[Has[ConnectorManager] with Has[GRPCServer] with Has[ExecutionContextExecutor], Throwable, Unit] =
     (for {
@@ -83,10 +75,16 @@ object ZIOgRPCServer extends App {
       ZIO.fail(t)
     })
 
-  val multiDependency: ZLayer[Any, Any, Has[ConnectorManager] with Has[GRPCServer] with Has[ExecutionContextExecutor]] =
+  /**
+   * We create a ZLayer with all dependencies together to be passed into the program as [R] of ZIO[R,E,A] dependency type
+   */
+  val dependencies: ZLayer[Any, Any, Has[ConnectorManager] with Has[GRPCServer] with Has[ExecutionContextExecutor]] =
     connectorManagerDependency ++ serverDependency ++ ecDependency
 
-  Main.unsafeRun(serverProgram.provideCustomLayer(multiDependency))
+  /**
+   * We run the program injecting the dependency using [provideCustomLayer]
+   */
+  Main.unsafeRun(serverProgram.provideCustomLayer(dependencies))
 
 }
 
