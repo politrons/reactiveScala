@@ -1,9 +1,10 @@
 package com.features.grpc
 
+import com.features.zio.connectorManager.ConnectorManagerGrpc.ConnectorManagerStub
 import com.features.zio.connectorManager.{ConnectorInfoDTO, ConnectorManagerGrpc}
 import io.grpc.{ManagedChannel, ManagedChannelBuilder}
 import zio.Runtime.{default => Main}
-import zio.{Has, Task, UIO, ULayer, ZIO, ZLayer}
+import zio.{Has, ULayer, ZIO, ZLayer}
 
 object ZIOgRPCClient extends App {
 
@@ -34,18 +35,29 @@ object ZIOgRPCClient extends App {
   }
 
   /**
+   * Implementation of ZLayer as dependency of [ManagedChannel => ConnectorManagerStub] function to be injected in the program
+   * and obtain the [ConnectorManagerStub] receiving the [ManagedChannel]
+   */
+  val connectorManagerStub: ULayer[Has[ManagedChannel => ConnectorManagerStub]] = ZLayer.succeed {
+    channel: ManagedChannel => ConnectorManagerGrpc.stub(channel)
+  }
+
+  /**
    * DSL of how to obtain channel from the dependency
    *
    * @return ManagedChannel
    */
   def getChannel: ZIO[Has[ManagedChannel], Nothing, ManagedChannel] = ZIO.access(has => has.get)
 
+  def getConnectorManagerStub(channel: ManagedChannel): ZIO[Has[ManagedChannel => ConnectorManagerStub], Nothing, ConnectorManagerStub] =
+    ZIO.access(_.get.apply(channel))
+
   /**
    * Client gRPC program that receive as dependency the channel where it must connected.
    */
-  private val clientProgram: ZIO[Has[ManagedChannel], Throwable, Unit] = (for {
+  private val clientProgram: ZIO[Has[ManagedChannel] with Has[ManagedChannel => ConnectorManagerStub], Throwable, Unit] = (for {
     channel <- getChannel
-    connectorManagerStub <- ZIO.effect(ConnectorManagerGrpc.stub(channel))
+    connectorManagerStub <- getConnectorManagerStub(channel)
     request <- ZIO.effect(ConnectorInfoDTO(connectorName = "Rest", requestInfo = "READ"))
     response <- ZIO.fromFuture(_ => connectorManagerStub.connectorRequest(request))
     _ <- ZIO.succeed(println(s"Response: ${response.message}"))
@@ -53,7 +65,12 @@ object ZIOgRPCClient extends App {
     println(s"Error running ZIO gRPC client. Caused by $t")
     ZIO.fail(t)
   })
-  Main.unsafeRun(clientProgram.provideCustomLayer(channel))
+
+
+  val dependencies: ZLayer[Any, Nothing, Has[ManagedChannel] with Has[ManagedChannel => ConnectorManagerStub]] =
+    channel ++ connectorManagerStub
+
+  Main.unsafeRun(clientProgram.provideCustomLayer(dependencies))
   //Kill the process, and the server running with it.
   process.destroy()
 
