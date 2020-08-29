@@ -43,12 +43,13 @@ object ZIOgRPCClient extends App {
   }
 
   /**
-   * DSL of how to obtain channel from the dependency
-   *
-   * @return ManagedChannel
+   * DSL/Behavior of how to obtain channel from the dependency
    */
   def getChannel: ZIO[Has[ManagedChannel], Nothing, ManagedChannel] = ZIO.access(has => has.get)
 
+  /**
+   * DSL/Behavior of how to obtain ConnectorManagerStub from the dependency passing ManagedChannel
+   */
   def getConnectorManagerStub(channel: ManagedChannel): ZIO[Has[ManagedChannel => ConnectorManagerStub], Nothing, ConnectorManagerStub] =
     ZIO.access(_.get.apply(channel))
 
