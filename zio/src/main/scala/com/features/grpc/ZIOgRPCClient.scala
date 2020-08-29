@@ -24,34 +24,26 @@ object ZIOgRPCClient extends App {
   Thread.sleep(2000)
 
   /**
-   * Definition of the dependency
+   * Implementation of ZLayer as dependency of Channel to be injected in the program
    */
-  trait Channel {
-    def createChannel(): UIO[ManagedChannel]
+  val channel: ULayer[Has[ManagedChannel]] = ZLayer.succeed {
+    ManagedChannelBuilder.forAddress("localhost", 9999)
+      .usePlaintext()
+      .asInstanceOf[ManagedChannelBuilder[_]]
+      .build()
   }
 
   /**
-   * Implementation of ZLayer as dependency of Channel to be injected in the program
-   */
-  val channel: ULayer[Has[Channel]] = ZLayer.succeed(() => {
-    ZIO.succeed {
-      ManagedChannelBuilder.forAddress("localhost", 9999)
-        .usePlaintext()
-        .asInstanceOf[ManagedChannelBuilder[_]]
-        .build()
-    }
-  })
-
-  /**
    * DSL of how to obtain channel from the dependency
+   *
    * @return ManagedChannel
    */
-  def getChannel: ZIO[Has[Channel], Nothing, ManagedChannel] = ZIO.accessM(has => has.get.createChannel())
+  def getChannel: ZIO[Has[ManagedChannel], Nothing, ManagedChannel] = ZIO.access(has => has.get)
 
   /**
    * Client gRPC program that receive as dependency the channel where it must connected.
    */
-  private val clientProgram: ZIO[Has[Channel], Throwable, Unit] = (for {
+  private val clientProgram: ZIO[Has[ManagedChannel], Throwable, Unit] = (for {
     channel <- getChannel
     connectorManagerStub <- ZIO.effect(ConnectorManagerGrpc.stub(channel))
     request <- ZIO.effect(ConnectorInfoDTO(connectorName = "Rest", requestInfo = "READ"))
