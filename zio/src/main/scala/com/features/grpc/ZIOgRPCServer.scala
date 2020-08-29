@@ -18,12 +18,15 @@ object ZIOgRPCServer extends App {
     def getConnectorManager: Task[ConnectorManagerGrpc.ConnectorManager]
   }
 
+  /**
+   * Description of grpc Server dependency
+   */
   trait GRPCServer {
     def getServer(service: ServerServiceDefinition): Task[Server]
   }
 
   /**
-   * Implementation/Behavior of ZLayer as dependency to be passed to the program.
+   * Implementation/Behavior of ZLayer as dependency to be passed to the program to obtain ConnectorManager.
    */
   val connectorManagerDependency: ULayer[Has[ConnectorManager]] = ZLayer.succeed(new ConnectorManager {
     override def getConnectorManager: Task[ConnectorManagerGrpc.ConnectorManager] = ZIO.succeed {
@@ -34,6 +37,9 @@ object ZIOgRPCServer extends App {
     }
   })
 
+  /**
+   * Implementation/Behavior of ZLayer as dependency of GRPCServer to be passed to the program to obtain grpc Server.
+   */
   val serverDependency = ZLayer.succeed(new GRPCServer {
     override def getServer(service: ServerServiceDefinition): Task[Server] = {
       ZIO.effect(ServerBuilder.forPort(port)
@@ -45,17 +51,20 @@ object ZIOgRPCServer extends App {
 
   /**
    * DSL/Structure of how to obtain the Connector manager dependency inside the program
-   *
-   * @return
    */
   def getConnectorManager: ZIO[Has[ConnectorManager], Throwable, ConnectorManagerGrpc.ConnectorManager] =
     ZIO.accessM(_.get.getConnectorManager)
 
+  /**
+   * DSL/Structure of how to obtain the grpc Server dependency inside the program
+   */
   def getGRPCServer(service: ServerServiceDefinition): ZIO[Has[GRPCServer], Throwable, Server] =
     ZIO.accessM(_.get.getServer(service))
 
   /**
-   * Server program that receive the ConnectorManager as dependency, it is bind in the service
+   * Server program that receive the ConnectorManager, GRPCServer as dependency.
+   * We extract those dependencies using the behavior functions, and we use it to bind it
+   * together and run the server
    */
   private val serverProgram: ZIO[Has[ConnectorManager] with Has[GRPCServer], Throwable, Unit] =
     (for {
