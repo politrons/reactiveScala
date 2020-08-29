@@ -67,12 +67,14 @@ object ZIOgRPCClient extends App {
     ZIO.fail(t)
   })
 
-
+  /**
+   * ZLayer with all dependencies together to be passed to the program.
+   */
   val dependencies: ZLayer[Any, Nothing, Has[ManagedChannel] with Has[ManagedChannel => ConnectorManagerStub]] =
     channel ++ connectorManagerStub
 
   Main.unsafeRun(clientProgram.provideCustomLayer(dependencies))
-  //Kill the process, and the server running with it.
+  //Kill the other JVM process, and the server running with it.
   process.destroy()
 
 
