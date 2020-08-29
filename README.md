@@ -192,7 +192,8 @@ Examples of how Scala and Haskell can look alike.
 * **[ScalaHaskell](scala_features/src/main/scala/app/impl/haskell/ScalaHaskell.scala)**
 
 
-![My image](scala_features/src/main/resources/img/grpc.png)
+![My image](scala_features/src/main/resources/img/grpc.png) ![My image](scala_features/src/main/resources/img/ZIO.png)
+
 # gRPC + ZIO
 
 Example of Client and Server using gRPC with ZIO and ZLayers for dependency injection.
