@@ -191,6 +191,16 @@ Examples of how Scala and Haskell can look alike.
 
 * **[ScalaHaskell](scala_features/src/main/scala/app/impl/haskell/ScalaHaskell.scala)**
 
+
+![My image](scala_features/src/main/resources/img/grpc.png)
+# gRPC + ZIO
+
+Example of Client and Server using gRPC with ZIO and ZLayers for dependency injection.
+
+* **[Client](zio/src/main/scala/com/features/grpc/ZIOgRPCClient.scala)**
+* **[Server](zio/src/main/scala/com/features/grpc/ZIOgRPCServer.scala)**
+
+
 # Hedged Http client
 
 Hedged requests: send the same requests to multiple servers, and use whatever response comes back first.
