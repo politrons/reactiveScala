@@ -3,21 +3,21 @@ package features.zio
 import java.util.UUID
 
 import org.junit.Test
-import zio.{Has, IO, UIO, ZIO, ZLayer}
+import zio.{Has, IO, Runtime, UIO, ULayer, URIO, ZIO, ZLayer}
 
 /**
-  * ZLayer is a recipe type that receive an RInput and return a ROut, with the possible effect or E
-  */
+ * ZLayer is a recipe type that receive an RInput and return a ROut, with the possible effect or E
+ */
 class ZIOLayer {
 
   val runtime: zio.Runtime[zio.ZEnv] = zio.Runtime.default
 
   /**
-    * Structures/DSL
-    * ---------------
-    * This patter is quite similar to type classes, we have an trait and multiple implementation, and depending which one
-    * we pass as Env arg to the program we will have one behavior or another.
-    */
+   * Structures/DSL
+   * ---------------
+   * This patter is quite similar to type classes, we have an trait and multiple implementation, and depending which one
+   * we pass as Env arg to the program we will have one behavior or another.
+   */
   trait CalcNumber {
     def multiplyBy(number: Long): UIO[Long]
   }
@@ -25,11 +25,11 @@ class ZIOLayer {
   def getNumberProcess(number: Long): ZIO[Has[CalcNumber], Nothing, Long] = ZIO.accessM(_.get.multiplyBy(number))
 
   /**
-    * Behaviors
-    * ---------
-    * Using this pattern we can create multiple behavior of our program, and depending which
-    * implementation of ZLayer we provide to the program when we run it, the program it will behave in one way or another.
-    */
+   * Behaviors
+   * ---------
+   * Using this pattern we can create multiple behavior of our program, and depending which
+   * implementation of ZLayer we provide to the program when we run it, the program it will behave in one way or another.
+   */
   val numberMultiply100: ZLayer[Any, Nothing, Has[CalcNumber]] = ZLayer.succeed(new CalcNumber {
     override def multiplyBy(number: Long): UIO[Long] = ZIO.succeed(number * 100)
   })
@@ -41,16 +41,16 @@ class ZIOLayer {
   val stringValue: ZLayer[Any, Any, Has[String]] = ZLayer.succeed("This is a simple layer")
 
   /**
-    * Using ++ operator we can combine multiple layers to have multi dependency to be passed as Env argument.
-    */
+   * Using ++ operator we can combine multiple layers to have multi dependency to be passed as Env argument.
+   */
   val multipleZLayer: ZLayer[Any, Any, Has[CalcNumber] with Has[String]] = numberMultiply100 ++ stringValue
 
   /**
-    * In this example we provide two execution of the same program, passing two different ZLayer as Env argument
-    * [numberMultiply100] and [numberMultiply1000].
-    * With this pattern using [ZLayer] and [Has] we are able to create a DSL [Program] and passing different ZLayer
-    * we provide different behaviors.
-    */
+   * In this example we provide two execution of the same program, passing two different ZLayer as Env argument
+   * [numberMultiply100] and [numberMultiply1000].
+   * With this pattern using [ZLayer] and [Has] we are able to create a DSL [Program] and passing different ZLayer
+   * we provide different behaviors.
+   */
   @Test
   def programWithOneZLayer(): Unit = {
     // Unique program definition
@@ -67,9 +67,9 @@ class ZIOLayer {
   }
 
   /**
-    * In this example we provide a program with multi Has[A] layers in the Env type.
-    * Having this we can use this two Has layers in our program using [ZIO.accessM]
-    */
+   * In this example we provide a program with multi Has[A] layers in the Env type.
+   * Having this we can use this two Has layers in our program using [ZIO.accessM]
+   */
   @Test
   def programWithMultipleZLayer(): Unit = {
     // Unique program definition
@@ -87,9 +87,9 @@ class ZIOLayer {
   }
 
   /**
-    * Multi module Basket ZLayer example
-    * ----------------------------------
-    */
+   * Multi module Basket ZLayer example
+   * ----------------------------------
+   */
   case class BasketId(uuid: String)
 
   case class Basket(id: BasketId, products: List[Product])
@@ -101,13 +101,13 @@ class ZIOLayer {
   var baskets: Map[BasketId, Basket] = Map()
 
   /**
-    * Module object that keeps all logic, and only expose a Service with the functions to be used.
-    * Internally those functions implementations it will use the Env argument provided into the program
-    * so basically we can change the implementation of the service if we have more than one [ZLayer]
-    * implemented in the Module.
-    * In this case we just implement [basketDependencies], we can implement so many as we want and being used by our
-    * DSL defined as Structure
-    */
+   * Module object that keeps all logic, and only expose a Service with the functions to be used.
+   * Internally those functions implementations it will use the Env argument provided into the program
+   * so basically we can change the implementation of the service if we have more than one [ZLayer]
+   * implemented in the Module.
+   * In this case we just implement [basketDependencies], we can implement so many as we want and being used by our
+   * DSL defined as Structure
+   */
   object BasketModule {
 
     trait Service {
@@ -117,14 +117,14 @@ class ZIOLayer {
     }
 
     /**
-      * Behavior of our module
-      * -----------------------
-      * Just like Type class pattern or Free monad, we can have multiple implementations of the Service, defined as [ZLayer]
-      * We create a service dependency using [ZLayer] which provide a factory to encapsulate the implementation
-      * defined before, so then it will be able to be used as Env argument provided in a ZIO program, as dependency.
-      *
-      * Has[A] represent a dependency of type A. We can combine multiple dependencies using ++ (Has[A] ++ Has[B]) -> Has[A] with Has[B]
-      */
+     * Behavior of our module
+     * -----------------------
+     * Just like Type class pattern or Free monad, we can have multiple implementations of the Service, defined as [ZLayer]
+     * We create a service dependency using [ZLayer] which provide a factory to encapsulate the implementation
+     * defined before, so then it will be able to be used as Env argument provided in a ZIO program, as dependency.
+     *
+     * Has[A] represent a dependency of type A. We can combine multiple dependencies using ++ (Has[A] ++ Has[B]) -> Has[A] with Has[B]
+     */
     val basketDependencies: ZLayer[Any, Nothing, Has[BasketModule.Service]] = ZLayer.succeed(new Service {
       override def getBasket(basketId: BasketId): ZIO[Any, BasketError, Basket] = {
         ZIO.effect {
@@ -144,13 +144,13 @@ class ZIOLayer {
     })
 
     /**
-      * Structure of our module
-      * -------------------------
-      * Access method of module. Since we use return type ZIO[Env, E, A] the compiler can infer
-      * when we use [ZIO.accessM], which it will get the function argument of the Env defined in the type.
-      * So we can use it, to extract that Env value and transform the value into A
-      * Here as Env we pass the service we expose so we can then invoke internally his use.
-      */
+     * Structure of our module
+     * -------------------------
+     * Access method of module. Since we use return type ZIO[Env, E, A] the compiler can infer
+     * when we use [ZIO.accessM], which it will get the function argument of the Env defined in the type.
+     * So we can use it, to extract that Env value and transform the value into A
+     * Here as Env we pass the service we expose so we can then invoke internally his use.
+     */
     def findBasketById(basketId: BasketId): ZIO[Has[BasketModule.Service], BasketError, Basket] = {
       ZIO.accessM(_.get.getBasket(basketId))
     }
@@ -161,8 +161,8 @@ class ZIOLayer {
   }
 
   /**
-    * Product module where we encapsulate the logic of Products
-    */
+   * Product module where we encapsulate the logic of Products
+   */
   object ProductModule {
 
     trait Service {
@@ -170,20 +170,20 @@ class ZIOLayer {
     }
 
     /**
-      * Behavior of our module
-      * -----------------------
-      * We define the logic of the [Product service] like if a type class is.
-      * Once we have the [ZLayer it can be used to be passed as Env type to a program to provide behavior]
-      */
+     * Behavior of our module
+     * -----------------------
+     * We define the logic of the [Product service] like if a type class is.
+     * Once we have the [ZLayer it can be used to be passed as Env type to a program to provide behavior]
+     */
     val productDependencies: ZLayer[Any, Nothing, Has[ProductModule.Service]] = ZLayer.succeed(new Service {
       override def createProduct(name: String, price: Long): UIO[Product] = ZIO.succeed(Product(name, price))
     })
 
     /**
-      * Structure of our module
-      * -----------------------
-      * The DSL of Product module. Using the Env Has[A] invoke the implementation for that environment
-      */
+     * Structure of our module
+     * -----------------------
+     * The DSL of Product module. Using the Env Has[A] invoke the implementation for that environment
+     */
     def createProduct(name: String, price: Long): ZIO[Has[ProductModule.Service], Nothing, Product] =
       ZIO.accessM(_.get.createProduct(name, price))
   }
@@ -208,4 +208,27 @@ class ZIOLayer {
 
   }
 
+
+  case class ServiceA(message: String)
+
+  case class ServiceB(a: ServiceA)
+
+  @Test
+  def fromService(): Unit = {
+    val stringLayer: ULayer[Has[String]] = ZLayer.succeed("Hello layer world")
+    val serviceALayer: ZLayer[Has[String], Nothing, Has[ServiceA]] = ZLayer.fromService[String, ServiceA]((s: String) => ServiceA(s))
+    val serviceBLayer: ZLayer[Has[ServiceA], Nothing, Has[ServiceB]] = ZLayer.fromService((a: ServiceA) => ServiceB(a))
+
+    val composeLayers = stringLayer >>> serviceALayer >>> serviceBLayer
+    val managed: Runtime.Managed[Has[ServiceB]] = Runtime.unsafeFromLayer(composeLayers)
+
+    val program: ZIO[Has[ServiceB], Nothing, Unit] = for {
+      serviceB <- getServiceB
+      _ <- ZIO.succeed(println(serviceB.a.message))
+    } yield ()
+
+    Runtime.global.unsafeRun(program.provide(managed.environment))
+  }
+
+  def getServiceB(): ZIO[Has[ServiceB], Nothing, ServiceB] = ZIO.access(_.get)
 }

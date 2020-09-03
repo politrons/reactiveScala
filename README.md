@@ -96,13 +96,14 @@ Here we cover with some practical examples, the most common use of ZIO library.
 
 * **[ZIO monad](scala_features/src/main/scala/app/impl/zio/ZIOMonad.scala)**
 * **[ZIO Actor](scala_features/src/main/scala/app/impl/zio/ZIOActor.scala)**
-* **[ZIO ZLayer](scala_features/src/main/scala/app/impl/zio/ZIOLayer.scala)**
+* **[ZIO ZLayer](zio/src/main/scala/com/features/zio/ZIOLayer.scala)**
 * **[ZIO ZStream](scala_features/src/main/scala/app/impl/zio/ZIOZStream.scala)**
 * **[ZIO Config](scala_features/src/main/scala/app/impl/zio/ZIOConfigFeature.scala)**
 * **[ZIO Test](scala_features/src/main/scala/app/impl/zio/ZIOTestFeature.scala)**
 * **[ZIO flip](scala_features/src/main/scala/app/impl/zio/ZIOFlip.scala)**
 * **[ZIO queue](scala_features/src/main/scala/app/impl/zio/ZIOQueue.scala)**
 * **[ZIO fiber](scala_features/src/main/scala/app/impl/zio/ZIOFiber.scala)**
+* **[ZIO promise](zio/src/main/scala/com/features/zio/ZIOPromise.scala)**
 
 
 ![My image](scala_features/src/main/resources/img/native.jpg)

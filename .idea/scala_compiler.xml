@@ -11,6 +11,8 @@
     <profile name="Maven 1" modules="zio">
       <option name="postfixOps" value="true" />
     </profile>
-    <profile name="Maven 2" modules="reactiveScala.zio" />
+    <profile name="Maven 2" modules="reactiveScala.zio">
+      <option name="postfixOps" value="true" />
+    </profile>
   </component>
 </project>
