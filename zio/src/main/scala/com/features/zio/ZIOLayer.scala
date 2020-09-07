@@ -2,8 +2,9 @@ package features.zio
 
 import java.util.UUID
 
+import features.zio.ZIOLayer.{MyDependency1, MyDependency2, MyDependency3}
 import org.junit.Test
-import zio.{Has, IO, Runtime, UIO, ULayer, URIO, ZIO, ZLayer}
+import zio.{Has, IO, Runtime, UIO, ULayer, URIO, ZIO, ZLayer, ZManaged}
 
 /**
  * ZLayer is a recipe type that receive an RInput and return a ROut, with the possible effect or E
@@ -230,5 +231,43 @@ class ZIOLayer {
     Runtime.global.unsafeRun(program.provide(managed.environment))
   }
 
+  @Test
+  def hasFeature(): Unit = {
+    val dependency1= Has(MyDependency1("Hello layer world"))
+    val dependency2 = Has(MyDependency2(" inside a zio"))
+    val dependency3 = Has(MyDependency3("!!!"))
+
+    val dependencies: Has[MyDependency1] with Has[MyDependency2] with Has[MyDependency3] =
+      dependency1 ++ dependency2 ++ dependency3
+
+    Runtime.global.unsafeRun {
+      (for {
+        value <- getMyService().provide(dependencies)
+        _ <- ZIO.succeed(println(value))
+      } yield ()).catchAll {
+        t =>
+          println(t)
+          ZIO.fail(t)
+      }
+    }
+  }
+
+  def getMyService(): ZIO[Has[MyDependency1] with Has[MyDependency2] with Has[MyDependency3], Throwable, String] = {
+    for {
+      (dependency1, dependency2) <- ZManaged.services[MyDependency1, MyDependency2].useNow
+      value <- ZIO.effect(dependency1.value ++ dependency2.value)
+    } yield value
+  }
+
   def getServiceB(): ZIO[Has[ServiceB], Nothing, ServiceB] = ZIO.access(_.get)
+}
+
+object ZIOLayer {
+
+  case class MyDependency1(value: String) extends AnyVal
+
+  case class MyDependency2(value: String) extends AnyVal
+
+  case class MyDependency3(value: String) extends AnyVal
+
 }
