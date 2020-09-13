@@ -360,6 +360,65 @@ class ZIOMonad {
       _ <- ZIO.whenM(ZIO.effect(true))(ZIO.effect(println("Hello if effect condition")))
     } yield ())
 
-
   }
+
+  @Test
+  def zioParallel(): Unit = {
+    main.unsafeRun((for {
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} Hello")).fork
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} Async")).fork
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} ZIO")).fork
+    } yield ()).catchAll(_ => ZIO.succeed(println("Control async effects"))))
+  }
+
+  @Test
+  def zioParallelZip(): Unit = {
+    main.unsafeRun(for {
+      f1 <- ZIO.effect(println(s"${Thread.currentThread().getName} Hello")).fork
+      f2 <- ZIO.effect(println(s"${Thread.currentThread().getName} Async")).fork
+      f3 <- ZIO.effect(println(s"${Thread.currentThread().getName} ZIO")).fork
+      _ <- (f1 zip f2 zip f3).join
+    } yield ())
+  }
+
+  @Test
+  def zioParallelZipError(): Unit = {
+    main.unsafeRun((for {
+      f1 <- ZIO.effect(println(s"${Thread.currentThread().getName} Hello")).fork
+      f2 <- ZIO.effect(throw new NullPointerException).fork
+      f3 <- ZIO.effect(println(s"${Thread.currentThread().getName} ZIO")).fork
+      _ <- (f1 zip f2 zip f3).join
+    } yield ()).catchAll(_ => ZIO.succeed(println("Control async effects"))))
+  }
+
+  @Test
+  def zioParallelError(): Unit = {
+    main.unsafeRun((for {
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} Hello")).fork
+      _ <- ZIO.effect(throw new NullPointerException).fork
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} ZIO")).fork
+    } yield ()).catchAll(_ => ZIO.succeed(println("Control async effects"))))
+  }
+
+  @Test
+  def zioError(): Unit = {
+    main.unsafeRun((for {
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} Hello"))
+      _ <- ZIO.effect(throw new NullPointerException)
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} ZIO"))
+    } yield ()).catchAll(_ => ZIO.succeed(println("Control async effects"))))
+  }
+
+  @Test
+  def zioErrorWhen(): Unit = {
+    main.unsafeRun((for {
+      _ <- ZIO.when(false)(
+        for {
+          _ <- ZIO.effectTotal(println("Why this happens?"))
+          _ <- ZIO.fail(new IllegalArgumentException())
+        } yield ())
+      _ <- ZIO.effect(println(s"${Thread.currentThread().getName} ZIO"))
+    } yield ()).catchAll(_ => ZIO.succeed(println("Control async effects"))))
+  }
+
 }
