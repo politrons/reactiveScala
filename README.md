@@ -31,6 +31,24 @@ Here we cover with some practical examples, the most common use of Scala API.
 * **[Phantom Types](scala_features/src/main/scala/app/impl/scala/PhantomTypes.scala)**
 * **[Option](scala_features/src/main/scala/app/impl/scala/OptionFeature.scala)**
 
+# Scala ![My image](scala_features/src/main/resources/img/scala_small.jpg)
+
+Here we cover with some practical examples, the new features of the version 3 
+
+* **[Given instances](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/GivenInstancesFeatures.scala)**
+* **[Implicit functions](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/ImplicitFunctionFeature.scala)**
+* **[Intersection types](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/IntersectionTypesFeature.scala)**
+* **[Union types](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/UnionTypesFeature.scala)**
+* **[Enum types](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/EnumTypesFeatures.scala)**
+* **[Type Lambda](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/TypeLambdaFeature.scala)**
+* **[Trait Params](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/TraitParamsFeature.scala)**
+* **[Extension methods](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/ExtensionMethodsFeature.scala)**
+* **[Export Clauses](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/ExportClausesFeature.scala)**
+* **[Auto param tuples](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/AutoParamTuplingFeature.scala)**
+* **[Multiverse equality](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/MultiversalEqualityFeature.scala)**
+* **[Pattern matching](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/PatternMatchingFeature.scala)**
+* **[Inline](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/InlineFeature.scala)**
+* **[Structure & Style](https://github.com/politrons/scala3Features/blob/master/src/main/scala/scala/features/StructureStyleFeature.scala)**
 
 # ![My image](scala_features/src/main/resources/img/rsz_reactive-extensions.png)
 
@@ -76,8 +94,18 @@ ZIO A type-safe, composable library for asynchronous and concurrent programming 
 
 Here we cover with some practical examples, the most common use of ZIO library.
 
-* **[ZIO monad](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOMonad.scala)**
-* **[ZIO Actor](scala_features/src/main/scala/app/impl/scalaz/zio/ZIOActor.scala)**
+* **[ZIO monad](scala_features/src/main/scala/app/impl/zio/ZIOMonad.scala)**
+* **[ZIO Actor](scala_features/src/main/scala/app/impl/zio/ZIOActor.scala)**
+* **[ZIO ZLayer](zio/src/main/scala/com/features/zio/ZIOLayer.scala)**
+* **[ZIO ZManaged](zio/src/main/scala/com/features/zio/ZIOManaged.scala)**
+* **[ZIO ZStream](scala_features/src/main/scala/app/impl/zio/ZIOZStream.scala)**
+* **[ZIO Config](scala_features/src/main/scala/app/impl/zio/ZIOConfigFeature.scala)**
+* **[ZIO Test](scala_features/src/main/scala/app/impl/zio/ZIOTestFeature.scala)**
+* **[ZIO flip](scala_features/src/main/scala/app/impl/zio/ZIOFlip.scala)**
+* **[ZIO queue](scala_features/src/main/scala/app/impl/zio/ZIOQueue.scala)**
+* **[ZIO fiber](scala_features/src/main/scala/app/impl/zio/ZIOFiber.scala)**
+* **[ZIO promise](zio/src/main/scala/com/features/zio/ZIOPromise.scala)**
+
 
 ![My image](scala_features/src/main/resources/img/native.jpg)
 # Scala-native
@@ -134,7 +162,6 @@ The original project [here](https://monix.io/)
 
 * **[Stream feature](fs2/src/main/scala/StreamFeature.scala)**
 
-
 ![My image](scala_features/src/main/resources/img/finagle.png)
 # Finagle
 
@@ -166,6 +193,24 @@ Examples of how Scala and Haskell can look alike.
 
 * **[ScalaHaskell](scala_features/src/main/scala/app/impl/haskell/ScalaHaskell.scala)**
 
+
+![My image](scala_features/src/main/resources/img/grpc.png) ![My image](scala_features/src/main/resources/img/ZIO.png)
+
+# gRPC + ZIO
+
+Example of Client and Server using gRPC with ZIO and ZLayers for dependency injection.
+
+* **[Client](zio/src/main/scala/com/features/grpc/ZIOgRPCClient.scala)**
+* **[Server](zio/src/main/scala/com/features/grpc/ZIOgRPCServer.scala)**
+
+
+# Hedged Http client
+
+Hedged requests: send the same requests to multiple servers, and use whatever response comes back first.
+
+* **[Connector](scala_features/src/main/scala/app/impl/http/HttpHedgedClient.scala)**
+* **[DSL Runner](scala_features/src/main/scala/app/impl/http/HedgedClientRunner.scala)**
+
 # Tagless Final
 
 Examples of use Tagless Final encode to enjoy the potential of free structures.
@@ -177,6 +222,11 @@ Examples of use Tagless Final encode to enjoy the potential of free structures.
 * [DSL validator](macros/src/main/scala/app/impl/macros/::.scala)
 * [Runner](test_macros/src/main/scala/app/impl/macros/Main.scala)
 
+# Refined
+
+Examples of this library to validate values types in compilation time.
+
+* [Examples](scala_features/src/main/scala/app/impl/types/RefinedFeature.scala)
 
 # Algorithms
 

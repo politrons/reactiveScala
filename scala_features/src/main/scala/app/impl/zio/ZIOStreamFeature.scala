@@ -1,10 +1,7 @@
-package app.impl.scalaz.zio
+package app.impl.zio
 
-import app.impl.scalaz.zio.ZIOActorSystem.{Bounded, Capacity, InboxStrategy, Permit, ZIOActor, inboxStrategy, unsafeRun}
 import org.junit.Test
-import scalaz.zio.{DefaultRuntime, Queue, Semaphore, UIO, ZIO}
-
-import scala.concurrent.Promise
+import scalaz.zio._
 
 
 object ZIOStreamFeature extends DefaultRuntime {

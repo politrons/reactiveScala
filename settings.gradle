@@ -6,4 +6,6 @@ include 'Cassandra'
 include 'monix'
 include 'category_theory'
 include 'fs2'
+include 'algorithm'
+include 'zio'
 

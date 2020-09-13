@@ -1,0 +1,17 @@
+syntax = "proto3";
+package com.features.zio;
+
+service ConnectorManager {
+
+  rpc ConnectorRequest (ConnectorInfoDTO) returns (ResponseInfo) {}
+}
+
+message ConnectorInfoDTO {
+  string connectorName = 1;
+  string requestInfo = 2;
+
+}
+
+message ResponseInfo {
+  string message = 1;
+}

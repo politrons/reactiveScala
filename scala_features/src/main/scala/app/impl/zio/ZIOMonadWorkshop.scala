@@ -1,4 +1,4 @@
-package app.impl.scalaz.zio
+package app.impl.zio
 
 import org.junit.Test
 import scalaz.zio.{DefaultRuntime, Fiber, IO, ZIO}
@@ -116,6 +116,18 @@ class ZIOMonadWorkshop {
       _ <- ZIO.whenM(ZIO.effect(true))(ZIO.effect(println("Hello if effect condition")))
     } yield ())
 
+  }
+
+  @Test
+  def zioCatchRecover: Unit = {
+    val output = main.unsafeRun {
+      (for {
+        value <- ZIO.effect(null)
+        compose <- ZIO.effect(value.toString.toUpperCase()).catchAll(_ => ZIO.succeed("Hello world"))
+        upper <- ZIO.effect(compose.toUpperCase())
+      } yield upper).catchAll(t => ZIO.succeed("Error error and error"))
+    }
+    println(output)
   }
 
 

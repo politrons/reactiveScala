@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
+        <option name="distributionType" value="WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Cassandra" />
+            <option value="$PROJECT_DIR$/algorithm" />
+            <option value="$PROJECT_DIR$/category_theory" />
+            <option value="$PROJECT_DIR$/fs2" />
+            <option value="$PROJECT_DIR$/h2" />
+            <option value="$PROJECT_DIR$/macros" />
+            <option value="$PROJECT_DIR$/monix" />
+            <option value="$PROJECT_DIR$/scala_features" />
+            <option value="$PROJECT_DIR$/test_macros" />
+            <option value="$PROJECT_DIR$/zio" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
