@@ -11,23 +11,28 @@ class TypeClass {
     }
   }
 
+  /**
+    * Contract to be implemented by type classes
+    * @tparam T generic type to be implemented for each different type
+    */
   trait EqualTypeClass[T] {
     def equal(a: T, b: T): Boolean
   }
 
-  object EqualTypeClass {
-    def apply[T](func: (T, T) => Boolean) = new EqualTypeClass[T] {
-      def equal(a: T, b: T): Boolean = func.apply(a, b)
-    }
-  }
-
+  /**
+    * Implementation of interface
+    */
   implicit val intEqual: EqualTypeClass[Int] = new EqualTypeClass[Int]() {
     override def equal(a: Int, b: Int): Boolean = a == b
   }
 
-  implicit val stringEqual: EqualTypeClass[String] = EqualTypeClass((a, b) => a.eq(b))
+  /**
+    * Sugar syntax
+    */
+  implicit val stringEqual: EqualTypeClass[String] = (a: String, b: String) => a.eq(b)
 
-  implicit val longEqual: EqualTypeClass[Long] = EqualTypeClass((a, b) => a == b)
+
+  implicit val longEqual: EqualTypeClass[Long] = (a: Long, b: Long) => a == b
 
   @Test
   def testEquals() = {
