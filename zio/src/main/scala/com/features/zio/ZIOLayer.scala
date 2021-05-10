@@ -1,8 +1,8 @@
-package features.zio
+package com.features.zio
 
 import java.util.UUID
 
-import features.zio.ZIOLayer.{MyDependency1, MyDependency2, MyDependency3}
+import com.features.zio.ZIOLayer.{MyDependency1, MyDependency2, MyDependency3}
 import org.junit.Test
 import zio.{Has, IO, Runtime, UIO, ULayer, URIO, ZIO, ZLayer, ZManaged}
 

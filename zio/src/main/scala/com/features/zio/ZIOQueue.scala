@@ -1,4 +1,4 @@
-package features.zio
+package com.features.zio
 
 import zio.{Queue, Semaphore, Task}
 
