@@ -84,40 +84,37 @@ object FunctionalCollection extends App {
         (value != x && x.toCharArray.count(c => c.isUpper) != value.length))
   }
 
-  override def main(args: Array[String]): Unit = {
-    /**
-      * We create a collection with some elements (which are actually predicate functions in memory)
-      */
-    val collection: MyCollection[Int] = GenericCollection add 1981 add 100 add 12 add 1 add 5
+  /**
+    * We create a collection with some elements (which are actually predicate functions in memory)
+    */
+  val collection: MyCollection[Int] = GenericCollection add 1981 add 100 add 12 add 1 add 5
 
-    println(s"Exist:${collection.has(1981)}")
-    println(s"Exist:${collection.has(100)}")
-    println(s"Exist:${collection.has(2000)}")
-    println(s"Exist:${collection.has(5)}")
-    println(s"Exist:${collection.has(1000)}")
+  println(s"Exist:${collection.has(1981)}")
+  println(s"Exist:${collection.has(100)}")
+  println(s"Exist:${collection.has(2000)}")
+  println(s"Exist:${collection.has(5)}")
+  println(s"Exist:${collection.has(1000)}")
 
-    /**
-      * We remove an element from the current collection
-      */
-    val newCollection: MyCollection[Int] = collection remove 1981
+  /**
+    * We remove an element from the current collection
+    */
+  val newCollection: MyCollection[Int] = collection remove 1981
 
-    println(s"Exist after being removed:${newCollection.has(1981)}")
+  println(s"Exist after being removed:${newCollection.has(1981)}")
 
-    /**
-      * Example for [StringCollection]
-      */
-    val stringCollections: GenericCollection[String] = GenericCollection add "HELLO" add "A" add "foo"
+  /**
+    * Example for [StringCollection]
+    */
+  val stringCollections: GenericCollection[String] = GenericCollection add "HELLO" add "A" add "foo"
 
-    println(s"Exist and is upper case: ${stringCollections.has("HELLO")}")
-    println(s"Exist and is upper case: ${stringCollections.has("foo")}")
-    println(s"Exist and is upper case: ${stringCollections.has("bla")}")
-    println(s"Exist and is upper case: ${stringCollections.has("A")}")
+  println(s"Exist and is upper case: ${stringCollections.has("HELLO")}")
+  println(s"Exist and is upper case: ${stringCollections.has("foo")}")
+  println(s"Exist and is upper case: ${stringCollections.has("bla")}")
+  println(s"Exist and is upper case: ${stringCollections.has("A")}")
 
-    val newStringCollection = stringCollections remove "HELLO"
+  val newStringCollection = stringCollections remove "HELLO"
 
-    println(s"Exist after being removed:${newStringCollection.has("HELLO")}")
-
-  }
+  println(s"Exist after being removed:${newStringCollection.has("HELLO")}")
 
 
 }
