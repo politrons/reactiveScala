@@ -47,10 +47,10 @@ object FunctionalCollection extends App {
     /**
       * We use same [add] function in a static way to create the first instance of [StringCollection] where
       * as the most important part, we have to specify the function, we will use to check if an element
-      * in the collection is there or not and also if is in upperCase.
+      * in the collection is there or not and also if is in upperCase, unless is a whitespace.
       */
     def add(value: String): StringCollection = {
-      StringCollection(x => value == x && x.toCharArray.count(c => c.isUpper) == value.length)
+      StringCollection(x => value == x && x.toCharArray.count(c => c.isUpper || c.isWhitespace) == value.length)
     }
   }
 
@@ -77,11 +77,11 @@ object FunctionalCollection extends App {
 
     override def add(value: String): GenericCollection[String] =
       StringCollection(x => property(x) ||
-        (value == x && x.toCharArray.count(c => c.isUpper) == value.length))
+        (value == x && x.toCharArray.count(c => c.isUpper || c.isWhitespace) == value.length))
 
     override def remove(value: String): GenericCollection[String] =
       StringCollection(x => property(x) &&
-        (value != x && x.toCharArray.count(c => c.isUpper) != value.length))
+        (value != x && x.toCharArray.count(c => c.isUpper || c.isWhitespace) != value.length))
   }
 
   /**
@@ -105,16 +105,15 @@ object FunctionalCollection extends App {
   /**
     * Example for [StringCollection]
     */
-  val stringCollections: GenericCollection[String] = GenericCollection add "HELLO" add "A" add "foo"
+  val stringCollections: GenericCollection[String] = GenericCollection add "HELLO WORLD" add "A" add "foo"
 
-  println(s"Exist and is upper case: ${stringCollections.has("HELLO")}")
+  println(s"Exist and is upper case: ${stringCollections.has("HELLO WORLD")}")
   println(s"Exist and is upper case: ${stringCollections.has("foo")}")
   println(s"Exist and is upper case: ${stringCollections.has("bla")}")
   println(s"Exist and is upper case: ${stringCollections.has("A")}")
 
-  val newStringCollection = stringCollections remove "HELLO"
+  val newStringCollection = stringCollections remove "HELLO WORLD"
 
-  println(s"Exist after being removed:${newStringCollection.has("HELLO")}")
-
+  println(s"Exist after being removed:${newStringCollection.has("HELLO WORLD")}")
 
 }
