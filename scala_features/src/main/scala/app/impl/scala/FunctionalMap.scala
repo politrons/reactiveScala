@@ -1,11 +1,19 @@
 package app.impl.scala
 
+import scala.util.Try
+
 /**
   * I have seen far by standing on the shoulders of giants.
   * This whole exercise was based on the RockJVM youtube post https://www.youtube.com/watch?v=Y5rPHZaUakg&t=487s
   */
 object FunctionalMap extends App {
 
+  /**
+    * Contract to implement a Functional Map
+    *
+    * @tparam K of the map
+    * @tparam V of the map
+    */
   trait MapF[K, V] {
 
     def has(key: K): Boolean
@@ -16,40 +24,73 @@ object FunctionalMap extends App {
 
   /**
     * Factory companion object to create MapF
+    *
+    * [Add] function that receive key and value, and we create the first instance of [GenericMap]
+    * passing two functions:
+    * [Predicate] to be used by [has] function. Check if the key is part of the map
+    * [Function1] to be used by [get] function. Get the value in the map for a key if exist, otherwise throw [IllegalAccessException] exception
     */
   object MapF {
-
     def add[K, V](key: K, value: V): GenericMap[K, V] = {
-      GenericMap(k => k == key, k =>
-        if (k == key) {
-          value
-        } else {
-          throw new IllegalAccessException
-        })
-
+      GenericMap(k => k == key, k => if (k == key) value else throw new IllegalAccessException)
     }
   }
 
+  /**
+    * Implementation of [MapF] where we pass two functions in the constructor.
+    *
+    * @param find predicate function to be used by [has] function. Check if the key is part of the map
+    * @param get  function1 function to be used by [get] function. Get the value in the map for a key
+    * @tparam K type key of the element
+    * @tparam V type value of the element
+    */
   case class GenericMap[K, V](find: K => Boolean, get: K => V) extends MapF[K, V] {
 
+    /**
+      * Using the [key] we invoke the [find] function to search the key in all the recursive predicate function
+      *
+      * @param key to be used by the function
+      */
     def has(key: K): Boolean = find(key)
 
-    def add(key: K, value: V): GenericMap[K, V] = GenericMap[K, V](e => find(e) || e == key, k => {
-      if (k == key) {
-        value
-      } else {
-        get(k)
+    /**
+      * Using key and value we create a new instance of [GenericMap] where we pass two functions, and part of this two functions, we use
+      * the functions of the previous GenericMap[K, V] instance.
+      * [findFunction] invoke the [find] function of the previous instance of [GenericMap] or try to apply the function e == key
+      * [getFunction] check if the key is equal to k input param of the function, and if is equals return the value
+      * otherwise invoke the recursive function [get(k)] of previous instance [GenericMap]
+      *
+      * @param key   of the element
+      * @param value of the element
+      * @return
+      */
+    def add(key: K, value: V): GenericMap[K, V] = {
+
+      val findFunction: K => Boolean = {
+        e => find(e) || e == key
       }
-    })
+
+      val getFunction: K => V = {
+        k => if (k == key) value else get(k)
+      }
+
+      GenericMap[K, V](findFunction, getFunction)
+
+    }
+
 
     def get(key: V): GenericMap[K, V] = get(key)
 
   }
 
-  private val functionalMap: GenericMap[Int, String] = MapF add(1, "hello") add(2, "world")
+  private val functionalMap: GenericMap[Int, String] = MapF add(1, "hello") add(2, "world") add(3, "functional") add(4, "programing") add(5, "rocks")
 
   println(s"Exist:${functionalMap.has(1)}")
   println(s"Value:${functionalMap.get(1)}")
-
-
+  println(s"Exist:${functionalMap.has(3)}")
+  println(s"Value:${functionalMap.get(3)}")
+  println(s"Exist:${functionalMap.has(2)}")
+  println(s"Value:${functionalMap.get(2)}")
+  println(s"Exist:${functionalMap.has(100)}")
+  println(s"Value:${Try(functionalMap.get(100))}")
 }
