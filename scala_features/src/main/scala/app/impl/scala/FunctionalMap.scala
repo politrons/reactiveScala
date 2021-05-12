@@ -5,6 +5,11 @@ import scala.util.Try
 /**
   * I have seen far by standing on the shoulders of giants.
   * This whole exercise was based on the RockJVM youtube post https://www.youtube.com/watch?v=Y5rPHZaUakg&t=487s
+  *
+  * This pattern apply the idea to concat functions like if we would doing recursive calls.
+  * For example:
+  * Find element after add 4 elements.  K => Boolean || K => Boolean || K => Boolean || K => Boolean || false
+  * Get element after add 4 elements. K => V || K => V || K => V || K => V || IllegalAccessException
   */
 object FunctionalMap extends App {
 
@@ -38,11 +43,8 @@ object FunctionalMap extends App {
 
   /**
     * Implementation of [MapF] where we pass two functions in the constructor.
-    *
     * @param find predicate function to be used by [has] function. Check if the key is part of the map
     * @param get  function1 function to be used by [get] function. Get the value in the map for a key
-    * @tparam K type key of the element
-    * @tparam V type value of the element
     */
   case class GenericMap[K, V](find: K => Boolean, get: K => V) extends MapF[K, V] {
 
@@ -59,10 +61,6 @@ object FunctionalMap extends App {
       * [findFunction] invoke the [find] function of the previous instance of [GenericMap] or try to apply the function e == key
       * [getFunction] check if the key is equal to k input param of the function, and if is equals return the value
       * otherwise invoke the recursive function [get(k)] of previous instance [GenericMap]
-      *
-      * @param key   of the element
-      * @param value of the element
-      * @return
       */
     def add(key: K, value: V): GenericMap[K, V] = {
 
@@ -78,7 +76,10 @@ object FunctionalMap extends App {
 
     }
 
-
+    /**
+      * invoke the function [get] passing the key and this function obtain the value for that key passing for
+      * all [getFunction] concatenations that we did when we use [add] function.
+      */
     def get(key: V): GenericMap[K, V] = get(key)
 
   }
