@@ -25,6 +25,10 @@ object FunctionalMap extends App {
 
     def add(key: K, value: V): MapF[K, V]
 
+    def remove(key: K): MapF[K, V]
+
+    def get(key: V): GenericMap[K, V]
+
   }
 
   /**
@@ -53,16 +57,16 @@ object FunctionalMap extends App {
       *
       * @param key to be used by the function
       */
-    def has(key: K): Boolean = find(key)
+    override def has(key: K): Boolean = find(key)
 
     /**
       * Using key and value we create a new instance of [GenericMap] where we pass two functions, and part of this two functions, we use
       * the functions of the previous GenericMap[K, V] instance.
-      * [findFunction] invoke the [find] function of the previous instance of [GenericMap] or try to apply the function e == key
+      * [findFunction] invoke the [find] function of the previous instance of [GenericMap] or apply the function e == key
       * [getFunction] check if the key is equal to k input param of the function, and if is equals return the value
       * otherwise invoke the recursive function [get(k)] of previous instance [GenericMap]
       */
-    def add(key: K, value: V): GenericMap[K, V] = {
+    override def add(key: K, value: V): GenericMap[K, V] = {
 
       val findFunction: K => Boolean = {
         e => find(e) || e == key
@@ -77,13 +81,36 @@ object FunctionalMap extends App {
     }
 
     /**
+      * Using key we create a new instance of [GenericMap] where we pass two functions, and part of this two functions, we use
+      * the functions of the previous GenericMap[K, V] instance.
+      * [findFunction] invoke the [find] function of the previous instance of [GenericMap] and apply the function e != key
+      * [getFunction] check if the key is not equal to k input param of the function, and if is not equals invoke
+      * the recursive function [get(k)] of previous instance [GenericMap] otherwise throw [IllegalAccessException]
+      */
+    override def remove(key: K): GenericMap[K, V] = {
+
+      val findFunction: K => Boolean = {
+        e => find(e) && e != key
+      }
+
+      val getFunction: K => V = {
+        k => if (k != key) get(k) else throw new IllegalAccessException
+      }
+
+      GenericMap[K, V](findFunction, getFunction)
+
+    }
+
+    /**
       * invoke the function [get] passing the key and this function obtain the value for that key passing for
       * all [getFunction] concatenations that we did when we use [add] function.
       */
-    def get(key: V): GenericMap[K, V] = get(key)
-
+    override def get(key: V): GenericMap[K, V] = get(key)
   }
 
+  /**
+    * Add some entries
+    */
   private val functionalMap: GenericMap[Int, String] = MapF add(1, "hello") add(2, "world") add(3, "functional") add(4, "programing") add(5, "rocks")
 
   println(s"Exist:${functionalMap.has(1)}")
@@ -94,4 +121,16 @@ object FunctionalMap extends App {
   println(s"Value:${functionalMap.get(2)}")
   println(s"Exist:${functionalMap.has(100)}")
   println(s"Value:${Try(functionalMap.get(100))}")
+
+  /**
+    * Remove some elements
+    */
+  private val newFunctionalMap: GenericMap[Int, String] = functionalMap remove 1 remove 3
+
+  println(s"Exist:${newFunctionalMap.has(3)}")
+  println(s"Value:${Try(newFunctionalMap.get(3))}")
+  println(s"Exist:${newFunctionalMap.has(1)}")
+  println(s"Value:${Try(newFunctionalMap.get(1))}")
+  println(s"Exist:${newFunctionalMap.has(2)}")
+  println(s"Value:${Try(newFunctionalMap.get(2))}")
 }
