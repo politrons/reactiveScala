@@ -2,7 +2,7 @@ import scala.util.Sorting
 
 object Warmup extends App {
 
-  weighOfString()
+  beautifulBinaryString()
 
   /**
     * https://www.hackerrank.com/challenges/sock-merchant/problem?h_l=interview&playlist_slugs%5B%5D%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D%5B%5D=warmup&isFullScreen=true
@@ -317,55 +317,148 @@ object Warmup extends App {
     val s: String = "abccddde" //1,2,6,4,8,12,5
     val queries: Array[Int] = Array(1, 3, 12, 5, 9, 10)
     val sArray = s.toArray
-    val alpha = Map(
-      "a" -> 1,
-      "b" -> 2,
-      "c" -> 3,
-      "d" -> 4,
-      "e" -> 5,
-      "f" -> 6,
-      "g" -> 7,
-      "h" -> 8,
-      "i" -> 9,
-      "j" -> 10,
-      "k" -> 11,
-      "l" -> 12,
-      "m" -> 13,
-      "n" -> 14,
-      "o" -> 15,
-      "p" -> 16,
-      "q" -> 17,
-      "r" -> 18,
-      "s" -> 19,
-      "t" -> 20,
-      "u" -> 21,
-      "v" -> 22,
-      "w" -> 23,
-      "x" -> 24,
-      "y" -> 25,
-      "z" -> 26)
-
-    var totalValues: List[Int] = List()
     var previousLetter: String = ""
+    val output: Array[String] = new Array(queries.length)
+    output.indices.foreach(i => {
+      output(i) = "No"
+    })
     sArray.foreach(letter => {
-      val length: Int = previousLetter.toArray.count(c => c.toString == letter.toString)
-      if (length > 0) {
+      val length: Int = previousLetter.toArray.count(c => c == letter)
+      val currentValue = if (length > 0) {
         previousLetter = letter.toString + previousLetter
-        totalValues = totalValues ++ List(alpha(letter.toString) * (length + 1))
+        (letter.toInt - 96) * (length + 1)
       } else {
         previousLetter = letter.toString
-        totalValues = totalValues ++ List(alpha(letter.toString))
+        letter.toInt - 96
       }
-    })
-    println(totalValues.toString())
-    val output: Array[String] = new Array(queries.length)
-    queries.indices.foreach(i => {
-      val value = queries(i)
-      output(i) = "No"
-      if (totalValues.contains(value)) {
-        output(i) = "Yes"
+      val queryIndex = queries.indexOf(currentValue)
+      if (queryIndex >= 0) {
+        output(queryIndex) = "Yes"
       }
     })
     println(output.mkString("Array(", ", ", ")"))
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/separate-the-numbers/problem
+    * TODO:Unsolved
+    */
+  def separateNumbers(): Unit = {
+    val s = "101112"
+    var fromCurrent = 0
+    var toCurrent = 1
+    var fromNext = 1
+    var toNext = 2
+
+    var finish = false
+    while (!finish) {
+      val current = s.substring(fromCurrent, toCurrent).toInt
+      val right = s.substring(fromNext, toNext).toInt
+      if (current > right) {
+        toNext += 1
+      } else if (right - current != 1) {
+        toCurrent += 1
+        fromNext += 1
+        toNext += 1
+      } else {
+        println(s"Current:$current")
+        println(s"Right:$right")
+        fromCurrent = toCurrent
+        toCurrent = toNext
+        fromNext = fromNext + 1
+        toNext = toNext + 1
+        if (toNext > s.length) {
+          finish = true
+        }
+      }
+    }
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/funny-string/problem
+    */
+  def funnyString(): Unit = {
+    val s = "bcxz" //97 99 120 122
+    val array = s.toArray
+    val diffArray: Array[Int] = new Array(array.length)
+    val revArray: Array[Int] = new Array(array.length)
+    array.indices.foreach(i => {
+      if (i + 1 < array.length) {
+        val diff = Math.abs(array(i).toInt - array(i + 1).toInt)
+        val revDiff = Math.abs(array(array.length - (i + 1)).toInt - array(array.length - (i + 2)).toInt)
+        diffArray(i) = diff
+        revArray(i) = revDiff
+      }
+    })
+    var output = "Funny"
+    for (i <- array.indices) {
+      if (diffArray(i) != revArray(i)) {
+        output = "Not Funny"
+      }
+    }
+    println(output)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/gem-stones/problem?h_r=next-challenge&h_v=zen
+    */
+  def gemStorm(): Unit = {
+    val arr = Array("abcdde", "baccd", "eeabg")
+    var gemStones: Map[Char, Boolean] = Map()
+    arr.foreach(rock => {
+      val minerals: Array[Char] = rock.toArray.distinct
+      minerals.foreach(mineral => {
+        val mineralInRocks = arr.count(rock => rock.contains(mineral.toString))
+        if (mineralInRocks == arr.length) {
+          gemStones = gemStones ++ Map(mineral -> true)
+        }
+      })
+    })
+    println(gemStones.size)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/alternating-characters/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+    */
+  def alteringCharacters(): Unit = {
+    val s = "ABABABAA"
+    val array = s.toArray
+    var deleteNumber = 0
+    array.indices.foreach(index => {
+      if (index < array.length - 1) {
+        val current = array(index)
+        if (current.toInt > 0 && index <= array.length - 2 && current == array(index + 1)) {
+          array(index) = 0
+          deleteNumber += 1
+        }
+      }
+    })
+    println(deleteNumber)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/beautiful-binary-string/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+    */
+  def beautifulBinaryString(): Unit = {
+    val b = "0101010"
+    val nonBeautiful = "010"
+    val array = b.toArray
+    var deleteTimes = 0
+    array.indices.foreach(i => {
+      if (i >= 2) {
+        if (s"${array(i - 2).toString}${array(i - 1).toString}${array(i).toString}" == nonBeautiful) {
+          array(i) = if (array(i) == 49) 48 else 49
+          deleteTimes += 1
+        }
+      }
+    })
+    println(deleteTimes)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/the-love-letter-mystery/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+    */
+  def theLoveLetterMystery(): Unit ={
+
   }
 }
