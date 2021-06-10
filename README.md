@@ -107,6 +107,7 @@ Here we cover with some practical examples, the most common use of ZIO library.
 * **[ZIO queue](scala_features/src/main/scala/app/impl/zio/ZIOQueue.scala)**
 * **[ZIO fiber](scala_features/src/main/scala/app/impl/zio/ZIOFiber.scala)**
 * **[ZIO promise](zio/src/main/scala/com/features/zio/ZIOPromise.scala)**
+* **[ZIO STM](zio/src/main/scala/com/features/zio/ZIOStm.scala)**
 
 
 ![My image](scala_features/src/main/resources/img/native.jpg)

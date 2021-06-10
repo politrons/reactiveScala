@@ -1,8 +1,8 @@
 import scala.util.Sorting
 
-object Warmup extends App {
+object HackerRank extends App {
 
-  beautifulBinaryString()
+  palindromeIndex()
 
   /**
     * https://www.hackerrank.com/challenges/sock-merchant/problem?h_l=interview&playlist_slugs%5B%5D%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D%5B%5D=warmup&isFullScreen=true
@@ -458,7 +458,273 @@ object Warmup extends App {
   /**
     * https://www.hackerrank.com/challenges/the-love-letter-mystery/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
     */
-  def theLoveLetterMystery(): Unit ={
+  def theLoveLetterMystery(): Unit = {
+    val s = "cba"
+    val array = s.toArray
+    var operation = 0
+
+    def reduceValue(i: Int): Unit = {
+      val reverseIndex = s.length - 1 - i
+      if (array(i) > array(reverseIndex) && array(i).toString != "a") {
+        array(i) = (array(i).toInt - 1).toChar
+        operation += 1
+        reduceValue(i)
+      } else if (array(i) < array(reverseIndex) && array(reverseIndex).toString != "a") {
+        array(reverseIndex) = (array(reverseIndex).toInt - 1).toChar
+        operation += 1
+        reduceValue(i)
+      }
+    }
+
+    array.indices.foreach(i => {
+      reduceValue(i)
+    })
+    println(operation)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/ctci-fibonacci-numbers/problem
+    */
+  def fibonacciNumbers(): Unit = {
+    val x = 6
+    val fibonacciSequence: Array[Int] = new Array(x + 1)
+    for (i <- 0 to x) {
+      if (i < 2) {
+        fibonacciSequence(i) = i
+      } else {
+        fibonacciSequence(i) = fibonacciSequence(i - 2) + fibonacciSequence(i - 1)
+      }
+    }
+    println(fibonacciSequence(x))
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/fibonacci-finding-easy/problem
+    */
+  def fibonacciFinder(): Unit = {
+    val a = 509618737
+    val b = 460201239
+    val n = 229176339
+
+    val fibonacciSequence = new Array[Long](n + 1)
+
+    def calcNextNumber(index: Int): Unit = {
+      if (index <= n) {
+        if (index < 2) {
+          fibonacciSequence(index) = a
+          fibonacciSequence(index + 1) = b
+          calcNextNumber(index + 2)
+        } else {
+          fibonacciSequence(index) = fibonacciSequence(index - 2) + fibonacciSequence(index - 1)
+          calcNextNumber(index + 1)
+        }
+      }
+    }
+
+    calcNextNumber(0)
+
+    println(fibonacciSequence(n))
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/palindrome-index/problem
+    */
+  def palindromeIndex(): Unit = {
+    val s = "hgygsvlfwcwnswtuhmyaljkqlqjjqlqkjlaymhutwsnwcflvsgygh"
+    val array: Array[Char] = s.toArray
+    var indexToMove: Int = -1
+
+    def findThePalindrome(array: Array[Char]): Unit = {
+      array.indices.foreach(i => {
+        val left = array(i)
+        val right = array(array.length - 1 - i)
+        if (left != right) {
+          val leftArray = array
+          leftArray(i) = 0
+          val filterArray = leftArray.filter(c => c != 0)
+          findThePalindrome(filterArray)
+          if (indexToMove == -1) {
+            indexToMove = array.length - 1 - i
+          } else {
+            indexToMove = i
+          }
+        }
+      })
+    }
+
+    findThePalindrome(array)
+    println(indexToMove)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/electronics-shop/problem
+    */
+  def findBestProduct(): Unit = {
+
+    val keyboards: Array[Int] = Array(3, 1)
+    val drives: Array[Int] = Array(5, 2, 8)
+    val b: Int = 10
+    val prices: Array[Int] = new Array[Int](keyboards.length * drives.length)
+
+    var index = 0
+    keyboards.foreach(keyboard => {
+      drives.foreach(driver => {
+        prices(index) = keyboard + driver
+        index += 1
+      })
+    })
+    Sorting.quickSort(prices)
+
+    val finalPrice = prices.reverse.find(price => price <= b).getOrElse(-1)
+    println(finalPrice)
 
   }
+
+  /**
+    * https://www.hackerrank.com/challenges/cats-and-a-mouse/problem?h_r=next-challenge&h_v=zen
+    */
+  def catsAndMouse(): Unit = {
+
+    val x: Int = 1
+    val y: Int = 3
+    val z: Int = 2
+
+    val movesCatA = Math.abs(x - z)
+    val movesCatB = Math.abs(y - z)
+    if (movesCatA == movesCatB) {
+      println("Mouse C")
+    } else if (movesCatA < movesCatB) {
+      println("Cat A")
+    } else {
+      println("Cat B")
+    }
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/picking-numbers/problem
+    */
+  def pickingNumbers(): Unit = {
+
+    val a: Array[Int] = Array(4, 6, 5, 3, 3, 1)
+
+    var bestSubArray = 0
+    a.foreach(x => {
+      var lenSubArray = 0
+      a.foreach(y => {
+        val diff = x - y
+        if (diff <= 1 && diff >= 0) {
+          lenSubArray += 1
+        }
+      })
+      if (lenSubArray > bestSubArray) bestSubArray = lenSubArray
+    })
+    println(bestSubArray)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/the-hurdle-race/problem
+    */
+  def hurdlerRace(): Unit = {
+    val k: Int = 47
+    val height: Array[Int] = Array(52, 99, 93, 84, 50, 64, 61, 87, 89, 97, 64, 69, 61, 90, 82, 53, 50, 63, 82, 87, 76, 78, 75, 55, 80, 68, 75, 83, 69, 81, 95, 89, 60, 59, 90, 100, 90, 64, 53, 60, 88, 93, 62, 50, 75, 77, 60, 93, 55, 79, 52, 47, 65, 74, 62, 60, 96, 49, 73, 92, 79, 54, 100, 81, 63, 58, 75, 80, 89, 94, 52, 85, 57, 72, 97, 81, 97, 66, 84, 77, 83, 94, 85, 68, 99, 54, 64, 83, 67, 84, 81, 65, 59, 89, 68, 91, 60, 79, 74, 57)
+
+    Sorting.quickSort(height)
+    val numbOfDoses = height.reverse.head - k
+    val i = if (numbOfDoses > 0) {
+      numbOfDoses
+    } else {
+      0
+    }
+    println(i)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/designer-pdf-viewer/problem?h_r=next-challenge&h_v=zen
+    */
+  def designerPdfViewer(): Unit = {
+    val h: Array[Int] = Array(1, 3, 1, 3, 1, 4, 1, 3, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+    val word: String = "abc"
+    val highlight: Array[Int] = new Array(word.length)
+    word.toArray.indices.foreach(i => {
+      val index = word(i).toInt - 97
+      highlight(i) = h(index)
+    })
+    Sorting.quickSort(highlight)
+    val mm3 = highlight.last * word.length
+    println(mm3)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/utopian-tree/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+    */
+  def utopianTree() {
+    val n: Int = 4
+
+    var height = 1
+    val spring: Int => Int = a => a * 2
+    val summer: Int => Int = a => a + 1
+
+    val yearCycle: Int = n / 2
+
+    for (_ <- 0 until yearCycle) {
+      height = summer(spring(height))
+    }
+    if (n % 2 != 0) {
+      height = spring(height)
+    }
+    println(height)
+  }
+
+  /**
+    * https://www.hackerrank.com/challenges/angry-professor/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+    */
+  def angryProfessor() {
+    val k: Int = 3
+    val a: Array[Int] = Array(-1, -3, 4, 2)
+    val totalStudentOnTime = a.count(t => t <= 0)
+    val result = if (totalStudentOnTime >= k) {
+      "NO"
+    } else {
+      "YES"
+    }
+    println(result)
+  }
+
+
+  /**
+    * https://www.hackerrank.com/challenges/beautiful-days-at-the-movies/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+    */
+  def beautifullyDays() {
+    val i: Int = 20
+    val j: Int = 23
+    val k: Int = 6
+    var beautifulDays = 0
+    for (x <- i to j) {
+      val day = x.toString.toArray
+      val reverse = day.reverse
+      val reverseDay = reverse.mkString("").toInt
+      if ((x - reverseDay) % k == 0) {
+        beautifulDays += 1
+      }
+    }
+    println(beautifulDays)
+  }
+
+
+  /**
+    * https://www.hackerrank.com/challenges/strange-advertising/problem?h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen
+    */
+  def viralAdvertising() {
+    val n: Int = 3
+    var total = 0
+    var init = 5
+    for (_ <- 0 until n) {
+      val i = init / 2
+      total += i
+      init = i * 3
+    }
+    println(total)
+  }
+
+
 }
