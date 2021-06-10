@@ -13,12 +13,17 @@ import zio.stm.{STM, TRef}
   * TRef[String] obtain the change of the other process that was perform before.
   *
   * Having this we can guarantee access without concurrent access issues.
- */
+  */
 object ZIOStm extends App {
 
   val main: zio.Runtime[zio.ZEnv] = zio.Runtime.default
 
-  def concatWord(sentence: TRef[String], word: String): STM[String, String] =
+  val toUpperCaseZ: TRef[String] => STM[String, String] = sentence =>
+    for {
+      output <- sentence.updateAndGet(s => s.toUpperCase)
+    } yield output
+
+  val concatWord: (TRef[String], String) => STM[String, String] = (sentence, word) =>
     for {
       _ <- sentence.update(existing => existing + word)
       output <- sentence.get
@@ -28,9 +33,11 @@ object ZIOStm extends App {
     sentence <- STM.atomically(TRef.make("hello transactional"))
     fiber1 <- STM.atomically(concatWord(sentence, " world")).fork
     fiber2 <- STM.atomically(concatWord(sentence, " again")).fork
+    fiber3 <- STM.atomically(toUpperCaseZ(sentence)).fork
     res <- fiber1.join
     res1 <- fiber2.join
-  } yield s"$res1 -> $res"
+    res2 <- fiber3.join
+  } yield s"$res1 -> $res -> $res2"
 
   println(main.unsafeRun(program))
 
