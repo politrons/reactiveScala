@@ -248,3 +248,13 @@ Examples of this library to validate values types in compilation time.
 # Dotty
 
 * **[Implicit function types](scala_features/src/main/scala/app/impl/scala3/ImplicitFunctionTypes.scala)**
+
+
+![My image](scala_features/src/main/resources/img/prime.jpg)
+
+# Prime number platform
+
+Prime number platform. A micro service platform implemented using Finagle for streaming between client/server and gRPC for communication between services.
+All platform implemented using pure functional ZIO effect system.
+
+You can find the project code [here](https://github.com/politrons/PrimeNumberPlatform)
