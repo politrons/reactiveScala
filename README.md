@@ -136,6 +136,15 @@ Here we cover some of the most important features of the library with practical 
 * **[HMap](scala_features/src/main/scala/app/impl/shapeless/HMapFeature.scala)**
 * **[Coproduct](scala_features/src/main/scala/app/impl/shapeless/CoproductFeature.scala)**
 
+![My image](Type_Level/img/cats.png)
+# Cats
+
+Cats is a library which provides abstractions for functional programming in the Scala.
+
+The original project [cats](https://typelevel.org/cats/)
+
+* **[Free monad connectors](Type_Level/src/main/scala/com/politrons/free/ConnectorsFreeMonad.scala)**
+
 ![My image](monix/src/main/resources/monix.png)
 # Monix
 

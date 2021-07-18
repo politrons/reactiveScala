@@ -9,7 +9,7 @@
         <parameter value="-target:jvm-1.8" />
       </parameters>
     </profile>
-    <profile name="Gradle 2" modules="reactiveScala.algorithm.main,reactiveScala.algorithm.test,reactiveScala.category_theory.main,reactiveScala.category_theory.test,reactiveScala.fs2.main,reactiveScala.fs2.test,reactiveScala.h2.main,reactiveScala.h2.test,reactiveScala.macros.main,reactiveScala.macros.test,reactiveScala.monix.main,reactiveScala.monix.test,reactiveScala.scala_features.main,reactiveScala.scala_features.test,reactiveScala.test_macros.main,reactiveScala.test_macros.test">
+    <profile name="Gradle 2" modules="reactiveScala.Type_Level.main,reactiveScala.Type_Level.test,reactiveScala.algorithm.main,reactiveScala.algorithm.test,reactiveScala.category_theory.main,reactiveScala.category_theory.test,reactiveScala.fs2.main,reactiveScala.fs2.test,reactiveScala.h2.main,reactiveScala.h2.test,reactiveScala.macros.main,reactiveScala.macros.test,reactiveScala.monix.main,reactiveScala.monix.test,reactiveScala.scala_features.main,reactiveScala.scala_features.test,reactiveScala.test_macros.main,reactiveScala.test_macros.test,reactiveScala.type_level.main,reactiveScala.type_level.test">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <parameters>

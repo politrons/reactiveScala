@@ -1,0 +1,11 @@
+apply plugin: 'scala'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.8'
+    compile 'org.typelevel:cats-free_2.12:2.3.0'
+    compile 'org.apache.httpcomponents:httpclient:4.5.13'
+}

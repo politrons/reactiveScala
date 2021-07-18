@@ -1,3 +1,4 @@
+import scala.::
 import scala.util.Sorting
 
 object HackerRank extends App {
@@ -48,7 +49,7 @@ object HackerRank extends App {
     c.indices foreach (i => {
       if (c(i) == 0) {
         if (cloudSteps.isEmpty) {
-          cloudSteps = cloudSteps ++ Array(i)
+          cloudSteps = cloudSteps :+ i
         } else {
           if (cloudSteps.length >= 2 && (cloudSteps(cloudSteps.length - 2) + 2) >= i) {
             cloudSteps(cloudSteps.length - 1) = i

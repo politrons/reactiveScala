@@ -13,6 +13,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Cassandra" />
+            <option value="$PROJECT_DIR$/Type_Level" />
             <option value="$PROJECT_DIR$/algorithm" />
             <option value="$PROJECT_DIR$/category_theory" />
             <option value="$PROJECT_DIR$/fs2" />
