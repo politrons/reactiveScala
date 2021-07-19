@@ -33,19 +33,19 @@ object ConnectorsFreeMonad extends App {
   /**
     * Create a Free monad of Host returns nothing (i.e. Unit).
     */
-  def port[T](value: String): Free[ActionA, Unit] =
+  def port(value: String): Free[ActionA, Unit] =
     liftF[ActionA, Unit](Port(value))
 
   /**
     * Create a Free monad of Host returns nothing (i.e. Unit).
     */
-  def host[T](value: String): Free[ActionA, Unit] =
+  def host(value: String): Free[ActionA, Unit] =
     liftF[ActionA, Unit](Host(value))
 
   /**
     * Create a Free monad of Endpoint returns nothing (i.e. Unit).
     */
-  def endpoint[T](value: String): Free[ActionA, Unit] =
+  def endpoint(value: String): Free[ActionA, Unit] =
     liftF[ActionA, Unit](Endpoint(value))
 
   /**
@@ -59,23 +59,6 @@ object ConnectorsFreeMonad extends App {
     */
   def request(): Free[ActionA, Response[String]] =
     liftF[ActionA, Response[String]](Request())
-
-  /**
-    * Structure Program
-    * -----------------
-    */
-
-  /**
-    * This is just an example of how a consumer can use our DSL to create a program
-    */
-  def program: Free[ActionA, Response[String]] =
-    for {
-      _ <- port("80")
-      _ <- host("run.mocky.io")
-      _ <- endpoint("/v3/808e7664-3079-4978-ae2d-a4f2ac4e669b")
-      _ <- method("GET")
-      response <- request()
-    } yield response
 
   /**
     * Behavior Programs
@@ -228,6 +211,23 @@ object ConnectorsFreeMonad extends App {
             Response(Await.result(promise.future, 10 seconds)).asInstanceOf[A]
         }
     }
+
+  /**
+    * Structure Program
+    * -----------------
+    */
+
+  /**
+    * This is just an example of how a consumer can use our DSL to create a program
+    */
+  def program: Free[ActionA, Response[String]] =
+    for {
+      _ <- port("80")
+      _ <- host("run.mocky.io")
+      _ <- endpoint("/v3/808e7664-3079-4978-ae2d-a4f2ac4e669b")
+      _ <- method("GET")
+      response <- request()
+    } yield response
 
   /**
     * Apache connector
