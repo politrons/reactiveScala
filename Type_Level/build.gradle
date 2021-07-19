@@ -10,4 +10,5 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.13'
     compile 'io.vertx:vertx-web-client:4.1.1'
     compile 'com.twitter:finagle-http_2.12:21.6.0'
+//    compile 'io.netty:netty-resolver-dns-native-macos:4.1.66.Final'
 }

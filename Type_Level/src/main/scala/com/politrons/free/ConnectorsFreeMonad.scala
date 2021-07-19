@@ -3,12 +3,6 @@ package com.politrons.free
 import cats.free.Free
 import cats.free.Free.liftF
 import cats.{Id, ~>}
-import com.twitter.finagle.{Http, Service, http}
-import com.twitter.util.Await
-import io.vertx.core.Future
-import io.vertx.core.Vertx.vertx
-import io.vertx.core.buffer.Buffer
-import io.vertx.ext.web.client.{HttpRequest, HttpResponse, WebClient}
 
 object ConnectorsFreeMonad extends App {
 
@@ -17,6 +11,8 @@ object ConnectorsFreeMonad extends App {
     * ------------------------
     */
   sealed trait ActionA[A]
+
+  case class Port(value: String) extends ActionA[Unit]
 
   case class Host(value: String) extends ActionA[Unit]
 
@@ -33,6 +29,12 @@ object ConnectorsFreeMonad extends App {
     * DSL
     * ----
     */
+
+  /**
+    * Create a Free monad of Host returns nothing (i.e. Unit).
+    */
+  def port[T](value: String): Free[ActionA, Unit] =
+    liftF[ActionA, Unit](Port(value))
 
   /**
     * Create a Free monad of Host returns nothing (i.e. Unit).
@@ -68,7 +70,8 @@ object ConnectorsFreeMonad extends App {
     */
   def program: Free[ActionA, Response[String]] =
     for {
-      _ <- host("run.mocky.io:80")
+      _ <- port("80")
+      _ <- host("run.mocky.io")
       _ <- endpoint("/v3/808e7664-3079-4978-ae2d-a4f2ac4e669b")
       _ <- method("GET")
       response <- request()
@@ -94,12 +97,16 @@ object ConnectorsFreeMonad extends App {
       import org.apache.http.impl.client.{BasicResponseHandler, CloseableHttpClient, HttpClients}
 
       private val client: CloseableHttpClient = HttpClients.createDefault()
+      var port: String = _
       var host: String = _
       var endpoint: String = _
       var httpRequest: HttpRequestBase = _
 
       def apply[A](fa: ActionA[A]): Id[A] =
         fa match {
+          case Port(value) =>
+            port = value
+            ().asInstanceOf[A]
           case Host(value) =>
             host = value
             ().asInstanceOf[A]
@@ -109,7 +116,7 @@ object ConnectorsFreeMonad extends App {
             ().asInstanceOf[A]
           case Method("GET") =>
             println(s"GET method")
-            httpRequest = new HttpGet(s"http://$host$endpoint")
+            httpRequest = new HttpGet(s"http://$host:$port$endpoint")
             ().asInstanceOf[A]
           case Request() =>
             println(s"Apache request executing......")
@@ -130,6 +137,10 @@ object ConnectorsFreeMonad extends App {
   def finagleConnector: ActionA ~> Id =
     new (ActionA ~> Id) {
 
+      import com.twitter.finagle.{Http, Service, http}
+      import com.twitter.util.Await
+
+      var port: String = _
       var host: String = _
       var endpoint: String = _
       var client: Service[http.Request, http.Response] = _
@@ -137,9 +148,12 @@ object ConnectorsFreeMonad extends App {
 
       def apply[A](fa: ActionA[A]): Id[A] =
         fa match {
+          case Port(value) =>
+            port = value
+            ().asInstanceOf[A]
           case Host(value) =>
             host = value
-            client = Http.newService(host)
+            client = Http.newService(s"$host:$port")
             ().asInstanceOf[A]
           case Endpoint(value) =>
             println(s"endpoint:$value")
@@ -148,12 +162,62 @@ object ConnectorsFreeMonad extends App {
           case Method("GET") =>
             println(s"GET method")
             request = http.Request(http.Method.Get, endpoint)
-            request.host = host
+            request.host = s"$host:$port"
             ().asInstanceOf[A]
           case Request() =>
             println(s"Finagle request executing......")
             val response = Await.result(client(request))
             Response(response.contentString).asInstanceOf[A]
+        }
+    }
+
+  def vertxConnector: ActionA ~> Id =
+    new (ActionA ~> Id) {
+
+      import io.vertx.core.Vertx.vertx
+      import io.vertx.core.buffer.Buffer
+      import io.vertx.ext.web.client.{HttpRequest, WebClient, WebClientOptions}
+      import scala.concurrent.duration._
+      import scala.concurrent.{Await, Promise}
+
+      val client: WebClient = WebClient.create(vertx, new WebClientOptions()
+        .setSsl(false)
+        .setTrustAll(true)
+        .setDefaultPort(80)
+        .setKeepAlive(true)
+      )
+
+      var port: String = _
+      var host: String = _
+      var endpoint: String = _
+      var httpRequest: HttpRequest[Buffer] = _
+
+      def apply[A](fa: ActionA[A]): Id[A] =
+        fa match {
+          case Port(value) =>
+            port = value
+            ().asInstanceOf[A]
+          case Host(value) =>
+            host = value
+            ().asInstanceOf[A]
+          case Endpoint(value) =>
+            println(s"endpoint:$value")
+            endpoint = value
+            ().asInstanceOf[A]
+          case Method("GET") =>
+            println(s"GET method")
+            httpRequest = client
+              .get(port.toInt, host, endpoint)
+            ().asInstanceOf[A]
+          case Request() =>
+            println(s"Vertx request executing......")
+            val promise = Promise[String]()
+            httpRequest
+              .uri("/v3/808e7664-3079-4978-ae2d-a4f2ac4e669b")
+              .send()
+              .onSuccess(response => promise.success(response.bodyAsString()))
+              .onFailure(err => promise.failure(err))
+            Response(Await.result(promise.future, 10 seconds)).asInstanceOf[A]
         }
     }
 
@@ -170,7 +234,15 @@ object ConnectorsFreeMonad extends App {
     * -----------------
     * We use in our program the finagle connector interpreter
     */
-  val vertxResponse: Response[String] = program.foldMap(finagleConnector)
+  val finagleResponse: Response[String] = program.foldMap(finagleConnector)
+  println(finagleResponse.value)
+
+  /**
+    * Vertx connector
+    * -----------------
+    * We use in our program the finagle connector interpreter
+    */
+  val vertxResponse: Response[String] = program.foldMap(vertxConnector)
   println(vertxResponse.value)
 
 }
