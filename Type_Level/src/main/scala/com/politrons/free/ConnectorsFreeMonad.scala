@@ -119,6 +119,14 @@ object ConnectorsFreeMonad extends App {
         }
     }
 
+  /**
+    * Finagle connector implementation.
+    * We implement the behavior to be used by the program that use the DSL.
+    * The program will become impure and it might have side-effects when:
+    * * Receive the ADT
+    * * We create the Service
+    * + We make the request and we await for the resolution of the future.
+    */
   def finagleConnector: ActionA ~> Id =
     new (ActionA ~> Id) {
 
@@ -151,12 +159,16 @@ object ConnectorsFreeMonad extends App {
 
   /**
     * Apache connector
+    * ----------------
+    * We use in our program the apache connector interpreter
     */
   val apacheResponse: Response[String] = program.foldMap(apacheConnector)
   println(apacheResponse.value)
 
   /**
-    * Vertx connector
+    * Finagle connector
+    * -----------------
+    * We use in our program the finagle connector interpreter
     */
   val vertxResponse: Response[String] = program.foldMap(finagleConnector)
   println(vertxResponse.value)
