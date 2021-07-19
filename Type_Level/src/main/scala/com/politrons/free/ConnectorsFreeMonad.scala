@@ -171,6 +171,14 @@ object ConnectorsFreeMonad extends App {
         }
     }
 
+  /**
+    * Vertx connector implementation.
+    * We implement the behavior to be used by the program that use the DSL.
+    * The program will become impure and it might have side-effects when:
+    * * Receive the ADT
+    * * We create the HttpRequest[Buffer]
+    * + We make the request and we await for the resolution of the future.
+    */
   def vertxConnector: ActionA ~> Id =
     new (ActionA ~> Id) {
 
