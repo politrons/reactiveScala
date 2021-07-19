@@ -8,4 +8,6 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.12.8'
     compile 'org.typelevel:cats-free_2.12:2.3.0'
     compile 'org.apache.httpcomponents:httpclient:4.5.13'
+    compile 'io.vertx:vertx-web-client:4.1.1'
+    compile 'com.twitter:finagle-http_2.12:21.6.0'
 }
