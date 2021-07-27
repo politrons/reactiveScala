@@ -144,6 +144,7 @@ Cats is a library which provides abstractions for functional programming in the 
 The original project [cats](https://typelevel.org/cats/)
 
 * **[Free monad connectors](Type_Level/src/main/scala/com/politrons/free/ConnectorsFreeMonad.scala)**
+* **[Effects](Type_Level/src/main/scala/com/politrons/cats/CatsEffects.scala)**
 
 ![My image](monix/src/main/resources/monix.png)
 # Monix
