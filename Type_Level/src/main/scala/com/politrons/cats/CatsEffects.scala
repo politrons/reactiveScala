@@ -2,11 +2,12 @@ package com.politrons.cats
 
 import cats.effect.IO
 import cats.effect.IO.async_
-import cats.effect.std.CountDownLatch
+import cats.effect.std.{CountDownLatch, Semaphore}
 import cats.effect.unsafe.IORuntime
 import cats.implicits._
 
 import java.util.UUID
+import scala.concurrent.duration.DurationInt
 import scala.util.{Random, Try}
 
 object CatsEffects {
@@ -20,6 +21,7 @@ object CatsEffects {
     fiber()
     countDownLatch()
     race()
+    semaphore()
   }
 
   /**
@@ -133,6 +135,41 @@ object CatsEffects {
         "Task2"
       })
     println(program.unsafeRunSync())
+  }
+
+  /**
+    * [Semaphore] provide the feature to only allow access to one specific part of the effect to the number
+    * of programs that we specify in the constructor.
+    * Each time we use [acquire] we reduce that number, and in case there's still no zero, we can proceed,
+    * otherwise we will wait, until we use the other operator [release] which it will increase the semaphore number.
+    * Finally [available] will let us know how many semaphore number are availables.
+    */
+  def semaphore(): Unit = {
+    val program =
+      for {
+        semaphore <- Semaphore[IO](2)
+        f <- runTask(semaphore).start
+        f1 <- runTask(semaphore).start
+        f2 <- runTask(semaphore).start
+        f3 <- runTask(semaphore).start
+        _ <- f.join
+        _ <- f1.join
+        _ <- f2.join
+        _ <- f3.join
+      } yield ()
+
+    program.unsafeRunSync()
+  }
+
+  def runTask(semaphore: Semaphore[IO]): IO[Unit] = {
+    for {
+      x <- semaphore.available
+      _ <- IO.println(s"Preparing to work. Spot available $x")
+      _ <- semaphore.acquire
+      y <- semaphore.available
+      _ <- IO.println(s"Working...  Spot available $y")
+      _ <- semaphore.release.delayBy(2.seconds)
+    } yield ()
   }
 
 }
