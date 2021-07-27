@@ -7,7 +7,7 @@ import cats.effect.unsafe.IORuntime
 import cats.implicits._
 
 import java.util.UUID
-import scala.util.Try
+import scala.util.{Random, Try}
 
 object CatsEffects {
 
@@ -19,6 +19,7 @@ object CatsEffects {
     memorize()
     fiber()
     countDownLatch()
+    race()
   }
 
   /**
@@ -116,8 +117,22 @@ object CatsEffects {
         _ <- f.join
       } yield ()
     program.unsafeRunSync()
+  }
 
-
+  /**
+    * [Race] Operator allow us make a race between two effects and return an Either with the left or right wich
+    * is the winner of the race.
+    */
+  def race(): Unit = {
+    val program = IO.race(
+      IO {
+        Thread.sleep(new Random().nextInt(1000))
+        "Task1"
+      }, IO {
+        Thread.sleep(new Random().nextInt(1000))
+        "Task2"
+      })
+    println(program.unsafeRunSync())
   }
 
 }
