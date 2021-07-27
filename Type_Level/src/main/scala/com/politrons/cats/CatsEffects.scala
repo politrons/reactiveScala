@@ -1,8 +1,10 @@
 package com.politrons.cats
 
 import cats.effect.IO
-import cats.effect.IO.{async, async_}
+import cats.effect.IO.async_
+import cats.effect.std.CountDownLatch
 import cats.effect.unsafe.IORuntime
+import cats.implicits._
 
 import java.util.UUID
 import scala.util.Try
@@ -15,6 +17,8 @@ object CatsEffects {
     monadIO()
     asyncIO()
     memorize()
+    fiber()
+    countDownLatch()
   }
 
   /**
@@ -25,10 +29,10 @@ object CatsEffects {
   def monadIO(): Unit = {
     val program: IO[Unit] =
       for {
-        _ <- printPure("Hello")
-        _ <- printPure("Pure")
-        _ <- printPure("Functional")
-        _ <- printPure("World")
+        _ <- IO.println("Hello")
+        _ <- IO.println("Pure")
+        _ <- IO.println("Functional")
+        _ <- IO.println("World")
       } yield ()
     program.unsafeRunSync()
   }
@@ -77,8 +81,43 @@ object CatsEffects {
     println(output)
   }
 
-  def printPure(msg: String): IO[Unit] = IO {
-    println(msg)
+  /**
+    * Fiber are lightweight threads also knows as Green threads. Are threads created in the JVM
+    * instead in the OS.
+    * Using IO, we can make the execution of the effect run in a Fiber using [start] operator.
+    * We receive then a Fiber instance, and to pass the output value to the main thread, we
+    * have to use [join]
+    */
+  def fiber(): Unit = {
+    val program =
+      for {
+        fiber1 <- IO(s"Task 1 in Thread:${Thread.currentThread().getName}\n").start
+        fiber2 <- IO(s"Task 2 in Thread:${Thread.currentThread().getName}\n").start
+        out1 <- fiber1.joinWithNever
+        out2 <- fiber2.joinWithNever
+      } yield out1 + out2
+    println(program.unsafeRunSync())
+  }
+
+  /**
+    * [CountDownLatch] allow us await an effect until the countdown of the number passed in the constructor  is 0.
+    * To reduce the number in the CountDownLatch we use [release]
+    */
+  def countDownLatch(): Unit = {
+    val program =
+      for {
+        cdl <- CountDownLatch[IO](3)
+        f <- (cdl.await >> IO.println(s"After release all latch running final action in Fiber: ${Thread.currentThread().getName}")).start
+        _ <- cdl.release
+        _ <- IO.println("Running action 1")
+        _ <- cdl.release
+        _ <- IO.println("Running action 2")
+        _ <- cdl.release
+        _ <- f.join
+      } yield ()
+    program.unsafeRunSync()
+
+
   }
 
 }
