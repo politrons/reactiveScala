@@ -2,6 +2,7 @@ package com.politrons.cats
 
 import cats.effect.IO
 import cats.effect.IO.async_
+import cats.effect.kernel.Resource
 import cats.effect.std.{CountDownLatch, Semaphore}
 import cats.effect.unsafe.IORuntime
 import cats.implicits._
@@ -19,9 +20,10 @@ object CatsEffects {
     monadIO()
     asyncIO()
     memorize()
+    resource()
     fiber()
-    countDownLatch()
     race()
+    countDownLatch()
     semaphore()
   }
 
@@ -46,7 +48,9 @@ object CatsEffects {
         _ <- IO.println(msg2)
         msg3 <- IO.fromEither(Right("Functional"))
         _ <- IO.println(msg3)
-        msg4 <- IO.fromFuture(IO(Future {"World"}(scala.concurrent.ExecutionContext.global)))
+        msg4 <- IO.fromFuture(IO(Future {
+          "World"
+        }(scala.concurrent.ExecutionContext.global)))
         _ <- IO.println(msg4)
       } yield ()).handleError(t => {
         println(s"Handling error:$t")
@@ -100,6 +104,27 @@ object CatsEffects {
   }
 
   /**
+    * [Resource] is quite similar to [Bracket] It has a section where we acquire a resource, a second
+    * one where we define what we will do with that resource once we finish our program(a.k.a Finalizer)
+    * and then the we use operator [use] where we add a function where the input param is the resource.
+    */
+  def resource(): Unit = {
+    val program: IO[Unit] = (for {
+      input1 <- Resource.make(IO {
+        println("Opening resource....")
+        "Foo"
+      })(resource => IO.println(s"Releasing resource $resource"))
+    } yield input1)
+      .use { input1 =>
+        for {
+          _ <- IO.println(s"Using resource $input1")
+        } yield ()
+      }
+    program.unsafeRunSync()
+
+  }
+
+  /**
     * Fiber are lightweight threads also knows as Green threads. Are threads created in the JVM
     * instead in the OS.
     * Using IO, we can make the execution of the effect run in a Fiber using [start] operator.
@@ -114,6 +139,22 @@ object CatsEffects {
         out1 <- fiber1.joinWithNever
         out2 <- fiber2.joinWithNever
       } yield out1 + out2
+    println(program.unsafeRunSync())
+  }
+
+  /**
+    * [Race] Operator allow us make a race between two effects and return an Either with the left or right wich
+    * is the winner of the race.
+    */
+  def race(): Unit = {
+    val program = IO.race(
+      IO {
+        Thread.sleep(new Random().nextInt(1000))
+        "Task1"
+      }, IO {
+        Thread.sleep(new Random().nextInt(1000))
+        "Task2"
+      })
     println(program.unsafeRunSync())
   }
 
@@ -134,22 +175,6 @@ object CatsEffects {
         _ <- f.join
       } yield ()
     program.unsafeRunSync()
-  }
-
-  /**
-    * [Race] Operator allow us make a race between two effects and return an Either with the left or right wich
-    * is the winner of the race.
-    */
-  def race(): Unit = {
-    val program = IO.race(
-      IO {
-        Thread.sleep(new Random().nextInt(1000))
-        "Task1"
-      }, IO {
-        Thread.sleep(new Random().nextInt(1000))
-        "Task2"
-      })
-    println(program.unsafeRunSync())
   }
 
   /**
