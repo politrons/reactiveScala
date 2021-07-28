@@ -29,6 +29,13 @@ object CatsEffects {
     * IO monad to introduce Pure functional programing in Cats.
     * Providing referential transparency, lazy evaluation, and the possibility to use Fibers
     * instead OS Threads.
+    *
+    * Just like other effect systems like ZIO, we have different operators to bring all
+    * Scala monads into one monad to rule them all [IO].
+    * * [fromOption] transform the effect Optional into IO
+    * * [fromTry] transform the effect Try into IO
+    * * [fromEither] transform the effect Either into IO
+    * * [fromFuture] transform the effect Future into IO
     */
   def monadIO(): Unit = {
     val program: IO[Unit] =
