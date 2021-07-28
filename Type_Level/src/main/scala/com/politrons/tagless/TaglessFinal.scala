@@ -1,6 +1,9 @@
 package com.politrons.tagless
 
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.util.Try
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 object TaglessFinal extends App {
 
@@ -13,6 +16,7 @@ object TaglessFinal extends App {
   case class ShoppingCart(id: String, products: List[Product])
 
   /**
+    * ------------------------
     * [ADT] Algebra Data Types
     * -------------------------
     * We describe the DSL that we will use in our program. We will expose to the client only this contract
@@ -29,27 +33,41 @@ object TaglessFinal extends App {
     def add(sc: ShoppingCart, product: Product): F[ShoppingCart]
   }
 
-  trait ShoppingCartDSL[ScalaValue] {
-    def ~>[F[_]](implicit interpreter: ShoppingCarts[F]): F[ScalaValue]
+  /**
+    * ------------------------------
+    * [DSL] Domain Specific Language
+    * ------------------------------
+    * Here we define the DSL we will use in the program we will define, each of this operators
+    * has an implicit interpreter that implement the ADT trait.
+    * Each implementation is just used as decorator, so we just invoke the interpreter method
+    * associated with this operator.
+    */
+  trait ShoppingCartDSL[T] {
+    def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[T]
   }
 
-  def createShoppingCart(id: String) = new ShoppingCartDSL[Unit] {
-    override def ~>[F[_]](implicit interpreter: ShoppingCarts[F]): F[Unit] = interpreter.create(id)
+  def createShoppingCart(id: String): ShoppingCartDSL[Unit] = new ShoppingCartDSL[Unit] {
+    override def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[Unit] = interpreter.create(id)
   }
 
-  def findShoppingCart(id: String) = new ShoppingCartDSL[ShoppingCart] {
-    override def ~>[F[_]](implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = interpreter.find(id)
+  def findShoppingCart(id: String): ShoppingCartDSL[ShoppingCart] = new ShoppingCartDSL[ShoppingCart] {
+    override def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = interpreter.find(id)
   }
 
-  def addInShoppingCart(sc: ShoppingCart, product: Product) = new ShoppingCartDSL[ShoppingCart] {
-    override def ~>[F[_]](implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = interpreter.add(sc, product)
+  def addInShoppingCart(sc: ShoppingCart, product: Product): ShoppingCartDSL[ShoppingCart] = new ShoppingCartDSL[ShoppingCart] {
+    override def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = interpreter.add(sc, product)
   }
 
   /**
+    * -------------
     * Interpreters
     * -------------
     */
 
+  /**
+    * Try interpreter
+    * ---------------
+    */
   val tryInterpreter: ShoppingCarts[Try] = new ShoppingCarts[Try] {
 
     var shoppingCartMap: Map[String, ShoppingCart] = Map()
@@ -68,16 +86,55 @@ object TaglessFinal extends App {
   }
 
   /**
-    * Program
-    * ----------
+    * Future interpreter
+    * -------------------
+    */
+  val futureInterpreter: ShoppingCarts[Future] = new ShoppingCarts[Future] {
+
+    var shoppingCartMap: Map[String, ShoppingCart] = Map()
+
+    override def create(id: String): Future[Unit] = Future {
+      shoppingCartMap = Map(id -> ShoppingCart(id, List())) ++ shoppingCartMap
+    }(scala.concurrent.ExecutionContext.global)
+
+    override def find(id: String): Future[ShoppingCart] = Future {
+      shoppingCartMap(id)
+    }(scala.concurrent.ExecutionContext.global)
+
+    override def add(sc: ShoppingCart, product: Product): Future[ShoppingCart] = Future {
+      sc.copy(products = product +: sc.products)
+    }(scala.concurrent.ExecutionContext.global)
+  }
+
+  /**
+    * ---------
+    * Programs
+    * ---------
+    * Here we can define using the DSL we define before all the
     */
 
-  private val shoppingCartProgram: Try[ShoppingCart] = for {
-    _ <- createShoppingCart("1981") ~> tryInterpreter
-    sc <- findShoppingCart("1981") ~> tryInterpreter
-    sc <- addInShoppingCart(sc, Product("111", "Coca-cola")) ~> tryInterpreter
-  } yield sc
+  def runProgramTry(): Unit = {
+    implicit val interpreter: ShoppingCarts[Try] = tryInterpreter
+    val shoppingCartProgram: Try[ShoppingCart] = for {
+      _ <- createShoppingCart("1981").run
+      sc <- findShoppingCart("1981").run
+      sc <- addInShoppingCart(sc, Product("111", "Coca-cola")).run
+    } yield sc
+    println(shoppingCartProgram)
+  }
 
-  println(shoppingCartProgram)
+  def runProgramFuture(): Unit = {
+    implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
+    implicit val interpreter: ShoppingCarts[Future] = futureInterpreter
+    val shoppingCartProgram: Future[ShoppingCart] = for {
+      _ <- createShoppingCart("1984").run
+      sc <- findShoppingCart("1984").run
+      sc <- addInShoppingCart(sc, Product("200", "Twix")).run
+      sc <- addInShoppingCart(sc, Product("300", "Pepsi")).run
+    } yield sc
+    println(Await.result(shoppingCartProgram, 10 seconds))
+  }
 
+  runProgramTry()
+  runProgramFuture()
 }
