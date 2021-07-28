@@ -7,6 +7,7 @@ import cats.effect.unsafe.IORuntime
 import cats.implicits._
 
 import java.util.UUID
+import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.util.{Random, Try}
 
@@ -31,12 +32,19 @@ object CatsEffects {
     */
   def monadIO(): Unit = {
     val program: IO[Unit] =
-      for {
-        _ <- IO.println("Hello")
-        _ <- IO.println("Pure")
-        _ <- IO.println("Functional")
-        _ <- IO.println("World")
-      } yield ()
+      (for {
+        msg1 <- IO.fromOption(Some("Hello"))(new IllegalAccessError())
+        _ <- IO.println(msg1)
+        msg2 <- IO.fromTry(Try("Pure"))
+        _ <- IO.println(msg2)
+        msg3 <- IO.fromEither(Right("Functional"))
+        _ <- IO.println(msg3)
+        msg4 <- IO.fromFuture(IO(Future {"World"}(scala.concurrent.ExecutionContext.global)))
+        _ <- IO.println(msg4)
+      } yield ()).handleError(t => {
+        println(s"Handling error:$t")
+        IO.raiseError(t)
+      })
     program.unsafeRunSync()
   }
 
