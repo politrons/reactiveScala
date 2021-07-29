@@ -1,12 +1,20 @@
 package com.politrons.tagless
 
+import cats.effect.IO
+import cats.effect.unsafe.IORuntime
+
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.util.Try
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-object TaglessFinal extends App {
+object TaglessFinal {
 
+  def main(args: Array[String]): Unit = {
+    runProgramIO()
+    runProgramTry()
+    runProgramFuture()
+  }
   /**
     * Domain
     * -----------
@@ -63,6 +71,28 @@ object TaglessFinal extends App {
     */
 
   /**
+    * IO interpreter
+    * ---------------
+    * Here we choose monad IO to control throwable side-effect
+    */
+  val ioInterpreter: ShoppingCarts[IO] = new ShoppingCarts[IO] {
+
+    var shoppingCartMap: Map[String, ShoppingCart] = Map()
+
+    override def create(id: String): IO[Unit] = IO {
+      shoppingCartMap = Map(id -> ShoppingCart(id, List())) ++ shoppingCartMap
+    }
+
+    override def find(id: String): IO[ShoppingCart] = IO {
+      shoppingCartMap(id)
+    }
+
+    override def add(sc: ShoppingCart, product: Product): IO[ShoppingCart] = IO {
+      sc.copy(products = product +: sc.products)
+    }
+  }
+
+  /**
     * Try interpreter
     * ---------------
     * Here we choose monad Try to control throwable side-effect
@@ -113,6 +143,17 @@ object TaglessFinal extends App {
     * Here we can define using the DSL we define before all the
     */
 
+  def runProgramIO(): Unit = {
+    implicit val runtime: IORuntime = IORuntime.global
+    implicit val interpreter: ShoppingCarts[IO] = ioInterpreter
+    val shoppingCartProgram: IO[ShoppingCart] = for {
+      _ <- createShoppingCart("1981")
+      sc <- findShoppingCart("1981")
+      sc <- addInShoppingCart(sc, Product("111", "Coca-cola"))
+    } yield sc
+    println(shoppingCartProgram.unsafeRunSync())
+  }
+
   def runProgramTry(): Unit = {
     implicit val interpreter: ShoppingCarts[Try] = tryInterpreter
     val shoppingCartProgram: Try[ShoppingCart] = for {
@@ -134,7 +175,4 @@ object TaglessFinal extends App {
     } yield sc
     println(Await.result(shoppingCartProgram, 10 seconds))
   }
-
-  runProgramTry()
-  runProgramFuture()
 }
