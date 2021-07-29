@@ -41,20 +41,17 @@ object TaglessFinal extends App {
     * Each implementation is just used as decorator, so we just invoke the interpreter method
     * associated with this operator.
     */
-  trait ShoppingCartDSL[T] {
-    def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[T]
+
+  def createShoppingCart[F[_]](id: String)(implicit interpreter: ShoppingCarts[F]): F[Unit] = {
+    interpreter.create(id)
   }
 
-  def createShoppingCart(id: String): ShoppingCartDSL[Unit] = new ShoppingCartDSL[Unit] {
-    override def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[Unit] = interpreter.create(id)
+  def findShoppingCart[F[_]](id: String)(implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = {
+    interpreter.find(id)
   }
 
-  def findShoppingCart(id: String): ShoppingCartDSL[ShoppingCart] = new ShoppingCartDSL[ShoppingCart] {
-    override def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = interpreter.find(id)
-  }
-
-  def addInShoppingCart(sc: ShoppingCart, product: Product): ShoppingCartDSL[ShoppingCart] = new ShoppingCartDSL[ShoppingCart] {
-    override def run[F[_]](implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = interpreter.add(sc, product)
+  def addInShoppingCart[F[_]](sc: ShoppingCart, product: Product)(implicit interpreter: ShoppingCarts[F]): F[ShoppingCart] = {
+    interpreter.add(sc, product)
   }
 
   /**
@@ -119,9 +116,9 @@ object TaglessFinal extends App {
   def runProgramTry(): Unit = {
     implicit val interpreter: ShoppingCarts[Try] = tryInterpreter
     val shoppingCartProgram: Try[ShoppingCart] = for {
-      _ <- createShoppingCart("1981").run
-      sc <- findShoppingCart("1981").run
-      sc <- addInShoppingCart(sc, Product("111", "Coca-cola")).run
+      _ <- createShoppingCart("1981")
+      sc <- findShoppingCart("1981")
+      sc <- addInShoppingCart(sc, Product("111", "Coca-cola"))
     } yield sc
     println(shoppingCartProgram)
   }
@@ -130,10 +127,10 @@ object TaglessFinal extends App {
     implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
     implicit val interpreter: ShoppingCarts[Future] = futureInterpreter
     val shoppingCartProgram: Future[ShoppingCart] = for {
-      _ <- createShoppingCart("1984").run
-      sc <- findShoppingCart("1984").run
-      sc <- addInShoppingCart(sc, Product("200", "Twix")).run
-      sc <- addInShoppingCart(sc, Product("300", "Pepsi")).run
+      _ <- createShoppingCart("1984")
+      sc <- findShoppingCart("1984")
+      sc <- addInShoppingCart(sc, Product("200", "Twix"))
+      sc <- addInShoppingCart(sc, Product("300", "Pepsi"))
     } yield sc
     println(Await.result(shoppingCartProgram, 10 seconds))
   }
