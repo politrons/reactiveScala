@@ -19,11 +19,10 @@ object TaglessFinal extends App {
     * ------------------------
     * [ADT] Algebra Data Types
     * -------------------------
-    * We describe the DSL that we will use in our program. We will expose to the client only this contract
+    * We describe the DSL that we will use in our interpreters. We will expose to the client only this contract
     * and we will make as abstract as possible the details of the implementation.
     * The idea is to hide the specific effect system we will use.
     * That's the reason to use Higher Kinded Types F[_]
-    * This is normally consider the Behavior of the program.
     */
   trait ShoppingCarts[F[_]] {
     def create(id: String): F[Unit]
@@ -62,11 +61,14 @@ object TaglessFinal extends App {
     * -------------
     * Interpreters
     * -------------
+    * Here we implement the the Behavior of the program. We use the contract described in the ADT to
+    * provide a specific implementation that replace that Higher kinded type
     */
 
   /**
     * Try interpreter
     * ---------------
+    * Here we choose monad Try to control throwable side-effect
     */
   val tryInterpreter: ShoppingCarts[Try] = new ShoppingCarts[Try] {
 
@@ -88,6 +90,7 @@ object TaglessFinal extends App {
   /**
     * Future interpreter
     * -------------------
+    * Here we choose monad Future to control time/throwable side-effect
     */
   val futureInterpreter: ShoppingCarts[Future] = new ShoppingCarts[Future] {
 
