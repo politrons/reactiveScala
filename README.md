@@ -269,3 +269,9 @@ Prime number platform. A micro service platform implemented using Finagle for st
 All platform implemented using pure functional ZIO effect system.
 
 You can find the project code [here](https://github.com/politrons/PrimeNumberPlatform)
+
+# Exchange platform
+
+A Microservice platform which provide currency exchange using pure functional programing libraries. 
+
+You can find the project code  [here](https://github.com/politrons/Exchange_platform)
