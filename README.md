@@ -275,3 +275,11 @@ You can find the project code [here](https://github.com/politrons/PrimeNumberPla
 A Microservice platform which provide currency exchange using pure functional programing libraries. 
 
 You can find the project code  [here](https://github.com/politrons/Exchange_platform)
+
+![My image](img/spark.png)
+
+# Spark
+
+Project to cover the most famous Spark features.
+
+You can find the project code  [here](https://github.com/politrons/ReactiveSpark)
