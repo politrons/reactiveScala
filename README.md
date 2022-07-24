@@ -96,6 +96,8 @@ ZIO A type-safe, composable library for asynchronous and concurrent programming 
 
 Here we cover with some practical examples, the most common use of ZIO library.
 
+## ZIO 1.0
+
 * **[ZIO monad](scala_features/src/main/scala/app/impl/zio/ZIOMonad.scala)**
 * **[ZIO Actor](scala_features/src/main/scala/app/impl/zio/ZIOActor.scala)**
 * **[ZIO ZLayer](zio/src/main/scala/com/features/zio/ZIOLayer.scala)**
@@ -109,6 +111,9 @@ Here we cover with some practical examples, the most common use of ZIO library.
 * **[ZIO promise](zio/src/main/scala/com/features/zio/ZIOPromise.scala)**
 * **[ZIO STM](zio/src/main/scala/com/features/zio/ZIOStm.scala)**
 
+## ZIO 2.0
+
+* **[ZIO New Features](https://github.com/politrons/zio_2.0_features/blob/main/src/test/scala/com/politrons/zio/ZIONewFeatures.scala)**
 
 ![My image](scala_features/src/main/resources/img/native.jpg)
 # Scala-native
