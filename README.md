@@ -288,3 +288,9 @@ You can find the project code  [here](https://github.com/politrons/Exchange_plat
 Project to cover the most famous Spark features.
 
 You can find the project code  [here](https://github.com/politrons/ReactiveSpark)
+
+# Games
+
+Games implementation in Scala
+
+* **[WonderPaul](https://github.com/politrons/WonderPaul)**
