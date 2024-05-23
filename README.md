@@ -295,3 +295,4 @@ Games implementation in Scala
 
 * **[WonderPaul](https://github.com/politrons/WonderPaul)**
 * **[FlyPaul](https://github.com/politrons/FlyPaul)**
+* **[ScalaChess](https://github.com/politrons/ScalaChess)**
