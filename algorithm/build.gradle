@@ -7,9 +7,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.scala-lang:scala-library:2.12.4'
-    compile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.scalatest', name: 'scalatest_2.12', version: '3.0.8'
-    compile group: 'co.fs2', name: 'fs2-core_2.12', version: '1.0.2'
+    implementation 'org.scala-lang:scala-library:2.12.4'
+    implementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'org.scalatest', name: 'scalatest_2.12', version: '3.0.8'
+    implementation group: 'co.fs2', name: 'fs2-core_2.12', version: '1.0.2'
 
 }

@@ -296,3 +296,10 @@ Games implementation in Scala
 * **[WonderPaul](https://github.com/politrons/WonderPaul)**
 * **[FlyPaul](https://github.com/politrons/FlyPaul)**
 * **[ScalaChess](https://github.com/politrons/ScalaChess)**
+
+# Machine Learning
+
+Examples of machine learning models to predict results after model training.
+
+* **[Recommendation]**(machine_learning/src/main/scala/RecommendationModel.scala)
+* **[Feedback]**(machine_learning/src/main/scala/FeedbackModel.scala)

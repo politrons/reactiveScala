@@ -7,10 +7,10 @@ repositories {
 }
 
 dependencies {
-    compile 'org.scala-lang:scala-library:2.12.4'
-    compile 'com.chuusai:shapeless_2.11:2.3.2'
-    compile group: 'org.scalameta', name: 'scalameta_2.11', version: '1.7.0'
-    compile group: 'com.h2database', name: 'h2', version: '1.4.192'
+    implementation 'org.scala-lang:scala-library:2.12.4'
+    implementation 'com.chuusai:shapeless_2.11:2.3.2'
+    implementation group: 'org.scalameta', name: 'scalameta_2.11', version: '1.7.0'
+    implementation group: 'com.h2database', name: 'h2', version: '1.4.192'
 
 }
 

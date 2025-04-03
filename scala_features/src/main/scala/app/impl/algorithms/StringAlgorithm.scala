@@ -1,6 +1,5 @@
 package app.impl.algorithms
 
-import org.h2.bnf.Sentence
 import org.junit.Test
 
 class StringAlgorithm {
